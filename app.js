@@ -1,52 +1,28 @@
-import createError from "http-errors";
 import express from "express";
-import path from "path";
-import cookieParser from "cookie-parser";
-import logger from "morgan";
-import { fileURLToPath } from "url";
-import { dirname } from "path";
 import cors from "cors";
 import dotenv from "dotenv";
 dotenv.config();
 
-// Rutas
-import indexRouter from "./routes/index.js";
-import usersRouter from "./routes/users.js";
+import habitacionRoutes from "./routes/habitacionRoutes.js";
+import clienteRoutes from "./routes/clienteRoutes.js";
+import reservaRoutes from "./routes/reservaRoutes.js";
 
-// Configurar paths correctamente (equivalente a __dirname en ESM)
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-// Crear app
 const app = express();
 
-// Configurar middlewares
-app.use(logger("dev"));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, "public")));
+// Middlewares
 app.use(cors());
+app.use(express.json());
 
 // Rutas
-app.use("/", indexRouter);
-app.use("/users", usersRouter);
+app.use("/api/habitaciones", habitacionRoutes);
+app.use("/api/clientes", clienteRoutes);
+app.use("/api/reservas", reservaRoutes);
 
-// Capturar error 404 y pasarlo al manejador
-app.use(function (req, res, next) {
-  next(createError(404));
-});
+// Puerto
+const PORT = process.env.PORT || 3000;
 
-// Manejador de errores
-app.use(function (err, req, res, next) {
-  res.locals.message = err.message;
-  res.locals.error = req.app.get("env") === "development" ? err : {};
-
-  res.status(err.status || 500);
-  res.send({
-    error: true,
-    message: err.message,
-  });
+app.listen(PORT, () => {
+  console.log(`🔥 Servidor corriendo en http://localhost:${PORT}`);
 });
 
 export default app;

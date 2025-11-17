@@ -11,7 +11,7 @@ const dbConfig = {
   options: { encrypt: true, trustServerCertificate: true }
 };
 
-export async function testConexion() {
+export async function getConnection() {
   try {
     const conn = await sql.connect(dbConfig);
     console.log("✅ Conexión exitosa a la base de datos");
