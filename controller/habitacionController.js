@@ -5,7 +5,7 @@ export async function verHabitacionesDisponibles (req, res) {
         const habitaciones = await obtenerHabitacionesDisponibles();
         res.status(200).json(habitaciones);
     } catch (error) {
-        res.status(404).json({
+        res.status(500).json({
             message: 'Error al obtener habitaciones disponibles', error: error.message});
     };
 }

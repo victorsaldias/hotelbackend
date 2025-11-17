@@ -5,3 +5,4 @@ const router = express.Router();
 
 // Ruta para obtener habitaciones disponibles
 router.get('/disponibles', verHabitacionesDisponibles);
+export default router;
