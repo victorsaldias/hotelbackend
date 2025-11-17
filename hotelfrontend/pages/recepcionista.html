@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Panel Recepcionista</title>
+
+    
+    <link rel="stylesheet" href="../css/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="../css/font-awesome.min.css" type="text/css">
+    <link rel="stylesheet" href="../css/elegant-icons.css" type="text/css">
+    <link rel="stylesheet" href="../css/nice-select.css" type="text/css">
+    <link rel="stylesheet" href="../css/jquery-ui.min.css" type="text/css">
+    <link rel="stylesheet" href="../css/owl.carousel.min.css" type="text/css">
+    <link rel="stylesheet" href="../css/slicknav.min.css" type="text/css">
+    <link rel="stylesheet" href="../css/style.css" type="text/css">
+
+    
+    <link rel="stylesheet" href="../css/admin.css" type="text/css">
+</head>
+
+<body>
+
+<div class="layout">
+
+   <aside class="sidebar">
+    <h2 class="sidebar-title" style="color:white;">Hotel XYZ</h2>
+
+    <ul class="menu">
+
+        <li onclick="location.href='recepcionista.html'" class="active" style="color:white;">
+            <i class="fa fa-bed" style="color:white;"></i> 
+            <span style="color:white;">Reservas</span>
+        </li>
+
+        <li onclick="location.href='perfil-recepcionista.html'" style="color:white;">
+            <i class="fa fa-user" style="color:white;"></i> 
+            <span style="color:white;">Perfil</span>
+        </li>
+
+    </ul>
+</aside>
+
+
+
+    <main class="content">
+
+       <header class="topbar">
+    <h2 style="color:white;">Panel del Recepcionista</h2>
+    <span style="color:white;">Recepcionista</span>
+</header>
+
+
+
+        
+        <section class="hero spad set-bg" data-setbg="../img/hero.jpg">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+
+                        <div class="hero__text">
+                            <h5>BIENVENIDO A "NOMBRE HOTEL"</h5>
+                            <h2>Registrar habitaciones </h2>
+                        </div>
+
+                       
+                        <form action="#" class="filter__form">
+                            <div class="filter__form__item filter__form__item--search">
+                                <p>Ubicación</p>
+                                <div class="filter__form__input">
+                                    <input type="text" placeholder="Buscar ubicación">
+                                    <span class="icon_search"></span>
+                                </div>
+                            </div>
+
+                            <div class="filter__form__item">
+                                <p>Fecha de Entrada</p>
+                                <div class="filter__form__datepicker">
+                                    <span class="icon_calendar"></span>
+                                    <input type="text" class="datepicker_pop check__in">
+                                    <i class="arrow_carrot-down"></i>
+                                </div>
+                            </div>
+
+                            <div class="filter__form__item">
+                                <p>Fecha de Salida</p>
+                                <div class="filter__form__datepicker">
+                                    <span class="icon_calendar"></span>
+                                    <input type="text" class="datepicker_pop check__out">
+                                    <i class="arrow_carrot-down"></i>
+                                </div>
+                            </div>
+
+                            <div class="filter__form__item filter__form__item--select">
+                                <p>Personas</p>
+                                <div class="filter__form__select">
+                                    <span class="icon_group"></span>
+                                    <select>
+                                        <option>2 Adultos, 1 Niño</option>
+                                        <option>2 Adultos</option>
+                                        <option>1 Adulto</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <button type="submit">Buscar Habitacion</button>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+
+       
+        
+
+    </main>
+</div>
+
+
+
+<script src="../js/jquery-3.3.1.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<script src="../js/jquery.nice-select.min.js"></script>
+<script src="../js/jquery-ui.min.js"></script>
+<script src="../js/jquery.slicknav.js"></script>
+<script src="../js/owl.carousel.min.js"></script>
+<script src="../js/main.js"></script>
+
+</body>
+</html>

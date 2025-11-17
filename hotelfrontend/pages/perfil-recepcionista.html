@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Mi Perfil - Recepcionista</title>
+    <link rel="stylesheet" href="../css/admin.css">
+    <link rel="stylesheet" href="../css/perfil.css">
+</head>
+
+<body>
+
+<div class="layout">
+
+   
+    <aside class="sidebar">
+        <h2 class="sidebar-title">Hotel XYZ</h2>
+        <ul class="menu">
+            <li onclick="location.href='recepcionista.html'">
+                <i class="fa fa-bed"></i> Reservas
+            </li>
+            <li class="active" onclick="location.href='perfil-recepcionista.html'">
+                <i class="fa fa-user"></i> Mi Perfil
+            </li>
+        </ul>
+    </aside>
+
+    
+    <main class="content">
+        
+        <header class="topbar">
+            <h2>Mi Perfil</h2>
+            <span id="perfilNombreHeader">Recepcionista</span>
+        </header>
+
+        <div class="perfil-container">
+
+            <div class="perfil-card">
+                <h3>Información Personal</h3>
+
+                <div class="perfil-grid">
+
+                    <label>RUT:</label>
+                    <input type="text" disabled>
+
+                    <label>Nombre:</label>
+                    <input type="text" disabled>
+
+                    <label>Apellido:</label>
+                    <input type="text" disabled>
+
+                    <label>Rol:</label>
+                    <input type="text" value="Recepcionista" disabled>
+
+                    <label>Estado:</label>
+                    <input type="text" value="Activo" disabled>
+
+                    <label>Sucursal:</label>
+                    <input type="text" disabled>
+
+                    <label>Nueva contraseña:</label>
+                    <input type="password" disabled placeholder="">
+                </div>
+
+                <div class="perfil-actions">
+                    <button class="btn-save" onclick="activarEdicion()">Editar</button>
+                    <button class="btn-save" style="display:none">Guardar</button>
+                    <button class="btn-cancel" style="display:none">Cancelar</button>
+                </div>
+
+            </div>
+
+        </div>
+    </main>
+
+</div>
+
+</body>
+</html>

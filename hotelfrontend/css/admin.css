@@ -1,0 +1,167 @@
+/* LAYOUT */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f7f7f7;
+}
+
+.layout {
+    display: flex;
+}
+
+/* SIDEBAR */
+.sidebar {
+    width: 230px;
+    background: #2c2c2c;
+    color: white;
+    height: 100vh;
+    padding: 20px;
+}
+
+.sidebar-title {
+    margin: 0 0 30px;
+    font-size: 20px;
+    text-align: center;
+}
+
+.menu {
+    list-style: none;
+    padding: 0;
+}
+
+.menu li {
+    padding: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.menu li.active,
+.menu li:hover {
+    background: #3a3a3a;
+}
+
+/* MAIN */
+.content {
+    flex: 1;
+    padding: 25px;
+}
+
+.topbar {
+    background: #4c4c4c;
+    color: white;
+    padding: 15px;
+    border-radius: 6px;
+    display: flex;
+    justify-content: space-between;
+}
+
+/* ACCIONES */
+.actions {
+    display: flex;
+    justify-content: space-between;
+    margin: 20px 0;
+}
+
+.search {
+    width: 60%;
+    padding: 12px;
+    border-radius: 6px;
+    border: 1px solid #bbb;
+}
+
+.btn-add {
+    background: #d8c04c;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+/* TABLA */
+.table-container {
+    background: white;
+    padding: 10px;
+    border-radius: 6px;
+}
+
+.tabla {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.tabla th,
+.tabla td {
+    border-bottom: 1px solid #ddd;
+    padding: 12px;
+}
+
+.tabla th {
+    background: #eee;
+}
+
+.btn-edit {
+    background: #2196f3;
+    color: white;
+    padding: 6px 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.btn-delete {
+    background: #e53935;
+    color: white;
+    padding: 6px 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+/* MODAL */
+.modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background: white;
+    width: 60%;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.modal-actions {
+    margin-top: 20px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+}
+
+.btn-save {
+    background: #d8c04c;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 6px;
+}
+
+.btn-cancel {
+    background: #888;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 6px;
+}

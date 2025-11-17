@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="Habitaciones del Hotel">
+    <meta name="keywords" content="Hotel, Habitaciones, Reserva">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Habitaciones | Hotel</title>
+
+
+    <link rel="stylesheet" href="../css/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="../css/font-awesome.min.css" type="text/css">
+    <link rel="stylesheet" href="../css/elegant-icons.css" type="text/css">
+    <link rel="stylesheet" href="../css/nice-select.css" type="text/css">
+    <link rel="stylesheet" href="../css/jquery-ui.min.css" type="text/css">
+    <link rel="stylesheet" href="../css/owl.carousel.min.css" type="text/css">
+    <link rel="stylesheet" href="../css/slicknav.min.css" type="text/css">
+    <link rel="stylesheet" href="../css/style.css" type="text/css">
+</head>
+
+<body>
+
+    <div id="preloder">
+        <div class="loader"></div>
+    </div>
+
+    <!-- OFFCANVAS -->
+    <div class="offcanvas-menu-overlay"></div>
+    <div class="offcanvas-menu-wrapper">
+
+        <div class="offcanvas__logo">
+            <a href="index.html"><img src="../img/logo.png" alt=""></a>
+        </div>
+
+        <!-- Slicknav insertará el menú aquí -->
+        <div id="mobile-menu-wrap"></div>
+
+        
+
+        <div class="offcanvas__widget">
+            <ul>
+                <li><span class="icon_phone"></span> (123) 456-78-910</li>
+            </ul>
+        </div>
+
+        <div class="offcanvas__auth">
+            <ul>
+                <li><a href="login.html">Login</a></li>
+                <li><a href="registro.html">Registrarse</a></li>
+            </ul>
+        </div>
+
+    </div>
+
+    <!-- HEADER -->
+    <header class="header">
+
+        <div class="header__top">
+            <div class="container">
+                <div class="row">
+
+                    <div class="col-lg-7">
+                        <ul class="header__top__widget">
+                            <li><span class="icon_phone"></span> (123) 456-78-910</li>
+                        </ul>
+                    </div>
+
+                    <div class="col-lg-5">
+                        <div class="header__top__right">
+                            <div class="header__top__auth">
+                                <ul>
+                                    <li><a href="login.html">Login</a></li>
+                                    <li><a href="registro.html">Registrarse</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="header__nav__option">
+            <div class="container">
+                <div class="row">
+
+                    <div class="col-lg-2">
+                        <div class="header__logo">
+                            <a href="index.html"><img src="../img/logo.png" alt=""></a>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-10">
+                        <div class="header__nav">
+                            <nav class="header__menu">
+                                <ul class="menu__class">
+                                    <li><a href="index.html">Inicio</a></li>
+                                    <li class="active"><a href="rooms.html">Habitaciones</a></li>
+                                    <li><a href="about.html">Sobre Nosotros</a></li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="canvas__open">
+                    <span class="fa fa-bars"></span>
+                </div>
+
+            </div>
+        </div>
+
+    </header>
+
+    <!-- BREADCRUMB -->
+    <div class="breadcrumb-option set-bg" data-setbg="../img/breadcrumb-bg.jpg">
+        <div class="container text-center">
+            <div class="breadcrumb__text">
+                <h1>Nuestras Habitaciones</h1>
+                <div class="breadcrumb__links">
+                    <a href="index.html">Inicio</a>
+                    <span>Habitaciones</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ROOMS SECTION -->
+    <section class="rooms spad">
+        <div class="container">
+            <div class="row">
+
+                <!-- HABITACIÓN 1 -->
+                <div class="col-lg-6">
+                    <div class="room__pic__slider owl-carousel">
+                        <div class="room__pic__item set-bg" data-setbg="../img/rooms/room-1.jpg"></div>
+                        <div class="room__pic__item set-bg" data-setbg="../img/rooms/room-2.jpg"></div>
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="room__text">
+                        <h3>Habitación Premium King</h3>
+                        <h2><sup>$</sup>99<span>/día</span></h2>
+
+                        <ul>
+                            <li><span>Tamaño:</span> 30 m²</li>
+                            <li><span>Capacidad:</span> 3 personas</li>
+                            <li><span>Cama:</span> King</li>
+                            <li><span>Servicios:</span> WiFi, TV, Baño privado</li>
+                        </ul>
+
+                        <a href="room-details.html?room=1">Ver Detalles</a>
+                    </div>
+                </div>
+
+                <!-- HABITACIÓN 2 -->
+                <div class="col-lg-6">
+                    <div class="room__pic__slider owl-carousel">
+                        <div class="room__pic__item set-bg" data-setbg="../img/rooms/room-3.jpg"></div>
+                        <div class="room__pic__item set-bg" data-setbg="../img/rooms/room-4.jpg"></div>
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="room__text">
+                        <h3>Habitación Deluxe</h3>
+                        <h2><sup>$</sup>86<span>/día</span></h2>
+
+                        <ul>
+                            <li><span>Tamaño:</span> 28 m²</li>
+                            <li><span>Capacidad:</span> 2 personas</li>
+                            <li><span>Cama:</span> Queen</li>
+                            <li><span>Servicios:</span> WiFi, TV, Baño privado</li>
+                        </ul>
+
+                        <a href="room-details.html?room=2">Ver Detalles</a>
+                    </div>
+                </div>
+
+                <!-- HABITACIÓN 3 -->
+                <div class="col-lg-6">
+                    <div class="room__pic__slider owl-carousel">
+                        <div class="room__pic__item set-bg" data-setbg="../img/rooms/details/rd-1.jpg"></div>
+                        <div class="room__pic__item set-bg" data-setbg="../img/rooms/details/rd-2.jpg"></div>
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="room__text">
+                        <h3>Suite Ejecutiva</h3>
+                        <h2><sup>$</sup>120<span>/día</span></h2>
+
+                        <ul>
+                            <li><span>Tamaño:</span> 40 m²</li>
+                            <li><span>Capacidad:</span> 4 personas</li>
+                            <li><span>Cama:</span> King + Sofá cama</li>
+                            <li><span>Servicios:</span> WiFi, TV Smart, Minibar</li>
+                        </ul>
+
+                        <a href="room-details.html?room=3">Ver Detalles</a>
+                    </div>
+                </div>
+
+                <!-- HABITACIÓN 4 -->
+                <div class="col-lg-6">
+                    <div class="room__pic__slider owl-carousel">
+                        <div class="room__pic__item set-bg" data-setbg="../img/rooms/details/rd-3.jpg"></div>
+                        <div class="room__pic__item set-bg" data-setbg="../img/rooms/details/rd-4.jpg"></div>
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="room__text">
+                        <h3>Suite Familiar</h3>
+                        <h2><sup>$</sup>150<span>/día</span></h2>
+
+                        <ul>
+                            <li><span>Tamaño:</span> 50 m²</li>
+                            <li><span>Capacidad:</span> 5 personas</li>
+                            <li><span>Cama:</span> 2 Queen</li>
+                            <li><span>Servicios:</span> Cocina, TV, WiFi</li>
+                        </ul>
+
+                        <a href="room-details.html?room=4">Ver Detalles</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer set-bg" data-setbg="../img/footer-bg.jpg">
+        <div class="container">
+            <p style="color:white; text-align:center; margin-top:20px;">
+                © 2025 Hotel Template — Todos los derechos reservados.
+            </p>
+        </div>
+    </footer>
+
+    <!-- JS -->
+    <script src="../js/jquery-3.3.1.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/jquery.nice-select.min.js"></script>
+    <script src="../js/jquery-ui.min.js"></script>
+    <script src="../js/jquery.slicknav.js"></script>
+    <script src="../js/owl.carousel.min.js"></script>
+    <script src="../js/main.js"></script>
+
+</body>
+
+
+</html>
