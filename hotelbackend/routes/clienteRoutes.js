@@ -16,6 +16,4 @@ router.get("/:rut", obtenerCliente);
 // Modificar cliente por RUT
 router.put("/:rut", modificarCliente);
 
-
-
 export default router;

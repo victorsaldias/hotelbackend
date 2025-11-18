@@ -1,9 +1,8 @@
 import express from "express";
+import { loginCliente } from "../controller/authController.js";
+
 const router = express.Router();
 
-/* GET users listing. */
-router.get("/", function (req, res) {
-  res.send("Ruta de usuarios funcionando ✅");
-});
+router.post("/login", loginCliente);
 
 export default router;

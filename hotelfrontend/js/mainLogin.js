@@ -1,16 +1,22 @@
-(function($) {
+$("#loginForm").on("submit", async function (e) {
+    e.preventDefault();
 
-	"use strict";
+    const correo = $("#correo").val();
+    const password = $("#password").val();
 
-	$(".toggle-password").click(function() {
+    const res = await fetch("http://localhost:3000/api/clientes/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ correo, password })
+    });
 
-  $(this).toggleClass("fa-eye fa-eye-slash");
-  var input = $($(this).attr("toggle"));
-  if (input.attr("type") == "password") {
-    input.attr("type", "text");
-  } else {
-    input.attr("type", "password");
-  }
+    const data = await res.json();
+
+    if (!res.ok) {
+        alert(data.message);
+        return;
+    }
+
+    alert("Login exitoso");
+    window.location.href = "index.html"; // o dashboard
 });
-
-})(jQuery);

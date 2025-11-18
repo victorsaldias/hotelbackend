@@ -1,5 +1,6 @@
 import { getConnection } from "../config/dbConfig.js";
 
+// INSERTAR CLIENTE
 export async function insertarCliente(data) {
 
   const {
@@ -33,6 +34,7 @@ export async function insertarCliente(data) {
   return result.recordset[0];
 }
 
+// OBTENER CLIENTE POR RUT
 export async function obtenerClientePorRut(rut) {
   const pool = await getConnection();
   
@@ -43,6 +45,7 @@ export async function obtenerClientePorRut(rut) {
   return result.recordset[0];
 }
 
+// ACTUALIZAR CLIENTE POR RUT
 export async function actualizarCliente(rut, data) {
   const {
     password,

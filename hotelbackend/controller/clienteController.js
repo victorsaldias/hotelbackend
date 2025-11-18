@@ -1,47 +1,69 @@
-import { insertarCliente, obtenerClientePorRut, actualizarCliente } from '../model/clienteModel.js';
+import {
+  insertarCliente,
+  obtenerClientePorRut,
+  actualizarCliente
+} from '../model/clienteModel.js';
 
+// CREAR CLIENTE
 export const crearCliente = async (req, res) => {
-    try {
-        const nuevoCliente = req.body;
-        const cliente = await insertarCliente(nuevoCliente);
+  try {
+      const nuevoCliente = req.body;
+      const cliente = await insertarCliente(nuevoCliente);
 
-        res.status(201).json({ message: "Cliente creado exitosamente", cliente });
-    }
-    catch (error) {
-        res.status(500).json({ message: "Error al crear el cliente", error: error.message });
-    }   
+      res.status(201).json({ 
+        message: "Cliente creado exitosamente", 
+        cliente 
+      });
+  }
+  catch (error) {
+      res.status(500).json({ 
+        message: "Error al crear el cliente", 
+        error: error.message 
+      });
+  }
 };
 
+// OBTENER CLIENTE POR RUT
 export const obtenerCliente = async (req, res) => {
-    try {
-        const rut = req.params.rut;
-        const cliente = await obtenerClientePorRut(rut);
+  try {
+      const rut = req.params.rut;
+      const cliente = await obtenerClientePorRut(rut);
 
-        if (cliente) {
-            res.status(200).json(cliente);
-        } else {
-            res.status(404).json({ message: "Cliente no encontrado" });
-        }
+      if (cliente) {
+          res.status(200).json(cliente);
+      } else {
+          res.status(404).json({ message: "Cliente no encontrado" });
+      }
 
-    } catch (error) {
-        res.status(500).json({ message: "Error al obtener el cliente", error: error.message });
-    }
+  } catch (error) {
+      res.status(500).json({ 
+        message: "Error al obtener el cliente", 
+        error: error.message 
+      });
+  }
 };
 
+// MODIFICAR CLIENTE POR RUT
 export const modificarCliente = async (req, res) => {
-    try {
-        const rut = req.params.rut;
-        const datosActualizados = req.body;
+  try {
+      const rut = req.params.rut;
+      const datosActualizados = req.body;
 
-        const clienteActualizado = await actualizarCliente(rut, datosActualizados);
+      const clienteActualizado = await actualizarCliente(rut, datosActualizados);
 
-        if (clienteActualizado) {
-            res.status(200).json({ message: "Cliente actualizado exitosamente", cliente: clienteActualizado });
-        } else {
-            res.status(404).json({ message: "Cliente no encontrado" });
-        }
+      if (clienteActualizado) {
+          res.status(200).json({ 
+            message: "Cliente actualizado exitosamente", 
+            cliente: clienteActualizado 
+          });
+      } else {
+          res.status(404).json({ message: "Cliente no encontrado" });
+      }
 
-    } catch (error) {
-        res.status(500).json({ message: "Error al actualizar el cliente", error: error.message });
-    }
+  } catch (error) {
+      res.status(500).json({
+        message: "Error al actualizar el cliente",
+        error: error.message
+      });
+  }
 };
