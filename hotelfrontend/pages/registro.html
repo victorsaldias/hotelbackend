@@ -5,15 +5,13 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <!-- Fuentes -->
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet">
-
-    <!-- Iconos -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-    <!-- CSS renombrados -->
     <link rel="stylesheet" href="../css/bootstrap.minRegistro.css">
     <link rel="stylesheet" href="../css/styleRegistro.css">
+
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 </head>
 
 <body>
@@ -24,57 +22,74 @@
         <div class="login-wrap" style="max-width: 430px; margin: 0 auto;">
             <h3 class="mb-4 text-center">Crear Cuenta</h3>
 
-            <form class="signup-form">
-
+            <form id="formRegistro" class="signup-form">
                 <div class="row">
-                    <!-- NOMBRE -->
+
+                    <div class="col-md-12">
+                        <div class="form-group mb-4">
+                            <input type="text" id="regRut" class="form-control" placeholder="RUT" required>
+                        </div>
+                    </div>
+
                     <div class="col-md-6">
                         <div class="form-group mb-4">
                             <input type="text" id="regNombre" class="form-control" placeholder="Nombre" required>
                         </div>
                     </div>
 
-                    <!-- APELLIDO -->
                     <div class="col-md-6">
                         <div class="form-group mb-4">
                             <input type="text" id="regApellido" class="form-control" placeholder="Apellido" required>
                         </div>
                     </div>
 
-                    <!-- CORREO -->
                     <div class="col-md-12">
                         <div class="form-group mb-4">
                             <input type="email" id="regCorreo" class="form-control" placeholder="Correo" required>
                         </div>
                     </div>
 
-                    <!-- CONTRASEÑA -->
+                    <div class="col-md-12">
+                        <div class="form-group mb-4">
+                            <input type="text" id="regTelefono" class="form-control" placeholder="Teléfono">
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div class="form-group mb-4">
+                            <input type="text" id="regDireccion" class="form-control" placeholder="Dirección">
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div class="form-group mb-4">
+                            <select id="regComuna" class="form-control select2" required>
+                                <option value="">Seleccionar comuna...</option>
+                            </select>
+                        </div>
+                    </div>
+
                     <div class="col-md-6">
                         <div class="form-group mb-4">
                             <input type="password" id="regPass" class="form-control" placeholder="Contraseña" required>
                         </div>
                     </div>
 
-                    <!-- CONFIRMAR CONTRASEÑA -->
                     <div class="col-md-6">
                         <div class="form-group mb-4">
                             <input type="password" id="regPass2" class="form-control" placeholder="Confirmar Contraseña" required>
                         </div>
                     </div>
 
-                    <!-- BOTÓN REGISTRAR -->
                     <div class="col-md-12">
-                        <div class="form-group d-flex">
-                            <button type="button" onclick="registrarUsuario()" class="btn btn-primary rounded submit p-3 w-100" style="background:#d8c04c; border:none;">
-                                Registrarse
-                            </button>
-                        </div>
+                        <button type="submit" class="btn btn-primary rounded submit p-3 w-100" style="background:#d8c04c; border:none;">
+                            Registrarse
+                        </button>
                     </div>
-                </div>
 
+                </div>
             </form>
 
-            <!-- LINK AL LOGIN -->
             <p class="text-center mt-3">
                 ¿Ya tienes cuenta? <a href="login.html">Inicia sesión</a>
             </p>
@@ -83,14 +98,11 @@
     </div>
 </section>
 
-
 <script src="../js/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script src="../js/popper.js"></script>
 <script src="../js/bootstrap.minRegistro.js"></script>
 <script src="../js/mainRegistro.js"></script>
-
-
-
 
 </body>
 </html>
