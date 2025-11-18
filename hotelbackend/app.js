@@ -6,6 +6,7 @@ dotenv.config();
 import habitacionRoutes from "./routes/habitacionRoutes.js";
 import clienteRoutes from "./routes/clienteRoutes.js";
 import reservaRoutes from "./routes/reservaRoutes.js";
+import authRoutes from "./routes/authRoutes.js";
 
 const app = express();
 
@@ -17,6 +18,7 @@ app.use(express.json());
 app.use("/api/habitaciones", habitacionRoutes);
 app.use("/api/clientes", clienteRoutes);
 app.use("/api/reservas", reservaRoutes);
+app.use("/api/auth", authRoutes);
 
 // Puerto
 const PORT = process.env.PORT || 3000;
