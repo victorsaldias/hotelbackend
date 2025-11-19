@@ -17,7 +17,10 @@ const dbConfig = {
     port: parseInt(process.env.DB_PORT),
     options: {
         encrypt: true,
-        trustServerCertificate: true
+        trustServerCertificate: true,
+        enableArithAbort: true,
+        useUTC: true,
+        tdsVersion: "7_4"
     }
 };
 

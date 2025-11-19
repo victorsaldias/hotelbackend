@@ -1,4 +1,4 @@
-import bcrypt from "bcryptjs";
+import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { 
     buscarEmpleadoPorCorreo, 
@@ -204,3 +204,32 @@ export async function modificarEmpleado(req, res) {
     }
 }
 
+// SUSPENDER EMPLEADO (cambia idEstadoEmpleado a 4)
+export async function suspenderEmpleado(req, res) {
+  try {
+      const idEmpleado = req.params.id;
+
+      const empleado = await buscarEmpleadoPorId(idEmpleado);
+
+      if (!empleado) {
+          return res.status(404).json({ message: "Empleado no encontrado" });
+      }
+      
+      await actualizarEmpleadoSinPassword(idEmpleado, {
+          idEstadoEmpleado: 4
+      });
+
+      return res.status(200).json({
+          message: "Empleado suspendido correctamente",
+          idEmpleado,
+          nuevoEstado: 4
+      });
+
+  } catch (error) {
+      console.error("Error al suspender empleado:", error);
+      return res.status(500).json({
+          message: "Error interno del servidor",
+          error: error.message
+      });
+  }
+}

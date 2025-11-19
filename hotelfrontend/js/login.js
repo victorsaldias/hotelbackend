@@ -17,6 +17,7 @@ import
         const $errorMessage = $("#errorMessage");
         $errorMessage.hide().text("");
 
+       
         if (!correo || !password) {
             $errorMessage.text("El correo y la contraseña son obligatorios.").show();
             return;
@@ -27,14 +28,12 @@ import
             return;
         }
 
+        
         $.ajax({
-            url: "http://localhost:3000/api/clientes/login",
+            url: "http://localhost:3000/api/auth/login",
             type: "POST",
             contentType: "application/json",
-
-            xhrFields: {
-                withCredentials: true   
-            },
+            xhrFields: { withCredentials: true },
 
             data: JSON.stringify({ correo, password }),
 
@@ -42,9 +41,13 @@ import
                 $errorMessage.text("Login exitoso. Redirigiendo...")
                     .css("color", "green").show();
 
-                setTimeout(() => {
-                   window.location.href = "./index.html";
+                
+                localStorage.setItem("clienteNombre", response.nombre ?? "");
+                localStorage.setItem("clienteApellido", response.apellido ?? "");
+                localStorage.setItem("clienteId", response.idCliente ?? "");
 
+                setTimeout(() => {
+                    window.location.href = "./index.html";
                 }, 1000);
             },
 
@@ -53,11 +56,13 @@ import
                 if (xhr.responseJSON?.message) {
                     msg = xhr.responseJSON.message;
                 }
-                $errorMessage.text(msg).css("color", "red").show();
+                $errorMessage.text(msg)
+                    .css("color", "red").show();
             }
         });
     });
 
+    
     $(".toggle-password").click(function() {
         $(this).toggleClass("fa-eye fa-eye-slash");
         const input = $($(this).attr("toggle"));

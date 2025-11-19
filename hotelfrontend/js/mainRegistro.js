@@ -1,19 +1,68 @@
-$(document).ready(function () {
-    $('#regComuna').select2();
+document.addEventListener("DOMContentLoaded", () => {
+    cargarRegiones();
+
+    document.getElementById("regRegion").addEventListener("change", function () {
+        cargarProvincias(this.value);
+    });
+
+    document.getElementById("regProvincia").addEventListener("change", function () {
+        cargarComunas(this.value);
+    });
+
+    document.getElementById("formRegistro").addEventListener("submit", registrarCliente);
 });
 
-async function cargarComunas() {
-    const res = await fetch("http://localhost:3000/api/comunas");
-    const comunas = await res.json();
-    const select = document.getElementById("regComuna");
-    comunas.forEach(c => {
-        select.innerHTML += `<option value="${c.idComuna}">${c.nombre}</option>`;
+
+async function cargarRegiones() {
+    const res = await fetch("http://localhost:3000/api/regiones");
+    const regiones = await res.json();
+
+    const region = document.getElementById("regRegion");
+    region.innerHTML = `<option value="">Seleccionar región...</option>`;
+
+    regiones.forEach(r => {
+        region.innerHTML += `<option value="${r.idRegion}">${r.nombreRegion}</option>`;
     });
 }
 
-cargarComunas();
 
-document.getElementById("formRegistro").addEventListener("submit", async (e) => {
+async function cargarProvincias(idRegion) {
+    if (!idRegion) return;
+
+    const res = await fetch(`http://localhost:3000/api/provincias/${idRegion}`);
+    const provincias = await res.json();
+
+    const provincia = document.getElementById("regProvincia");
+    provincia.disabled = false;
+    provincia.innerHTML = `<option value="">Seleccionar provincia...</option>`;
+
+    provincias.forEach(p => {
+        provincia.innerHTML += `<option value="${p.idProvincia}">${p.nombre}</option>`;
+    });
+
+    const comuna = document.getElementById("regComuna");
+    comuna.disabled = true;
+    comuna.innerHTML = `<option value="">Seleccionar comuna...</option>`;
+}
+
+
+async function cargarComunas(idProvincia) {
+    if (!idProvincia) return;
+
+    const res = await fetch(`http://localhost:3000/api/comunas/${idProvincia}`);
+    const comunas = await res.json();
+
+    const comuna = document.getElementById("regComuna");
+    comuna.disabled = false;
+    comuna.innerHTML = `<option value="">Seleccionar comuna...</option>`;
+
+    comunas.forEach(c => {
+        comuna.innerHTML += `<option value="${c.idComuna}">${c.nombre}</option>`;
+    });
+}
+
+
+async function registrarCliente(e) {
     e.preventDefault();
 
     const pass = document.getElementById("regPass").value;
@@ -35,7 +84,7 @@ document.getElementById("formRegistro").addEventListener("submit", async (e) => 
         idComuna: document.getElementById("regComuna").value
     };
 
-    const res = await fetch("http://localhost:3000/api/clientes/registro", {
+    const res = await fetch("http://localhost:3000/api/clientes", {
         method: "POST",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify(data)
@@ -45,4 +94,4 @@ document.getElementById("formRegistro").addEventListener("submit", async (e) => 
     alert(resp.message);
 
     if (res.ok) window.location.href = "login.html";
-});
+}
