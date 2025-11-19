@@ -2,131 +2,107 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel del Recepcionista</title>
 
-    <title>Panel Recepcionista</title>
-
-    
-    <link rel="stylesheet" href="../css/bootstrap.min.css" type="text/css">
-    <link rel="stylesheet" href="../css/font-awesome.min.css" type="text/css">
-    <link rel="stylesheet" href="../css/elegant-icons.css" type="text/css">
-    <link rel="stylesheet" href="../css/nice-select.css" type="text/css">
-    <link rel="stylesheet" href="../css/jquery-ui.min.css" type="text/css">
-    <link rel="stylesheet" href="../css/owl.carousel.min.css" type="text/css">
-    <link rel="stylesheet" href="../css/slicknav.min.css" type="text/css">
-    <link rel="stylesheet" href="../css/style.css" type="text/css">
-
-    
-    <link rel="stylesheet" href="../css/admin.css" type="text/css">
+    <link rel="stylesheet" href="../css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 
 <body>
 
 <div class="layout">
 
-   <aside class="sidebar">
-    <h2 class="sidebar-title" style="color:white;">Hotel XYZ</h2>
+    <aside class="sidebar">
+        <h2 class="sidebar-title">Hotel XYZ</h2>
 
-    <ul class="menu">
-
-        <li onclick="location.href='recepcionista.html'" class="active" style="color:white;">
-            <i class="fa fa-bed" style="color:white;"></i> 
-            <span style="color:white;">Reservas</span>
-        </li>
-
-        <li onclick="location.href='perfil-recepcionista.html'" style="color:white;">
-            <i class="fa fa-user" style="color:white;"></i> 
-            <span style="color:white;">Perfil</span>
-        </li>
-
-    </ul>
-</aside>
-
-
+        <ul class="menu">
+            <li class="active" onclick="location.href='recepcionista.html'">
+                <i class="fa fa-bed"></i> Reservas
+            </li>
+            <li onclick="location.href='perfil-recepcionista.html'">
+                <i class="fa fa-user"></i> Mi Perfil
+            </li>
+            <li onclick="location.href='../index.html'" style="color:#ff6b6b;">
+                <i class="fa fa-sign-out-alt"></i> Cerrar Sesión
+            </li>
+        </ul>
+    </aside>
 
     <main class="content">
 
-       <header class="topbar">
-    <h2 style="color:white;">Panel del Recepcionista</h2>
-    <span style="color:white;">Recepcionista</span>
-</header>
+        <header class="topbar">
+            <h2>Panel del Recepcionista</h2>
+            <span>Recepcionista</span>
+        </header>
 
+        <div class="actions">
+            <input type="text" id="buscarReserva" class="search" placeholder="Buscar reserva por nombre, apellido, RUT o habitación...">
+            <button class="btn-add" onclick="abrirModalReserva()">Registrar Reserva</button>
+        </div>
 
-
-        
-        <section class="hero spad set-bg" data-setbg="../img/hero.jpg">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-12">
-
-                        <div class="hero__text">
-                            <h5>BIENVENIDO A "NOMBRE HOTEL"</h5>
-                            <h2>Registrar habitaciones </h2>
-                        </div>
-
-                       
-                        <form action="#" class="filter__form">
-                            <div class="filter__form__item filter__form__item--search">
-                                <p>Ubicación</p>
-                                <div class="filter__form__input">
-                                    <input type="text" placeholder="Buscar ubicación">
-                                    <span class="icon_search"></span>
-                                </div>
-                            </div>
-
-                            <div class="filter__form__item">
-                                <p>Fecha de Entrada</p>
-                                <div class="filter__form__datepicker">
-                                    <span class="icon_calendar"></span>
-                                    <input type="text" class="datepicker_pop check__in">
-                                    <i class="arrow_carrot-down"></i>
-                                </div>
-                            </div>
-
-                            <div class="filter__form__item">
-                                <p>Fecha de Salida</p>
-                                <div class="filter__form__datepicker">
-                                    <span class="icon_calendar"></span>
-                                    <input type="text" class="datepicker_pop check__out">
-                                    <i class="arrow_carrot-down"></i>
-                                </div>
-                            </div>
-
-                            <div class="filter__form__item filter__form__item--select">
-                                <p>Personas</p>
-                                <div class="filter__form__select">
-                                    <span class="icon_group"></span>
-                                    <select>
-                                        <option>2 Adultos, 1 Niño</option>
-                                        <option>2 Adultos</option>
-                                        <option>1 Adulto</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <button type="submit">Buscar Habitacion</button>
-                        </form>
-
-                    </div>
-                </div>
-            </div>
-        </section>
-
-       
-        
+        <div class="table-container">
+            <table class="tabla">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Apellido</th>
+                        <th>RUT</th>
+                        <th>Correo</th>
+                        <th>Habitación</th>
+                        <th>Entrada</th>
+                        <th>Salida</th>
+                        <th>Estado</th>
+                        <th>Acción</th>
+                    </tr>
+                </thead>
+                <tbody id="listaReservas"></tbody>
+            </table>
+        </div>
 
     </main>
 </div>
 
+<div class="modal" id="modalReserva">
+    <div class="modal-content">
 
+        <h3 id="tituloModal">Registrar Reserva</h3>
 
-<script src="../js/jquery-3.3.1.min.js"></script>
-<script src="../js/bootstrap.min.js"></script>
-<script src="../js/jquery.nice-select.min.js"></script>
-<script src="../js/jquery-ui.min.js"></script>
-<script src="../js/jquery.slicknav.js"></script>
-<script src="../js/owl.carousel.min.js"></script>
-<script src="../js/main.js"></script>
+        <div class="form-grid">
+
+            <h4 style="grid-column: span 2;">Datos del Cliente</h4>
+
+            <input type="text" id="reservaNombre" placeholder="Nombre" required>
+            <input type="text" id="reservaApellido" placeholder="Apellido" required>
+
+            <input type="text" id="reservaRut" placeholder="RUT" required>
+            <input type="email" id="reservaCorreo" placeholder="Correo" required>
+
+            <h4 style="grid-column: span 2; margin-top: 10px;">Datos de la Reserva</h4>
+
+            <input type="number" id="reservaHabitacion" placeholder="N° Habitación" required>
+
+            <label>Fecha Entrada:</label>
+            <input type="date" id="reservaEntrada" required>
+
+            <label>Fecha Salida:</label>
+            <input type="date" id="reservaSalida" required>
+
+            <select id="reservaEstado">
+                <option value="pendiente">Pendiente</option>
+                <option value="confirmada">Confirmada</option>
+                <option value="cancelada">Cancelada</option>
+            </select>
+
+        </div>
+
+        <div class="modal-actions">
+            <button class="btn-save">Guardar</button>
+            <button class="btn-cancel" onclick="cerrarModalReserva()">Cerrar</button>
+        </div>
+
+    </div>
+</div>
 
 </body>
 </html>

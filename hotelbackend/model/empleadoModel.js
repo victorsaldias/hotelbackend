@@ -30,7 +30,7 @@ export async function crearEmpleadoBD(data) {
         .input("idSucursal", idSucursal)
         .query(`
             INSERT INTO empleado (rut, correo, password, nombre, apellido, rol, idEstadoEmpleado, idSucursal)
-            VALUES (@rut, @correo, @password, @nombre, @apellido, @rol, @idEstadoEmpleado, @idSucursal)
+            VAgiLUES (@rut, @correo, @password, @nombre, @apellido, @rol, @idEstadoEmpleado, @idSucursal)
         `);
 }
 
