@@ -6,7 +6,7 @@ import {
 } from "../model/clienteModel.js";
 
 
-// ➤ CREAR CLIENTE
+// CREAR CLIENTE
 export const crearCliente = async (req, res) => {
   try {
       const nuevoCliente = req.body;
@@ -41,7 +41,7 @@ export const crearCliente = async (req, res) => {
 };
 
 
-// ➤ OBTENER CLIENTE POR RUT
+// OBTENER CLIENTE POR RUT
 export const obtenerCliente = async (req, res) => {
   try {
       const rut = req.params.rut;
@@ -63,7 +63,7 @@ export const obtenerCliente = async (req, res) => {
 };
 
 
-// ➤ MODIFICAR CLIENTE
+// MODIFICAR CLIENTE
 export const modificarCliente = async (req, res) => {
   try {
       const rut = req.params.rut;

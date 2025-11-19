@@ -6,24 +6,26 @@
 <title>Login Personal de Aseo</title>
 
 <link rel="stylesheet" href="../css/aseo.css">
-
-
 </head>
 
 <body>
 
 <div class="login-container">
     <img src="https://cdn-icons-png.flaticon.com/512/747/747376.png">
-    
-    <p>login</p>
 
-    <input type="email" placeholder="correo">
-    <input type="password" placeholder="contraseña">
+    <p>Login de Empleado</p>
 
-    <a href="#">olvidaste tu contraseña?</a>
+    <form id="loginEmpleadoForm">
+        <input type="email" id="correoEmpleado" placeholder="Correo" required>
+        <input type="password" id="passwordEmpleado" placeholder="Contraseña" required>
 
-    <button class="btn-login">iniciar sesión</button>
+        <a href="#">¿Olvidaste tu contraseña?</a>
+
+        <button type="submit" class="btn-login">Iniciar sesión</button>
+    </form>
 </div>
+
+<script src="../js/loginEmpleado.js"></script>
 
 </body>
 </html>

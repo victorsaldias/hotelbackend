@@ -5,7 +5,8 @@ import {
   crearHabitacion,
   actualizarEstadoHabitacion,
   obtenerTodasLasHabitaciones,
-  obtenerPrecioHabitacion
+  obtenerPrecioHabitacion,
+  buscarHabitacionesPorCapacidadYFechas
 } from "../model/habitacionModel.js";
 
 import { getConnection } from "../config/dbConfig.js";
@@ -100,6 +101,7 @@ export async function actualizarEstadoHabitacionController(req, res) {
   }
 }
 
+// Obtener todas las habitaciones
 export async function obtenerTodasLasHabitacionesController(req, res) {
   try {
     const idHabitacion = req.params.idHabitacion;
@@ -110,6 +112,7 @@ export async function obtenerTodasLasHabitacionesController(req, res) {
   } 
 }
 
+// Asignar habitación (cambiar estado)
 export async function asignarHabitacionController(req, res) {
   try {
     const { numero, idEstadoHabitacion } = req.body;
@@ -122,6 +125,7 @@ export async function asignarHabitacionController(req, res) {
   }
 }
 
+// Obtener precio de habitación por número
 export async function obtenerPrecioHabitacionController(req, res) {
   try {
     const { numero } = req.params;
@@ -135,6 +139,7 @@ export async function obtenerPrecioHabitacionController(req, res) {
   }
 }
 
+//VERR HABITACIIONES DE RESERVA
 export async function verHabitacionesDeReservaController(req, res) {
   try {
     const { idReserva } = req.params; 
@@ -153,3 +158,21 @@ export async function verHabitacionesDeReservaController(req, res) {
     res.status(500).json({ message: "Error al obtener habitaciones de la reserva", error: error.message });
   }
 }
+
+export async function obtenerHabitacionesAdecuadas(req, res) {
+    try {
+        const { idSucursal, fechaInicio, fechaFin, huespedes } = req.body;
+
+        const habitaciones = await buscarHabitacionesPorCapacidadYFechas(
+            idSucursal,
+            fechaInicio,
+            fechaFin,
+            huespedes
+        );
+
+        res.json(habitaciones);
+    } catch (error) {
+        res.status(500).json({ message: "Error al obtener habitaciones", error });
+    }
+}
+

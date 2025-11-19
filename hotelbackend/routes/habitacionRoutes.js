@@ -7,7 +7,8 @@ import {
   obtenerTodasLasHabitacionesController,
   crearHabitacionController,
   actualizarEstadoHabitacionController,
-  asignarHabitacionController
+  asignarHabitacionController,
+  obtenerHabitacionesAdecuadas
 
 } from '../controllers/habitacionController.js';
 
@@ -36,6 +37,9 @@ router.put('/estado/:numero', actualizarEstadoHabitacionController);
 
 // Asignar habitación (ejemplo adicional)
 router.put('/asignar/:numero', asignarHabitacionController);
+
+// Buscar habitaciones por sucursal + fechas + huéspedes
+router.post("/buscar", obtenerHabitacionesAdecuadas);
 
 export default router;
 

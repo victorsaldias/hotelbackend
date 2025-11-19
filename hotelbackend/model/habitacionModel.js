@@ -111,6 +111,32 @@ export async function verHabitacionesDeReserva(idReserva) {
     return result.recordset;
 }
 
+export async function buscarHabitacionesPorCapacidadYFechas(
+    idSucursal, fechaInicio, fechaFin, cantidadHuespedes
+) {
+    const pool = await getConnection();
+
+    const result = await pool.request()
+        .input("idSucursal", idSucursal)
+        .input("fechaInicio", fechaInicio)
+        .input("fechaFin", fechaFin)
+        .input("cantidadHuespedes", cantidadHuespedes)
+        .query(`
+            SELECT *
+            FROM habitacion h
+            WHERE h.idSucursal = @idSucursal
+            AND h.capacidad >= @cantidadHuespedes
+            AND h.idHabitacion NOT IN (
+                SELECT idHabitacion FROM reserva
+                WHERE (fechaInicio <= @fechaFin)
+                AND (fechaFin >= @fechaInicio)
+                AND idEstadoReserva <> 3
+            )
+        `);
+
+    return result.recordset;
+}
+
 
 
 

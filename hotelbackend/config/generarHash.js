@@ -1,2 +1,2 @@
 import bcrypt from "bcrypt";
-bcrypt.hash("Cliente123", 10).then(console.log);
+bcrypt.hash("Hotel123", 10).then(console.log);

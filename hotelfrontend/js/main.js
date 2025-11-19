@@ -173,7 +173,7 @@
     /*--------------------------
         Select
     ----------------------------*/
-    $("select").niceSelect();
+    $("select").not("#sucursalSelect").niceSelect();
     
 
     /*--------------------------
@@ -206,5 +206,36 @@
         dateFormat: 'dd M yy',
         minDate: 0
     });
+
+    async function cargarSucursales() {
+    const select = document.getElementById("sucursalSelect");
+
+    try {
+        const response = await fetch("http://localhost:3000/api/sucursales");
+        const data = await response.json();
+
+        select.innerHTML = `<option value="">Seleccione una sucursal</option>`;
+
+        data.forEach(s => {
+            select.innerHTML += `
+                <option value="${s.idSucursal}">
+                    ${s.nombre} - ${s.direccion}
+                </option>
+            `;
+        });
+
+    } catch (error) {
+        select.innerHTML = `<option value="">Error al cargar</option>`;
+    }
+}
+
+document.addEventListener("DOMContentLoaded", cargarSucursales);
+
+// Refrescar selects después de cargar DOM
+document.addEventListener("DOMContentLoaded", () => {
+    setTimeout(() => {
+        $("select").niceSelect('update');
+    }, 200);
+});
 
 })(jQuery);

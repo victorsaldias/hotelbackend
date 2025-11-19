@@ -25,7 +25,6 @@
         <div class="loader"></div>
     </div>
 
-   
     <div class="offcanvas-menu-overlay"></div>
     <div class="offcanvas-menu-wrapper">
         <div class="offcanvas__logo">
@@ -41,34 +40,33 @@
         
         <div class="offcanvas__auth">
            <ul>
-                <li><a href="login.html">Login</a></li>
-                <li><a href="registro.html">Registrarse</a></li>
+                <li><a href="login.html" id="mobileLoginBtn">Login</a></li>
+                <li><a href="registro.html" id="mobileRegisterBtn">Registrarse</a></li>
+                <li><a href="#" id="mobileLogoutBtn" style="display:none;">Cerrar Sesión</a></li>
             </ul>
         </div>
     </div>
 
-   
     <header class="header">
         <div class="header__top">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-7">
                         <ul class="header__top__widget">
-                            
                             <li><span class="icon_phone"></span> (123) 456-78-910</li>
                         </ul>
                     </div>
-                   <div class="col-lg-5">
-    <div class="header__top__right">
-        <div class="header__top__auth">
-            <ul>
-                <li><a href="login.html">Login</a></li>
-                <li><a href="registro.html">Registrarse</a></li>
-            </ul>
-        </div>
-    </div>
-</div>
-
+                    <div class="col-lg-5">
+                        <div class="header__top__right">
+                            <div class="header__top__auth">
+                                <ul>
+                                    <li><a href="login.html" id="loginBtn">Login</a></li>
+                                    <li><a href="registro.html" id="registerBtn">Registrarse</a></li>
+                                    <li><a href="#" id="logoutBtn" style="display:none;">Cerrar Sesión</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -90,7 +88,6 @@
                                     <li><a href="./about.html">Sobre Nosotros</a></li>
                                 </ul>
                             </nav>
-                            
                         </div>
                     </div>
                 </div>
@@ -101,60 +98,78 @@
         </div>
     </header>
 
-    
     <section class="hero spad set-bg" data-setbg="../img/hero.jpg">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="hero__text">
-                        <h5>BIENVENIDO A "Nombre Hotel"</h5>
-                        <h2>Vive unas vacaciones inolvidables.</h2>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+
+                <div class="hero__text">
+                    <h5>BIENVENIDO A "Nombre Hotel"</h5>
+                    <h2>Vive unas vacaciones inolvidables.</h2>
+                </div>
+
+                <form action="#" class="filter__form">
+                    <div class="filter__form__item filter__form__item--search">
+                        <p>Sucursal</p>
+
+                        <div class="filter__form__input" style="position: relative;">
+
+                            <select id="sucursalSelect" class="form-control"
+                                style="width:100%; height:48px; border:none; padding-left:15px; 
+                                       background:#fff; color:#000; appearance:none; 
+                                       -webkit-appearance:none; -moz-appearance:none;">
+                                <option value="">Cargando sucursales...</option>
+                            </select>
+
+                            <span class="icon_search"
+                                style="position:absolute; right:15px; top:50%; 
+                                       transform:translateY(-50%); pointer-events:none;">
+                            </span>
+
+                        </div>
                     </div>
 
-                    
-                    <form action="#" class="filter__form">
-                        <div class="filter__form__item filter__form__item--search">
-                            <p>Ubicación</p>
-                            <div class="filter__form__input">
-                                <input type="text" placeholder="Buscar ubicación">
-                                <span class="icon_search"></span>
-                            </div>
+                    <div class="filter__form__item">
+                        <p>Fecha de Entrada</p>
+                        <div class="filter__form__datepicker">
+                            <span class="icon_calendar"></span>
+                            <input type="text" class="datepicker_pop check__in">
+                            <i class="arrow_carrot-down"></i>
                         </div>
-                        <div class="filter__form__item">
-                            <p>Fecha de Entrada</p>
-                            <div class="filter__form__datepicker">
-                                <span class="icon_calendar"></span>
-                                <input type="text" class="datepicker_pop check__in">
-                                <i class="arrow_carrot-down"></i>
-                            </div>
+                    </div>
+
+                    <div class="filter__form__item">
+                        <p>Fecha de Salida</p>
+                        <div class="filter__form__datepicker">
+                            <span class="icon_calendar"></span>
+                            <input type="text" class="datepicker_pop check__out">
+                            <i class="arrow_carrot-down"></i>
                         </div>
-                        <div class="filter__form__item">
-                            <p>Fecha de Salida</p>
-                            <div class="filter__form__datepicker">
-                                <span class="icon_calendar"></span>
-                                <input type="text" class="datepicker_pop check__out">
-                                <i class="arrow_carrot-down"></i>
-                            </div>
-                        </div>
-                        <div class="filter__form__item filter__form__item--select">
-                            <p>Personas</p>
-                            <div class="filter__form__select">
-                                <span class="icon_group"></span>
-                                <select>
-                                    <option value="">2 Adultos, 1 Niño</option>
-                                    <option value="">2 Adultos</option>
-                                    <option value="">1 Adulto</option>
-                                </select>
-                            </div>
-                        </div>
-                        <button type="submit">Buscar Habitacion</button>
-                    </form>
-                </div>
+                    </div>
+
+                    <div class="filter__form__item filter__form__item--select">
+                        <p>Huéspedes</p>
+                    <div class="filter__form__select">
+                        <span class="icon_group"></span>
+                            <select id="huespedesSelect">
+                                <option value="1">1 Huésped</option>
+                                <option value="2">2 Huéspedes</option>
+                                <option value="3">3 Huéspedes</option>
+                                <option value="4">4 Huéspedes</option>
+                                <option value="5">5 Huéspedes</option>
+                            </select>
+    </div>
+</div>
+                    <button type="submit">Buscar Habitacion</button>
+
+                </form>
+
             </div>
         </div>
-    </section>
+    </div>
+</section>
 
-    
+
    <section class="services spad">
     <div class="container">
         <div class="row">
@@ -211,8 +226,6 @@
     </div>
 </section>
 
-
-   
    <section class="home-room spad">
     <div class="container">
         <div class="row">
@@ -228,7 +241,6 @@
     <div class="container-fluid">
         <div class="row">
 
-            
             <div class="col-lg-3 col-md-6 col-sm-6 p-0">
                 <div class="home__room__item set-bg" data-setbg="../img/home-room/hr-1.jpg">
                     <div class="home__room__title">
@@ -239,7 +251,6 @@
                 </div>
             </div>
 
-            
             <div class="col-lg-3 col-md-6 col-sm-6 p-0">
                 <div class="home__room__item set-bg" data-setbg="../img/home-room/hr-2.jpg">
                     <div class="home__room__title">
@@ -250,7 +261,6 @@
                 </div>
             </div>
 
-           
             <div class="col-lg-3 col-md-6 col-sm-6 p-0">
                 <div class="home__room__item set-bg" data-setbg="../img/home-room/hr-3.jpg">
                     <div class="home__room__title">
@@ -261,7 +271,6 @@
                 </div>
             </div>
 
-            
             <div class="col-lg-3 col-md-6 col-sm-6 p-0">
                 <div class="home__room__item set-bg" data-setbg="../img/home-room/hr-4.jpg">
                     <div class="home__room__title">
@@ -276,8 +285,6 @@
     </div>
 </section>
 
-
-    
     <script src="../js/jquery-3.3.1.min.js"></script>
     <script src="../js/bootstrap.min.js"></script>
     <script src="../js/jquery.nice-select.min.js"></script>
@@ -285,6 +292,7 @@
     <script src="../js/jquery.slicknav.js"></script>
     <script src="../js/owl.carousel.min.js"></script>
     <script src="../js/main.js"></script>
+    <script src="../js/authStatus.js"></script>
 
 </body>
 </html>
