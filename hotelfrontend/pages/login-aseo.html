@@ -3,10 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Login Personal de Aseo</title>
+<title>Login - Sistema Hotel</title>
 
 <link rel="stylesheet" href="../css/aseo.css">
-
 
 </head>
 
@@ -15,15 +14,16 @@
 <div class="login-container">
     <img src="https://cdn-icons-png.flaticon.com/512/747/747376.png">
     
-    <p>login</p>
+    <p>Iniciar Sesión</p>
 
-    <input type="email" placeholder="correo">
-    <input type="password" placeholder="contraseña">
+    <input type="email" id="loginCorreo" placeholder="Correo" required>
+    <input type="password" id="loginPassword" placeholder="Contraseña" required>
 
-    <a href="#">olvidaste tu contraseña?</a>
-
-    <button class="btn-login">iniciar sesión</button>
+    <button class="btn-login" onclick="loginEmpleado()">Ingresar</button>
 </div>
+
+<script src="../js/loginEmpleado.js"></script>
 
 </body>
 </html>
+
