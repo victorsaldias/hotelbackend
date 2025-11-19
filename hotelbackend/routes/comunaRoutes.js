@@ -1,8 +1,8 @@
 import express from "express";
-import { listarComunas } from "../controller/comunaController.js";
+import { listarComunasPorProvincia } from "../controller/comunaController.js";
 
 const router = express.Router();
 
-router.get("/", listarComunas);
+router.get("/:idProvincia", listarComunasPorProvincia);
 
 export default router;

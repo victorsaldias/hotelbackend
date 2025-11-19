@@ -1,14 +1,11 @@
-import { getConnection } from "../config/dbConfig.js";
+import { obtenerComunasPorProvincia } from "../model/Comuna.js";
 
-
-export async function listarComunas(req, res) {
+export async function listarComunasPorProvincia(req, res) {
     try {
-        const pool = await getConnection();
-        const result = await pool.request().query("SELECT idComuna, nombre FROM Comuna");
-
-        res.json(result.recordset);
-
-    } catch (error) {
-        res.status(500).json({ message: error.message });
+        const { idProvincia } = req.params;
+        const comunas = await obtenerComunasPorProvincia(idProvincia);
+        res.json(comunas);
+    } catch (e) {
+        res.status(500).json({ message: e.message });
     }
 }

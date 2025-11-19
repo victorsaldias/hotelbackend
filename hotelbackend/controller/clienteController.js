@@ -1,29 +1,40 @@
+import bcrypt from "bcryptjs";
 import {
   insertarCliente,
   obtenerClientePorRut,
   actualizarCliente
-} from '../model/clienteModel.js';
+} from "../model/clienteModel.js";
 
-// CREAR CLIENTE
+
 export const crearCliente = async (req, res) => {
   try {
-      const nuevoCliente = req.body;
+      let nuevoCliente = req.body;
+
+     
+      if (!nuevoCliente.password || !nuevoCliente.rut) {
+          return res.status(400).json({ message: "RUT y contraseña son obligatorios." });
+      }
+
+      
+      const passwordHash = await bcrypt.hash(nuevoCliente.password, 10);
+      nuevoCliente.password = passwordHash;
+
       const cliente = await insertarCliente(nuevoCliente);
 
-      res.status(201).json({ 
-        message: "Cliente creado exitosamente", 
-        cliente 
+      res.status(201).json({
+        message: "Cliente creado exitosamente",
+        cliente
       });
-  }
-  catch (error) {
-      res.status(500).json({ 
-        message: "Error al crear el cliente", 
-        error: error.message 
+
+  } catch (error) {
+      res.status(500).json({
+        message: "Error al crear el cliente",
+        error: error.message
       });
   }
 };
 
-// OBTENER CLIENTE POR RUT
+
 export const obtenerCliente = async (req, res) => {
   try {
       const rut = req.params.rut;
@@ -36,25 +47,31 @@ export const obtenerCliente = async (req, res) => {
       }
 
   } catch (error) {
-      res.status(500).json({ 
-        message: "Error al obtener el cliente", 
-        error: error.message 
+      res.status(500).json({
+        message: "Error al obtener el cliente",
+        error: error.message
       });
   }
 };
 
-// MODIFICAR CLIENTE POR RUT
+
 export const modificarCliente = async (req, res) => {
   try {
       const rut = req.params.rut;
-      const datosActualizados = req.body;
+      let datosActualizados = req.body;
+
+      
+      if (datosActualizados.password) {
+          const passwordHash = await bcrypt.hash(datosActualizados.password, 10);
+          datosActualizados.password = passwordHash;
+      }
 
       const clienteActualizado = await actualizarCliente(rut, datosActualizados);
 
       if (clienteActualizado) {
-          res.status(200).json({ 
-            message: "Cliente actualizado exitosamente", 
-            cliente: clienteActualizado 
+          res.status(200).json({
+            message: "Cliente actualizado exitosamente",
+            cliente: clienteActualizado
           });
       } else {
           res.status(404).json({ message: "Cliente no encontrado" });
