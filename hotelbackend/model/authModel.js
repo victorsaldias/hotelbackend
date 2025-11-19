@@ -1,12 +1,22 @@
 import { getConnection } from "../config/dbConfig.js";
-import sql from "mssql";
 
 export async function buscarClientePorCorreo(correo) {
-    const pool = await getConnection();
+    try {
+        const pool = await getConnection();
 
-    const result = await pool.request()
-        .input("correo", sql.VarChar, correo)
-        .query("SELECT * FROM cliente WHERE correo = @correo");
+        const result = await pool.request()
+            .input("correo", correo)
+            .query(`
+                SELECT *
+                FROM cliente
+                WHERE correo = @correo
+            `);
 
-    return result.recordset[0];
+        console.log("Resultado cliente:", result.recordset); // <-- DEBUG
+
+        return result.recordset[0] || null;
+    } catch (error) {
+        console.error("Error en buscarClientePorCorreo:", error);
+        return null;
+    }
 }

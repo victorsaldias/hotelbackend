@@ -9,7 +9,7 @@ import {
   actualizarEstadoHabitacionController,
   asignarHabitacionController
 
-} from '../controller/habitacionController.js';
+} from '../controllers/habitacionController.js';
 
 const router = express.Router();
 

@@ -7,7 +7,7 @@ import {
     traerHistorialReservas,
     modificarReservaController,
     modificarHabitacionReservaController
-} from '../controller/reservaController.js';
+} from '../controllers/reservaController.js';
 
 const router = express.Router();    
 

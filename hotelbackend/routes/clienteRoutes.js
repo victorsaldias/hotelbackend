@@ -3,7 +3,7 @@ import {
     crearCliente,
     obtenerCliente,
     modificarCliente               
-} from "../controller/clienteController.js";
+} from "../controllers/clienteController.js";
 
 const router = express.Router();
 

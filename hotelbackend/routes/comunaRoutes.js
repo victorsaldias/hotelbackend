@@ -1,5 +1,5 @@
 import express from "express";
-import { listarComunas } from "../controller/comunaController.js";
+import { listarComunas } from "../controllers/comunaController.js";
 
 const router = express.Router();
 

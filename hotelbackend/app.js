@@ -1,29 +1,29 @@
-import express from "express";
+import express, { Router } from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import session from "express-session"; 
 dotenv.config();
 
-import indexRoutes from "..routes/indexRoutes.js";
+import router from "./routes/index.js";
 import habitacionRoutes from "./routes/habitacionRoutes.js";
 import clienteRoutes from "./routes/clienteRoutes.js";
 import reservaRoutes from "./routes/reservaRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
+import empleadoRoutes from "./routes/empleadoRoutes.js";
 
 const app = express();
 
-//Middlewares
-app.use(cors);
 app.use(express.json());
 
-
+// Configurar CORS
 app.use(cors({
     origin: [
         'http://localhost:5500',
         'http://192.168.0.16:5500',
         'http://127.0.0.1:5500',
         'http://localhost:5000',
-        'http://localhost:4000'
+        'http://localhost:4000',
+        'http://localhost:3000'
     ],
     credentials: true
 }));
@@ -42,10 +42,11 @@ app.use(session({
 }));
 
 
-app.use("/", indexRoutes);
+app.use("/", router);
 app.use("/api/habitaciones", habitacionRoutes);
 app.use("/api/clientes", clienteRoutes);
 app.use("/api/reservas", reservaRoutes);
 app.use("/api/auth", authRoutes);
+app.use("/api/empleados", empleadoRoutes);
 
 export default app;
