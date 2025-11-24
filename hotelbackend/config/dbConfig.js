@@ -1,5 +1,6 @@
 import sql from "mssql";
 import dotenv from "dotenv";
+
 dotenv.config();
 
 console.log("Cargando variables .env:");

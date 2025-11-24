@@ -1,4 +1,5 @@
 import { getConnection } from "../config/dbConfig.js";
+import { obtenerHabitacionPorId } from "./habitacionModel.js";
 
 export async function obtenerSucursales() {
     try {
@@ -13,3 +14,4 @@ export async function obtenerSucursales() {
         throw new Error("Error al obtener sucursales: " + error.message);
     }
 }
+

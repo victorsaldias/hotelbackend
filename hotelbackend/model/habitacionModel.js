@@ -1,13 +1,22 @@
 import {getConnection} from "../config/dbConfig.js";
 
 export async function obtenerHabitacionesDisponibles() {
-  const pool = await getConnection();
+    const pool = await getConnection();
     const result = await pool
-    .request()
-    .query("SELECT * FROM habitacion WHERE idEstadoHabitacion = '1';"
-    );
+        .request()
+        .query(`
+            SELECT 
+                h.*,
+                s.nombre AS nombreSucursal,
+                s.direccion AS direccionSucursal
+            FROM habitacion h
+            INNER JOIN sucursal s ON s.idSucursal = h.idSucursal
+            WHERE h.idEstadoHabitacion = 1;
+        `);
+
     return result.recordset;
 }
+
 
 export async function obtenerHabitacionPorNumero(numero) {
   const pool = await getConnection();
@@ -122,8 +131,12 @@ export async function buscarHabitacionesPorCapacidadYFechas(
         .input("fechaFin", fechaFin)
         .input("cantidadHuespedes", cantidadHuespedes)
         .query(`
-            SELECT *
+            SELECT 
+                h.*,
+                s.nombre AS nombreSucursal,
+                s.direccion AS direccionSucursal
             FROM habitacion h
+            INNER JOIN sucursal s ON s.idSucursal = h.idSucursal
             WHERE h.idSucursal = @idSucursal
             AND h.capacidad >= @cantidadHuespedes
             AND h.idHabitacion NOT IN (
@@ -136,6 +149,7 @@ export async function buscarHabitacionesPorCapacidadYFechas(
 
     return result.recordset;
 }
+
 
 
 

@@ -5,4 +5,6 @@ const router = express.Router();
 
 router.get("/", obtenerSucursales);
 
+router
+
 export default router;

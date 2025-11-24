@@ -176,6 +176,7 @@
     $("select").not("#sucursalSelect").niceSelect();
     
 
+    
     /*--------------------------
         Datepicker
     ----------------------------*/
@@ -210,22 +211,30 @@
     async function cargarSucursales() {
     const select = document.getElementById("sucursalSelect");
 
-    try {
-        const response = await fetch("http://localhost:3000/api/sucursales");
-        const data = await response.json();
+   try {
+    const response = await fetch("http://localhost:3000/api/sucursales/");
+    const data = await response.json();
 
-        select.innerHTML = `<option value="">Seleccione una sucursal</option>`;
+    select.innerHTML = `<option value="">Seleccione una sucursal</option>`;
 
-        data.forEach(s => {
-            select.innerHTML += `
-                <option value="${s.idSucursal}">
-                    ${s.nombre} - ${s.direccion}
-                </option>
-            `;
-        });
+    data.forEach(s => {
+        select.innerHTML += `
+            <option value="${s.idSucursal}">
+                ${s.nombre} - ${s.direccion}
+            </option>
+        `;
+    });
 
     } catch (error) {
-        select.innerHTML = `<option value="">Error al cargar</option>`;
+
+    Swal.fire({
+        icon: "error",
+        title: "Error al cargar sucursales",
+        text: "No se pudieron cargar las sucursales, intente nuevamente.",
+        confirmButtonColor: "#d33"
+    });
+
+    select.innerHTML = `<option value="">Error al cargar</option>`;
     }
 }
 
@@ -238,4 +247,51 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 200);
 });
 
-})(jQuery);
+function convertirFecha(fechaString) {
+    const d = new Date(fechaString);
+    return d.toISOString().split("T")[0]; // YYYY-MM-DD
+}
+
+document.querySelector(".filter__form").addEventListener("submit", async function (e) {
+    e.preventDefault();
+
+    const idSucursal = document.getElementById("sucursalSelect").value;
+
+    let fechaInicio = convertirFecha(document.querySelector(".check__in").value);
+    let fechaFin = convertirFecha(document.querySelector(".check__out").value);
+
+    const cantidadHuespedes = document.getElementById("huespedesSelect").value;
+
+    if (!idSucursal) {
+        alert("Seleccione una sucursal");
+        return;
+    }
+
+    try {
+        const query = new URLSearchParams({
+            idSucursal,
+            fechaInicio,
+            fechaFin,
+            cantidadHuespedes
+        });
+
+        const response = await fetch(`http://localhost:3000/api/habitaciones/disponibles?${query}`);
+        
+        if (!response.ok) {
+            alert("Error al buscar habitaciones");
+            return;
+        }
+
+        const data = await response.json();
+
+        localStorage.setItem("habitacionesBusqueda", JSON.stringify(data));
+
+        window.location.href = "rooms.html";
+
+    } catch (error) {
+        console.error(error);
+        alert("Error al conectar con el servidor");
+    }
+});
+}
+)(jQuery);

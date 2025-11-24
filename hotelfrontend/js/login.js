@@ -38,22 +38,31 @@
             data: JSON.stringify({ correo, password }),
 
             success: function(response) {
-                Swal.fire({
-                    title: "¡Bienvenido!",
-                    text: "Inicio de sesión exitoso.",
-                    icon: "success",
-                    confirmButtonColor: "#d8c04c"
-                }).then(() => {
 
-                    // Guardar info del usuario
-                    localStorage.setItem("clienteNombre", response.nombre ?? "");
-                    localStorage.setItem("clienteApellido", response.apellido ?? "");
-                    localStorage.setItem("clienteId", response.idCliente ?? "");
-                    localStorage.setItem("userLogged", "true");
+               Swal.fire({
+    title: "¡Bienvenido!",
+    text: "Inicio de sesión exitoso.",
+    icon: "success",
+    showConfirmButton: false,    
+    timer: 1200,                 
+    timerProgressBar: true
+});
 
-                    window.location.href = "./index.html";
-                });
+setTimeout(() => {
+    // TOKEN
+    localStorage.setItem("token", response.token);
+
+    // Guardar info del usuario
+    localStorage.setItem("clienteNombre", response.nombre ?? "");
+    localStorage.setItem("clienteApellido", response.apellido ?? "");
+    localStorage.setItem("clienteId", response.idCliente ?? "");
+    localStorage.setItem("userLogged", "true");
+
+    // EVITA VOLVER ATRÁS
+    window.location.replace("./index.html");
+}, 1200);
             },
+        
 
             error: function(xhr) {
                 let msg = "Error desconocido.";
@@ -78,3 +87,4 @@
     });
 
 })(jQuery);
+

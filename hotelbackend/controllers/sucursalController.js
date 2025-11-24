@@ -12,3 +12,16 @@ export async function obtenerSucursales(req, res) {
         });
     }
 }
+
+export async function listarSucursales(req, res) {
+    try {
+        const sucursales = await obtenerSucursales();
+        res.status(200).json(sucursales);
+
+    } catch (error) {
+        res.status(500).json({
+            message: "Error al obtener sucursales",
+            error: error.message
+        });
+    }
+}

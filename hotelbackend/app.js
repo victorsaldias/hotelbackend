@@ -5,6 +5,11 @@ import session from "express-session";
 
 dotenv.config();
 
+console.log("📦 VARIABLES CARGADAS:");
+console.log("DB_USER:", process.env.DB_USER);
+console.log("DB_SERVER:", process.env.DB_SERVER);
+console.log("DB_DATABASE:", process.env.DB_DATABASE);
+
 import router from "./routes/index.js";
 import habitacionRoutes from "./routes/habitacionRoutes.js";
 import clienteRoutes from "./routes/clienteRoutes.js";

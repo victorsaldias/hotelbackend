@@ -9,7 +9,6 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Habitaciones | Hotel</title>
 
-
     <link rel="stylesheet" href="../css/bootstrap.min.css" type="text/css">
     <link rel="stylesheet" href="../css/font-awesome.min.css" type="text/css">
     <link rel="stylesheet" href="../css/elegant-icons.css" type="text/css">
@@ -34,10 +33,7 @@
             <a href="index.html"><img src="../img/logo.png" alt=""></a>
         </div>
 
-        <!-- Slicknav insertará el menú aquí -->
         <div id="mobile-menu-wrap"></div>
-
-        
 
         <div class="offcanvas__widget">
             <ul>
@@ -45,10 +41,11 @@
             </ul>
         </div>
 
-        <div class="offcanvas__auth">
-            <ul>
-                <li><a href="login.html">Login</a></li>
-                <li><a href="registro.html">Registrarse</a></li>
+       <div class="offcanvas__auth">
+           <ul>
+                <li><a href="login.html" id="mobileLoginBtn">Login</a></li>
+                <li><a href="registro.html" id="mobileRegisterBtn">Registrarse</a></li>
+                <li><a href="#" id="mobileLogoutBtn" style="display:none;">Cerrar Sesión</a></li>
             </ul>
         </div>
 
@@ -81,6 +78,7 @@
                 </div>
             </div>
         </div>
+
 
         <div class="header__nav__option">
             <div class="container">
@@ -128,107 +126,11 @@
         </div>
     </div>
 
-    <!-- ROOMS SECTION -->
+    <!-- ROOMS SECTION (DINÁMICO) -->
     <section class="rooms spad">
         <div class="container">
-            <div class="row">
-
-                <!-- HABITACIÓN 1 -->
-                <div class="col-lg-6">
-                    <div class="room__pic__slider owl-carousel">
-                        <div class="room__pic__item set-bg" data-setbg="../img/rooms/room-1.jpg"></div>
-                        <div class="room__pic__item set-bg" data-setbg="../img/rooms/room-2.jpg"></div>
-                    </div>
-                </div>
-
-                <div class="col-lg-6">
-                    <div class="room__text">
-                        <h3>Habitación Premium King</h3>
-                        <h2><sup>$</sup>99<span>/día</span></h2>
-
-                        <ul>
-                            <li><span>Tamaño:</span> 30 m²</li>
-                            <li><span>Capacidad:</span> 3 personas</li>
-                            <li><span>Cama:</span> King</li>
-                            <li><span>Servicios:</span> WiFi, TV, Baño privado</li>
-                        </ul>
-
-                        <a href="room-details.html?room=1">Ver Detalles</a>
-                    </div>
-                </div>
-
-                <!-- HABITACIÓN 2 -->
-                <div class="col-lg-6">
-                    <div class="room__pic__slider owl-carousel">
-                        <div class="room__pic__item set-bg" data-setbg="../img/rooms/room-3.jpg"></div>
-                        <div class="room__pic__item set-bg" data-setbg="../img/rooms/room-4.jpg"></div>
-                    </div>
-                </div>
-
-                <div class="col-lg-6">
-                    <div class="room__text">
-                        <h3>Habitación Deluxe</h3>
-                        <h2><sup>$</sup>86<span>/día</span></h2>
-
-                        <ul>
-                            <li><span>Tamaño:</span> 28 m²</li>
-                            <li><span>Capacidad:</span> 2 personas</li>
-                            <li><span>Cama:</span> Queen</li>
-                            <li><span>Servicios:</span> WiFi, TV, Baño privado</li>
-                        </ul>
-
-                        <a href="room-details.html?room=2">Ver Detalles</a>
-                    </div>
-                </div>
-
-                <!-- HABITACIÓN 3 -->
-                <div class="col-lg-6">
-                    <div class="room__pic__slider owl-carousel">
-                        <div class="room__pic__item set-bg" data-setbg="../img/rooms/details/rd-1.jpg"></div>
-                        <div class="room__pic__item set-bg" data-setbg="../img/rooms/details/rd-2.jpg"></div>
-                    </div>
-                </div>
-
-                <div class="col-lg-6">
-                    <div class="room__text">
-                        <h3>Suite Ejecutiva</h3>
-                        <h2><sup>$</sup>120<span>/día</span></h2>
-
-                        <ul>
-                            <li><span>Tamaño:</span> 40 m²</li>
-                            <li><span>Capacidad:</span> 4 personas</li>
-                            <li><span>Cama:</span> King + Sofá cama</li>
-                            <li><span>Servicios:</span> WiFi, TV Smart, Minibar</li>
-                        </ul>
-
-                        <a href="room-details.html?room=3">Ver Detalles</a>
-                    </div>
-                </div>
-
-                <!-- HABITACIÓN 4 -->
-                <div class="col-lg-6">
-                    <div class="room__pic__slider owl-carousel">
-                        <div class="room__pic__item set-bg" data-setbg="../img/rooms/details/rd-3.jpg"></div>
-                        <div class="room__pic__item set-bg" data-setbg="../img/rooms/details/rd-4.jpg"></div>
-                    </div>
-                </div>
-
-                <div class="col-lg-6">
-                    <div class="room__text">
-                        <h3>Suite Familiar</h3>
-                        <h2><sup>$</sup>150<span>/día</span></h2>
-
-                        <ul>
-                            <li><span>Tamaño:</span> 50 m²</li>
-                            <li><span>Capacidad:</span> 5 personas</li>
-                            <li><span>Cama:</span> 2 Queen</li>
-                            <li><span>Servicios:</span> Cocina, TV, WiFi</li>
-                        </ul>
-
-                        <a href="room-details.html?room=4">Ver Detalles</a>
-                    </div>
-                </div>
-
+            <div class="row" id="roomsContainer">
+                <!-- Aquí se insertan las habitaciones dinámicas -->
             </div>
         </div>
     </section>
@@ -251,7 +153,9 @@
     <script src="../js/owl.carousel.min.js"></script>
     <script src="../js/main.js"></script>
 
+    <!-- JS DINÁMICO -->
+    <script src="../js/rooms.js"></script>
+    <script src="../js/authGuardReservas.js"></script>
+
 </body>
-
-
 </html>
