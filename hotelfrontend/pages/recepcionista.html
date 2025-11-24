@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <title>Panel del Recepcionista</title>
@@ -16,15 +17,23 @@
         <h2 class="sidebar-title">Hotel XYZ</h2>
 
         <ul class="menu">
+
             <li class="active" onclick="location.href='recepcionista.html'">
-                <i class="fa fa-bed"></i> Reservas
+                <i class="fa fa-bed"></i> Registrar Reservas
             </li>
+
+            <li onclick="location.href='registrar-cliente.html'">
+                <i class="fa fa-user-plus"></i> Registrar Cliente
+            </li>
+
             <li onclick="location.href='perfil-recepcionista.html'">
                 <i class="fa fa-user"></i> Mi Perfil
             </li>
+
             <li onclick="location.href='../index.html'" style="color:#ff6b6b;">
                 <i class="fa fa-sign-out-alt"></i> Cerrar Sesión
             </li>
+
         </ul>
     </aside>
 
@@ -32,29 +41,27 @@
 
         <header class="topbar">
             <h2>Panel del Recepcionista</h2>
-            <span>Recepcionista</span>
+            <span id="recepName">Recepcionista</span>
         </header>
 
         <div class="actions">
-            <input type="text" id="buscarReserva" class="search" placeholder="Buscar reserva por nombre, apellido, RUT o habitación...">
+            <input type="text" id="buscarReserva" class="search" placeholder="Buscar reserva por cliente, RUT o habitación...">
             <button class="btn-add" onclick="abrirModalReserva()">Registrar Reserva</button>
         </div>
 
         <div class="table-container">
             <table class="tabla">
                 <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Nombre</th>
-                        <th>Apellido</th>
-                        <th>RUT</th>
-                        <th>Correo</th>
-                        <th>Habitación</th>
-                        <th>Entrada</th>
-                        <th>Salida</th>
-                        <th>Estado</th>
-                        <th>Acción</th>
-                    </tr>
+                <tr>
+            <th>Nombre</th>
+            <th>Apellido</th>
+            <th>RUT</th>
+            <th>Habitación</th>
+            <th>Entrada</th>
+            <th>Salida</th>
+            <th>Total</th>
+            <th>Estado</th>
+        </tr>
                 </thead>
                 <tbody id="listaReservas"></tbody>
             </table>
@@ -63,6 +70,7 @@
     </main>
 </div>
 
+
 <div class="modal" id="modalReserva">
     <div class="modal-content">
 
@@ -70,17 +78,17 @@
 
         <div class="form-grid">
 
-            <h4 style="grid-column: span 2;">Datos del Cliente</h4>
+            <h4 style="grid-column: span 2;">Seleccionar Cliente</h4>
 
-            <input type="text" id="reservaNombre" placeholder="Nombre" required>
-            <input type="text" id="reservaApellido" placeholder="Apellido" required>
+            <select id="reservaCliente" required style="grid-column: span 2;">
+                <option value="">Seleccione un cliente…</option>
+            </select>
 
-            <input type="text" id="reservaRut" placeholder="RUT" required>
-            <input type="email" id="reservaCorreo" placeholder="Correo" required>
+            <h4 style="grid-column: span 2; margin-top: 10px;">Seleccionar Habitación Disponible</h4>
 
-            <h4 style="grid-column: span 2; margin-top: 10px;">Datos de la Reserva</h4>
-
-            <input type="number" id="reservaHabitacion" placeholder="N° Habitación" required>
+            <select id="reservaHabitacion" required style="grid-column: span 2;">
+                <option value="">Seleccione una habitación…</option>
+            </select>
 
             <label>Fecha Entrada:</label>
             <input type="date" id="reservaEntrada" required>
@@ -88,21 +96,17 @@
             <label>Fecha Salida:</label>
             <input type="date" id="reservaSalida" required>
 
-            <select id="reservaEstado">
-                <option value="pendiente">Pendiente</option>
-                <option value="confirmada">Confirmada</option>
-                <option value="cancelada">Cancelada</option>
-            </select>
-
         </div>
 
         <div class="modal-actions">
-            <button class="btn-save">Guardar</button>
+            <button class="btn-save" id="btnGuardarReserva">Guardar</button>
             <button class="btn-cancel" onclick="cerrarModalReserva()">Cerrar</button>
         </div>
 
     </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="../js/recepcionista.js"></script>
 
 </body>
 </html>

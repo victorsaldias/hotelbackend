@@ -1,235 +1,202 @@
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
-import { 
-    buscarEmpleadoPorCorreo, 
-    crearEmpleadoBD,
-    listarEmpleadosBD
+import {
+    obtenerTodosLosEmpleados,
+    obtenerEmpleadoPorIdModel,
+    crearEmpleadoModel,
+    actualizarEmpleadoModel,
+    eliminarEmpleadoModel,
+    buscarEmpleadosModel
 } from "../model/empleadoModel.js";
 
-// LOGIN EMPLEADO POR CORREO
-export async function loginEmpleado(req, res) {
 
-    const { correo, password } = req.body;
-
+export async function obtenerEmpleados(req, res) {
     try {
-        if (!correo || !password) {
-            return res.status(400).json({ message: "Correo y contraseña obligatorios." });
-        }
-
-        // Buscar empleado por correo
-        const empleado = await buscarEmpleadoPorCorreo(correo);
-
-        if (!empleado) {
-            return res.status(401).json({ message: "Correo o contraseña incorrectos." });
-        }
-
-        // Comparar contraseña usando bcryptjs
-        const coincide = await bcrypt.compare(password, empleado.password);
-
-        if (!coincide) {
-            return res.status(401).json({ message: "Correo o contraseña incorrectos." });
-        }
-
-        // Datos dentro del token
-        const payload = {
-            idEmpleado: empleado.idEmpleado,
-            correo: empleado.correo,
-            rol: empleado.rol,
-            idSucursal: empleado.idSucursal
-        };
-
-        // Crear token JWT
-        const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "8h" });
-
+        const empleados = await obtenerTodosLosEmpleados();
         return res.status(200).json({
-            message: "Login exitoso",
-            token,
-            empleado: {
-                idEmpleado: empleado.idEmpleado,
-                nombre: empleado.nombre,
-                apellido: empleado.apellido,
-                rol: empleado.rol,
-                correo: empleado.correo
-            }
+            success: true,
+            empleados
         });
-
     } catch (error) {
-        console.error("Error login empleado:", error);
-        return res.status(500).json({ message: "Error interno del servidor." });
+        console.error("❌ Error en obtenerEmpleados:", error);
+        return res.status(500).json({
+            success: false,
+            message: "Error al obtener empleados"
+        });
     }
 }
 
 
-
-// CREAR EMPLEADO (ADMIN) CON CONTRASEÑA AUTOMÁTICA
-export async function crearEmpleado(req, res) {
-    const { rut, correo, nombre, apellido, rol, idEstadoEmpleado, idSucursal } = req.body;
-
+export async function obtenerEmpleadoPorId(req, res) {
     try {
-        if (!rut || !correo || !nombre || !apellido || !rol || !idEstadoEmpleado || !idSucursal) {
-            return res.status(400).json({ message: "Todos los campos son obligatorios." });
-        } 
+        const { id } = req.params;
+        const empleado = await obtenerEmpleadoPorIdModel(id);
 
-        const empleadoExistente = await buscarEmpleadoPorCorreo(correo);
-        if (empleadoExistente) {
-            return res.status(409).json({ message: "El correo ya está en uso." });
+        if (!empleado) {
+            return res.status(404).json({
+                success: false,
+                message: "Empleado no encontrado"
+            });
         }
 
-        // Generar contraseña automática
-        const passwordGenerada = generarPasswordAutomatico();
+        
+        delete empleado.password;
 
-        // Hashear con bcryptjs
-        const hashedPassword = await bcrypt.hash(passwordGenerada, 10);
+        return res.status(200).json({
+            success: true,
+            empleado
+        });
+    } catch (error) {
+        console.error("❌ Error en obtenerEmpleadoPorId:", error);
+        return res.status(500).json({
+            success: false,
+            message: "Error al obtener empleado"
+        });
+    }
+}
 
-        const nuevoEmpleado = {
+
+export async function crearEmpleado(req, res) {
+    try {
+        const { rut, nombre, apellido, correo, password, rol, idSucursal } = req.body;
+
+        
+        if (!rut || !nombre || !apellido || !correo || !password || !rol || !idSucursal) {
+            return res.status(400).json({
+                success: false,
+                message: "Todos los campos son obligatorios"
+            });
+        }
+
+        const passwordHash = await bcrypt.hash(password, 10);
+
+        const empleadoData = {
             rut,
-            correo,
-            password: hashedPassword,
             nombre,
             apellido,
+            correo,
+            password: passwordHash,
             rol,
-            idEstadoEmpleado,
-            idSucursal
+            idEstadoEmpleado: 1, 
+            idSucursal: parseInt(idSucursal)
         };
 
-        await crearEmpleadoBD(nuevoEmpleado);
+        const resultado = await crearEmpleadoModel(empleadoData);
+
+        console.log("✅ Empleado creado:", resultado.idEmpleado);
+
+        return res.status(201).json({
+            success: true,
+            message: "Empleado creado exitosamente",
+            idEmpleado: resultado.idEmpleado
+        });
+    } catch (error) {
+        console.error("❌ Error en crearEmpleado:", error);
         
-        return res.status(201).json({ 
-            message: "Empleado creado exitosamente.",
-            contraseñaTemporal: passwordGenerada  // El admin se la entrega al empleado
+        if (error.message.includes("duplicate") || error.message.includes("UNIQUE")) {
+            return res.status(409).json({
+                success: false,
+                message: "El correo o RUT ya existe"
+            });
+        }
+
+        return res.status(500).json({
+            success: false,
+            message: "Error al crear empleado"
         });
-
-    } catch (error) {
-        console.error("Error al crear empleado:", error);
-        return res.status(500).json({ message: "Error interno del servidor." });
-    } 
-}
-
-// LISTAR EMPLEADOS
-export async function listarEmpleados(req, res) {
-    try {
-        const empleados = await listarEmpleadosBD();
-        return res.status(200).json(empleados);
-
-    } catch (error) {
-        console.error("Error al listar empleados:", error);
-        return res.status(500).json({ message: "Error interno del servidor." });
     }
 }
 
-// CAMBIAR CONTRASEÑA (EMPLEADO LOGUEADO)
-export async function cambiarPasswordEmpleado(req, res) {
-    const idEmpleado = req.user?.idEmpleado; // viene del token JWT
-    const { passwordActual, passwordNueva } = req.body;
 
+export async function actualizarEmpleado(req, res) {
     try {
-        if (!idEmpleado) {
-            return res.status(401).json({ message: "No autenticado." });
-        }
+        const { id } = req.params;
+        const { rut, nombre, apellido, correo, password, rol, idEstadoEmpleado, idSucursal } = req.body;
 
-        if (!passwordActual || !passwordNueva) {
-            return res.status(400).json({ message: "Debes enviar contraseña actual y nueva." });
-        }
-
-        const empleado = await buscarEmpleadoPorId(idEmpleado);
-
-        if (!empleado) {
-            return res.status(404).json({ message: "Empleado no encontrado." });
-        }
-
-        const coincide = await bcrypt.compare(passwordActual, empleado.password);
-        if (!coincide) {
-            return res.status(401).json({ message: "La contraseña actual es incorrecta." });
-        }
-
-        const hashed = await bcrypt.hash(passwordNueva, 10);
-
-        await actualizarPasswordEmpleado(idEmpleado, hashed);
-
-        return res.status(200).json({ 
-            message: "Contraseña cambiada exitosamente."
-        });
-
-    } catch (error) {
-        console.error("Error al cambiar contraseña:", error);
-        return res.status(500).json({ message: "Error interno al cambiar contraseña." });
-    }
-}
-
-// MODIFICAR EMPLEADO(ADMIN)
-export async function modificarEmpleado(req, res) {
-    const idEmpleado = req.params.idEmpleado;
-    const { nombre, apellido, rol, idEstadoEmpleado, idSucursal, password } = req.body;
-
-    try {
-        if (!nombre || !apellido || !rol || !idEstadoEmpleado || !idSucursal) {
-            return res.status(400).json({ 
-                message: "Nombre, apellido, rol, estado e idSucursal son obligatorios."
+        
+        if (!rut || !nombre || !apellido || !correo || !rol || !idSucursal) {
+            return res.status(400).json({
+                success: false,
+                message: "Todos los campos son obligatorios"
             });
         }
 
-        // Sin cambio de contraseña
-        if (!password || password.trim() === "") {
-            await actualizarEmpleadoSinPassword({
-                idEmpleado,
-                nombre,
-                apellido,
-                rol,
-                idEstadoEmpleado,
-                idSucursal
-            });
-        } 
-        // Con cambio de contraseña
-        else {
-            const hashedPassword = await bcrypt.hash(password, 10);
+        const empleadoData = {
+            rut,
+            nombre,
+            apellido,
+            correo,
+            rol,
+            idEstadoEmpleado: parseInt(idEstadoEmpleado) || 1,
+            idSucursal: parseInt(idSucursal)
+        };
 
-            await actualizarEmpleadoConPassword({
-                idEmpleado,
-                nombre,
-                apellido,
-                rol,
-                idEstadoEmpleado,
-                idSucursal,
-                password: hashedPassword
-            });
+        if (password && password.trim() !== "") {
+            empleadoData.password = await bcrypt.hash(password, 10);
         }
+
+        await actualizarEmpleadoModel(id, empleadoData);
+
+        console.log("✅ Empleado actualizado:", id);
 
         return res.status(200).json({
-            message: "Empleado actualizado exitosamente."
+            success: true,
+            message: "Empleado actualizado exitosamente"
         });
-
     } catch (error) {
-        console.error("Error al actualizar empleado:", error);
-        return res.status(500).json({ message: "Error interno al actualizar empleado." });
+        console.error("❌ Error en actualizarEmpleado:", error);
+        return res.status(500).json({
+            success: false,
+            message: "Error al actualizar empleado"
+        });
     }
 }
 
-// SUSPENDER EMPLEADO (cambia idEstadoEmpleado a 4)
-export async function suspenderEmpleado(req, res) {
-  try {
-      const idEmpleado = req.params.id;
 
-      const empleado = await buscarEmpleadoPorId(idEmpleado);
+export async function eliminarEmpleado(req, res) {
+    try {
+        const { id } = req.params;
 
-      if (!empleado) {
-          return res.status(404).json({ message: "Empleado no encontrado" });
-      }
-      
-      await actualizarEmpleadoSinPassword(idEmpleado, {
-          idEstadoEmpleado: 4
-      });
+        await eliminarEmpleadoModel(id);
 
-      return res.status(200).json({
-          message: "Empleado suspendido correctamente",
-          idEmpleado,
-          nuevoEstado: 4
-      });
+        console.log("✅ Empleado eliminado (desactivado):", id);
 
-  } catch (error) {
-      console.error("Error al suspender empleado:", error);
-      return res.status(500).json({
-          message: "Error interno del servidor",
-          error: error.message
-      });
-  }
+        return res.status(200).json({
+            success: true,
+            message: "Empleado eliminado exitosamente"
+        });
+    } catch (error) {
+        console.error("❌ Error en eliminarEmpleado:", error);
+        return res.status(500).json({
+            success: false,
+            message: "Error al eliminar empleado"
+        });
+    }
+}
+
+
+export async function buscarEmpleados(req, res) {
+    try {
+        const { q } = req.query;
+
+        if (!q || q.trim() === "") {
+            const empleados = await obtenerTodosLosEmpleados();
+            return res.status(200).json({
+                success: true,
+                empleados
+            });
+        }
+
+        const empleados = await buscarEmpleadosModel(q);
+
+        return res.status(200).json({
+            success: true,
+            empleados
+        });
+    } catch (error) {
+        console.error("❌ Error en buscarEmpleados:", error);
+        return res.status(500).json({
+            success: false,
+            message: "Error al buscar empleados"
+        });
+    }
 }

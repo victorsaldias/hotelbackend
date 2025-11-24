@@ -1,4 +1,4 @@
-/* LAYOUT */
+
 body {
     margin: 0;
     font-family: Arial, sans-serif;
@@ -9,14 +9,18 @@ body {
     display: flex;
 }
 
-/* SIDEBAR */
+
+
 .sidebar {
     width: 230px;
     background: #2c2c2c;
     color: white;
-    height: 100vh;
+    min-height: 100vh;  
     padding: 20px;
+    display: flex;
+    flex-direction: column;
 }
+
 
 .sidebar-title {
     margin: 0 0 30px;
@@ -42,7 +46,7 @@ body {
     background: #3a3a3a;
 }
 
-/* MAIN */
+
 .content {
     flex: 1;
     padding: 25px;
@@ -57,7 +61,7 @@ body {
     justify-content: space-between;
 }
 
-/* ACCIONES */
+
 .actions {
     display: flex;
     justify-content: space-between;
@@ -80,7 +84,7 @@ body {
     cursor: pointer;
 }
 
-/* TABLA */
+
 .table-container {
     background: white;
     padding: 10px;
@@ -90,52 +94,104 @@ body {
 .tabla {
     width: 100%;
     border-collapse: collapse;
+    table-layout: fixed; 
 }
 
 .tabla th,
 .tabla td {
     border-bottom: 1px solid #ddd;
     padding: 12px;
+    text-align: center;
+    vertical-align: middle;
 }
 
 .tabla th {
     background: #eee;
+    font-weight: bold;
+}
+
+
+.tabla th:nth-child(1), .tabla td:nth-child(1) { width: 14%; } 
+.tabla th:nth-child(2), .tabla td:nth-child(2) { width: 14%; } 
+.tabla th:nth-child(3), .tabla td:nth-child(3) { width: 12%; } 
+.tabla th:nth-child(4), .tabla td:nth-child(4) { width: 10%; } 
+.tabla th:nth-child(5), .tabla td:nth-child(5) { width: 12%; } 
+.tabla th:nth-child(6), .tabla td:nth-child(6) { width: 12%; } 
+.tabla th:nth-child(7), .tabla td:nth-child(7) { width: 12%; } 
+.tabla th:nth-child(8), .tabla td:nth-child(8) { width: 14%; } 
+
+
+.btn-edit,
+.btn-delete {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-right: 5px;
 }
 
 .btn-edit {
-    background: #2196f3;
+    background: #17a2b8;
     color: white;
-    padding: 6px 10px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
+}
+.btn-edit:hover {
+    background: #138496;
 }
 
 .btn-delete {
-    background: #e53935;
+    background: #dc3545;
     color: white;
-    padding: 6px 10px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
+}
+.btn-delete:hover {
+    background: #c82333;
 }
 
-/* MODAL */
+
+.estado-activo {
+    background: #28a745;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+}
+
+.estado-inactivo {
+    background: #dc3545;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+}
+
+
 .modal {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.5);
     display: none;
-    justify-content: center;
+    position: fixed;
+    z-index: 1000;
+    inset: 0;
+    background-color: rgba(0,0,0,0.5);
     align-items: center;
+    justify-content: center;
+}
+
+.modal.show {
+    display: flex;
 }
 
 .modal-content {
     background: white;
-    width: 60%;
-    padding: 20px;
-    border-radius: 8px;
+    padding: 30px;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 600px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.3);
 }
+
+.modal-title {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
 
 .form-grid {
     display: grid;
@@ -143,25 +199,58 @@ body {
     gap: 15px;
 }
 
+.form-grid input,
+.form-grid select {
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.form-grid input:focus,
+.form-grid select:focus {
+    outline: none;
+    border-color: #ffc107;
+}
+
 .modal-actions {
-    margin-top: 20px;
     display: flex;
     justify-content: flex-end;
-    gap: 15px;
+    gap: 10px;
+    margin-top: 20px;
 }
 
 .btn-save {
-    background: #d8c04c;
+    background: #ffc107;
     color: white;
-    padding: 10px 15px;
+    padding: 12px 25px;
     border: none;
-    border-radius: 6px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+}
+.btn-save:hover {
+    background: #e0a800;
 }
 
 .btn-cancel {
-    background: #888;
+    background: #6c757d;
     color: white;
-    padding: 10px 15px;
+    padding: 12px 25px;
     border: none;
-    border-radius: 6px;
+    border-radius: 5px;
+}
+.btn-cancel:hover {
+    background: #5a6268;
+}
+
+
+@media (max-width: 768px) {
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .search {
+        width: 100%;
+    }
 }

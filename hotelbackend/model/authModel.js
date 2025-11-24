@@ -12,7 +12,7 @@ export async function buscarClientePorCorreo(correo) {
                 WHERE correo = @correo
             `);
 
-        console.log("Resultado cliente:", result.recordset); // <-- DEBUG
+        console.log("Resultado cliente:", result.recordset); 
 
         return result.recordset[0] || null;
     } catch (error) {

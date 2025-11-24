@@ -5,7 +5,7 @@ export async function listarComunasPorProvincia(req, res) {
         const { idProvincia } = req.params;
         const comunas = await obtenerComunasPorProvincia(idProvincia);
         res.json(comunas);
-    } catch (e) {
-        res.status(500).json({ message: e.message });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
     }
 }

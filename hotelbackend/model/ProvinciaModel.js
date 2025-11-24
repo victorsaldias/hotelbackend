@@ -19,3 +19,4 @@ export async function obtenerProvinciasPorRegion(idRegion) {
 
     return result.recordset;
 }
+
