@@ -3,9 +3,12 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel del Recepcionista</title>
 
     <link rel="stylesheet" href="../css/admin.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/responsive.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 
@@ -17,7 +20,6 @@
         <h2 class="sidebar-title">Hotel XYZ</h2>
 
         <ul class="menu">
-
             <li class="active" onclick="location.href='recepcionista.html'">
                 <i class="fa fa-bed"></i> Registrar Reservas
             </li>
@@ -30,16 +32,16 @@
                 <i class="fa fa-user"></i> Mi Perfil
             </li>
 
-            <li onclick="location.href='../index.html'" style="color:#ff6b6b;">
+            <li class="logout" onclick="location.href='../index.html'">
                 <i class="fa fa-sign-out-alt"></i> Cerrar Sesión
             </li>
-
         </ul>
     </aside>
 
     <main class="content">
 
         <header class="topbar">
+            <i class="fa-solid fa-bars btn-menu" onclick="toggleMenu()"></i>
             <h2>Panel del Recepcionista</h2>
             <span id="recepName">Recepcionista</span>
         </header>
@@ -52,16 +54,16 @@
         <div class="table-container">
             <table class="tabla">
                 <thead>
-                <tr>
-            <th>Nombre</th>
-            <th>Apellido</th>
-            <th>RUT</th>
-            <th>Habitación</th>
-            <th>Entrada</th>
-            <th>Salida</th>
-            <th>Total</th>
-            <th>Estado</th>
-        </tr>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Apellido</th>
+                        <th>RUT</th>
+                        <th>Habitación</th>
+                        <th>Entrada</th>
+                        <th>Salida</th>
+                        <th>Total</th>
+                        <th>Estado</th>
+                    </tr>
                 </thead>
                 <tbody id="listaReservas"></tbody>
             </table>
@@ -69,7 +71,6 @@
 
     </main>
 </div>
-
 
 <div class="modal" id="modalReserva">
     <div class="modal-content">
@@ -105,6 +106,10 @@
 
     </div>
 </div>
+
+<div class="overlay-menu" id="overlayMenu"></div>
+
+<script src="../js/menuMovil.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="../js/recepcionista.js"></script>
 

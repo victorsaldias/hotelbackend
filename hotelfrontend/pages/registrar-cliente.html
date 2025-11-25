@@ -1,10 +1,14 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
-    <title>Clientes - Recepcionista</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrar Cliente</title>
 
     <link rel="stylesheet" href="../css/admin.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/responsive.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 
@@ -19,16 +23,13 @@
             <li onclick="location.href='recepcionista.html'">
                 <i class="fa fa-bed"></i> Registrar Reservas
             </li>
-
-            <li onclick="location.href='registrar-cliente.html'">
+            <li class="active" onclick="location.href='registrar-cliente.html'">
                 <i class="fa fa-user-plus"></i> Registrar Cliente
             </li>
-
             <li onclick="location.href='perfil-recepcionista.html'">
                 <i class="fa fa-user"></i> Mi Perfil
             </li>
-
-            <li onclick="location.href='../index.html'" style="color:#ff6b6b;">
+            <li class="logout" onclick="location.href='../index.html'">
                 <i class="fa fa-sign-out-alt"></i> Cerrar Sesión
             </li>
         </ul>
@@ -37,62 +38,31 @@
     <main class="content">
 
         <header class="topbar">
-            <h2>Gestión de Clientes</h2>
+            <i class="fa-solid fa-bars btn-menu" onclick="toggleMenu()"></i>
+            <h2>Registrar Cliente</h2>
             <span>Recepcionista</span>
         </header>
 
-        <div class="actions">
-            <input 
-                type="text" 
-                id="buscarCliente" 
-                class="search" 
-                placeholder="Buscar por nombre, apellido, RUT..."
-            >
-            <button class="btn-add" onclick="abrirModalCliente()">Registrar Cliente</button>
-        </div>
+        <div class="table-container" style="padding: 25px;">
+            <div class="form-grid">
+                <input type="text" id="cliNombre" placeholder="Nombre" required>
+                <input type="text" id="cliApellido" placeholder="Apellido" required>
+                <input type="text" id="cliRut" placeholder="RUT" required>
+                <input type="email" id="cliCorreo" placeholder="Correo" required>
+                <input type="tel" id="cliTelefono" placeholder="Teléfono" required>
+            </div>
 
-        <div class="table-container">
-            <table class="tabla">
-                <thead>
-                    <tr>
-                        <th>Nombre</th>
-                        <th>Apellido</th>
-                        <th>RUT</th>
-                        <th>Correo</th>
-                        <th>Teléfono</th>
-                    </tr>
-                </thead>
-                <tbody id="listaClientes"></tbody>
-            </table>
+            <div class="modal-actions" style="margin-top: 25px;">
+                <button class="btn-save" id="btnGuardarCliente">Registrar Cliente</button>
+            </div>
         </div>
 
     </main>
 </div>
 
+<div class="overlay-menu" id="overlayMenu"></div>
 
-
-<div class="modal" id="modalCliente">
-    <div class="modal-content">
-
-        <h3 id="tituloModalCliente">Registrar Cliente</h3>
-
-        <div class="form-grid">
-            <input type="text" id="cliNombre" placeholder="Nombre" required>
-            <input type="text" id="cliApellido" placeholder="Apellido" required>
-
-            <input type="text" id="cliRut" placeholder="RUT" required>
-            <input type="email" id="cliCorreo" placeholder="Correo" required>
-
-            <input type="tel" id="cliTelefono" placeholder="Teléfono" required>
-        </div>
-
-        <div class="modal-actions">
-            <button id="btnGuardarCliente" class="btn-save">Guardar</button>
-            <button class="btn-cancel" onclick="cerrarModalCliente()">Cerrar</button>
-        </div>
-
-    </div>
-</div>
+<script src="../js/menuMovil.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="../js/registroClienteRecepcionista.js"></script>
 

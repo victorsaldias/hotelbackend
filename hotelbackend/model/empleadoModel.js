@@ -45,12 +45,12 @@ export async function obtenerEmpleadoPorIdModel(idEmpleado) {
                     e.nombre,
                     e.apellido,
                     e.correo,
+                    r.nombre AS rol,
                     e.idRol,
-                    r.nombre AS rolNombre,
                     e.idEstadoEmpleado,
                     e.idSucursal
-                FROM empleado e
-                LEFT JOIN rol r ON e.idRol = r.idRol
+                FROM Empleado e
+                INNER JOIN Rol r ON e.idRol = r.idRol
                 WHERE e.idEmpleado = @idEmpleado
             `);
         return result.recordset[0] || null;
@@ -60,9 +60,10 @@ export async function obtenerEmpleadoPorIdModel(idEmpleado) {
     }
 }
 
-/* ============================================================
+
+/* =====================================================
    CREAR EMPLEADO
-   ============================================================ */
+===================================================== */
 export async function crearEmpleadoModel(empleado) {
     try {
         const pool = await getConnection();

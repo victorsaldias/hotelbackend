@@ -1,0 +1,132 @@
+/* =======================================
+   COMPONENTS.CSS – BOTONES, FORMULARIOS
+   ======================================= */
+
+.btn-add,
+.btn-save {
+    background: #E9AD28 !important;
+    color: #ffffff !important;
+    border: none;
+    padding: 12px 18px;
+    border-radius: 6px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.btn-cancel {
+    background: #6c757d;
+    color: white;
+    padding: 12px 18px;
+    border-radius: 6px;
+    border: none;
+}
+
+.search {
+    width: 60%;
+    padding: 12px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+
+.actions {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.table-container {
+    background: white;
+    padding: 15px;
+    border-radius: 12px;
+    box-shadow: 0px 4px 12px rgba(0,0,0,0.08);
+}
+
+.tabla {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.tabla th,
+.tabla td {
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+    text-align: center;
+}
+
+.tabla th {
+    background: #F2F2F2;
+    font-weight: 700;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal.show {
+    display: flex;
+}
+
+.modal-content {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 550px;
+    box-shadow: 0px 5px 20px rgba(0,0,0,0.2);
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+input, select {
+    padding: 12px;
+    border: 1px solid #DADADA;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
+.perfil-container {
+    display: flex;
+    justify-content: center;
+}
+
+.perfil-card {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    max-width: 900px;
+    width: 100%;
+    box-shadow: 0px 4px 14px rgba(0,0,0,0.1);
+}
+
+.perfil-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+}
+
+.perfil-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.perfil-item label {
+    margin-bottom: 5px;
+    font-weight: 600;
+    color: #333;
+}

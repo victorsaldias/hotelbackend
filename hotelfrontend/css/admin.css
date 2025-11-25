@@ -1,31 +1,34 @@
+/* ===================================================
+   ADMIN.CSS – ESTILO BASE DEL PANEL (ESCRITORIO)
+   =================================================== */
 
 body {
     margin: 0;
-    font-family: Arial, sans-serif;
-    background: #f7f7f7;
+    font-family: "DM Sans", sans-serif;
+    background: #F9F8F6;
 }
 
 .layout {
     display: flex;
+    min-height: 100vh;
 }
-
-
 
 .sidebar {
-    width: 230px;
-    background: #2c2c2c;
+    width: 240px;
+    background: #111;
     color: white;
-    min-height: 100vh;  
-    padding: 20px;
+    padding: 25px 20px;
     display: flex;
     flex-direction: column;
+    border-right: 1px solid #2c2c2c;
 }
 
-
 .sidebar-title {
-    margin: 0 0 30px;
-    font-size: 20px;
+    color: #E9AD28;
+    font-size: 22px;
+    font-weight: 800;
     text-align: center;
+    margin-bottom: 25px;
 }
 
 .menu {
@@ -39,13 +42,24 @@ body {
     display: flex;
     align-items: center;
     gap: 10px;
+    border-radius: 8px;
+    margin-bottom: 6px;
+    color: #eee;
 }
 
-.menu li.active,
-.menu li:hover {
-    background: #3a3a3a;
+.menu li i {
+    color: #E9AD28;
 }
 
+.menu li:hover,
+.menu li.active {
+    background: #E9AD28;
+    color: #111;
+}
+
+.menu li.active i {
+    color: #111;
+}
 
 .content {
     flex: 1;
@@ -53,204 +67,98 @@ body {
 }
 
 .topbar {
-    background: #4c4c4c;
-    color: white;
-    padding: 15px;
-    border-radius: 6px;
-    display: flex;
-    justify-content: space-between;
-}
-
-
-.actions {
-    display: flex;
-    justify-content: space-between;
-    margin: 20px 0;
-}
-
-.search {
-    width: 60%;
-    padding: 12px;
-    border-radius: 6px;
-    border: 1px solid #bbb;
-}
-
-.btn-add {
-    background: #d8c04c;
-    color: white;
-    border: none;
-    padding: 12px 20px;
-    border-radius: 6px;
-    cursor: pointer;
-}
-
-
-.table-container {
-    background: white;
-    padding: 10px;
-    border-radius: 6px;
-}
-
-.tabla {
-    width: 100%;
-    border-collapse: collapse;
-    table-layout: fixed; 
-}
-
-.tabla th,
-.tabla td {
-    border-bottom: 1px solid #ddd;
-    padding: 12px;
-    text-align: center;
-    vertical-align: middle;
-}
-
-.tabla th {
-    background: #eee;
-    font-weight: bold;
-}
-
-
-.tabla th:nth-child(1), .tabla td:nth-child(1) { width: 14%; } 
-.tabla th:nth-child(2), .tabla td:nth-child(2) { width: 14%; } 
-.tabla th:nth-child(3), .tabla td:nth-child(3) { width: 12%; } 
-.tabla th:nth-child(4), .tabla td:nth-child(4) { width: 10%; } 
-.tabla th:nth-child(5), .tabla td:nth-child(5) { width: 12%; } 
-.tabla th:nth-child(6), .tabla td:nth-child(6) { width: 12%; } 
-.tabla th:nth-child(7), .tabla td:nth-child(7) { width: 12%; } 
-.tabla th:nth-child(8), .tabla td:nth-child(8) { width: 14%; } 
-
-
-.btn-edit,
-.btn-delete {
-    padding: 8px 12px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-right: 5px;
-}
-
-.btn-edit {
-    background: #17a2b8;
-    color: white;
-}
-.btn-edit:hover {
-    background: #138496;
-}
-
-.btn-delete {
-    background: #dc3545;
-    color: white;
-}
-.btn-delete:hover {
-    background: #c82333;
-}
-
-
-.estado-activo {
-    background: #28a745;
-    color: white;
-    padding: 5px 10px;
-    border-radius: 20px;
-    font-size: 12px;
-}
-
-.estado-inactivo {
-    background: #dc3545;
-    color: white;
-    padding: 5px 10px;
-    border-radius: 20px;
-    font-size: 12px;
-}
-
-
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 1000;
-    inset: 0;
-    background-color: rgba(0,0,0,0.5);
-    align-items: center;
-    justify-content: center;
-}
-
-.modal.show {
-    display: flex;
-}
-
-.modal-content {
-    background: white;
-    padding: 30px;
+    background: #ffffff;
+    color: #1d1c1c;
+    padding: 18px 22px;
     border-radius: 10px;
-    width: 90%;
-    max-width: 600px;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+    font-weight: 600;
+    border: 1px solid #e5e5e5;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 25px;
 }
 
-.modal-title {
-    font-size: 24px;
+/* Ocultar botón hamburguesa en escritorio */
+.btn-menu {
+    display: none !important;
+}
+.card-aseo {
+    background: #ffffff;
+    padding: 18px 20px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    box-shadow: 0px 4px 12px rgba(0,0,0,0.08);
+    border: 1px solid #e2e2e2;
+}
+
+.card-aseo p {
+    margin: 6px 0;
+    font-size: 15px;
+}
+
+.btn-limpiar {
+    width: 100%;
+    padding: 10px;
+    margin-top: 12px;
+    background: #E9AD28;
+    border: none;
+    color: #111;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+}
+.report-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
+    padding: 20px;
+}
+
+.report-card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    transition: .3s;
+    cursor: pointer;
+    text-align: center;
+}
+
+.report-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 8px 18px rgba(0,0,0,0.15);
+}
+
+.report-card i {
+    font-size: 50px;
+    color: #d8c04c;
+    margin-bottom: 15px;
+}
+
+.report-title {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.report-desc {
+    font-size: 15px;
+    color: #555;
     margin-bottom: 20px;
 }
 
-
-.form-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 15px;
-}
-
-.form-grid input,
-.form-grid select {
-    padding: 12px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    font-size: 14px;
-}
-
-.form-grid input:focus,
-.form-grid select:focus {
-    outline: none;
-    border-color: #ffc107;
-}
-
-.modal-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-    margin-top: 20px;
-}
-
-.btn-save {
-    background: #ffc107;
-    color: white;
-    padding: 12px 25px;
+.btn-report {
+    background: #d8c04c;
+    padding: 10px 18px;
     border: none;
-    border-radius: 5px;
-    cursor: pointer;
+    border-radius: 6px;
+    color: white;
     font-weight: bold;
-}
-.btn-save:hover {
-    background: #e0a800;
-}
-
-.btn-cancel {
-    background: #6c757d;
-    color: white;
-    padding: 12px 25px;
-    border: none;
-    border-radius: 5px;
-}
-.btn-cancel:hover {
-    background: #5a6268;
+    cursor: pointer;
+    transition: .3s;
 }
 
-
-@media (max-width: 768px) {
-    .form-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .search {
-        width: 100%;
-    }
+.btn-report:hover {
+    background: #c0aa42;
 }
