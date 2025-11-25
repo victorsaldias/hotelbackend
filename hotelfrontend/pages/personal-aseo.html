@@ -5,45 +5,56 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel Personal de Aseo</title>
-    <link rel="stylesheet" href="../css/aseo.css">
+
+    <link rel="stylesheet" href="../css/admin.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 </head>
 
 <body>
 
-    <header class="topbar">
-        <div class="topbar-left">
-            <button class="btn-ver">ver habitaciones</button>
-        </div>
+<div class="layout">
 
-        <div class="topbar-right">
-            <span class="icon-user">👤</span>
-            <span class="icon-menu">☰</span>
-        </div>
-    </header>
+    <aside class="sidebar">
+        <h2 class="sidebar-title">Hotel XYZ</h2>
 
-    
-    <section class="habitaciones">
+        <ul class="menu">
+            <li onclick="location.href='personal-aseo.html'">
+                <i class="fa-solid fa-broom"></i> Habitaciones
+            </li>
+            <li onclick="location.href='perfil-aseo.html'">
+                <i class="fa-solid fa-user"></i> Mi Perfil
+            </li>
 
-        <div class="card">
-            <p><strong>Número habitación:</strong>  203</p>
-            <p><strong>Estado:</strong>  pendiente</p>
-            <button class="btn-limpiar">realizar limpieza</button>
-        </div>
+            <li class="logout" onclick="location.href='../index.html'">
+                <i class="fa-solid fa-right-from-bracket"></i> Cerrar Sesión
+            </li>
 
-        <div class="card">
-            <p><strong>Número habitación:</strong> 105</p>
-            <p><strong>Estado:</strong> en proceso</p>
-            <button class="btn-limpiar">realizar limpieza</button>
-        </div>
+        </ul>
+    </aside>
 
-        <div class="card">
-            <p><strong>Número habitación:</strong> 330</p>
-            <p><strong>Estado:</strong> sucia</p>
-            <button class="btn-limpiar">realizar limpieza</button>
-        </div>
+    <main class="content">
 
-    </section>
+        <header class="topbar">
+            <i class="fa-solid fa-bars btn-menu" onclick="toggleMenu()"></i>
+            <h2>Personal de Aseo</h2>
+            <span id="aseoNombreHeader">Empleado</span>
+        </header>
+
+        <section class="habitaciones" id="listaHabitaciones">
+            
+        </section>
+
+    </main>
+
+</div>
+
+<div class="overlay-menu" id="overlayMenu"></div>
+
+<script src="../js/menuMovil.js"></script>
+<script src="../js/personalAseo.js"></script>
 
 </body>
-
 </html>

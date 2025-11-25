@@ -1,14 +1,16 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mi Perfil - Recepcionista</title>
+    <title>Mi Perfil - Personal de Aseo</title>
 
     <link rel="stylesheet" href="../css/admin.css">
     <link rel="stylesheet" href="../css/components.css">
     <link rel="stylesheet" href="../css/responsive.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
 </head>
 
 <body>
@@ -19,15 +21,11 @@
         <h2 class="sidebar-title">Hotel XYZ</h2>
 
         <ul class="menu">
-            <li onclick="location.href='recepcionista.html'">
-                <i class="fa-solid fa-bed"></i> Registrar Reservas
+            <li onclick="location.href='personal-aseo.html'">
+                <i class="fa-solid fa-broom"></i> Habitaciones
             </li>
 
-            <li onclick="location.href='registrar-cliente.html'">
-                <i class="fa fa-user-plus"></i> Registrar Cliente
-            </li>
-
-            <li class="active" onclick="location.href='perfil-recepcionista.html'">
+            <li class="active" onclick="location.href='perfil-aseo.html'">
                 <i class="fa-solid fa-user"></i> Mi Perfil
             </li>
 
@@ -42,49 +40,49 @@
         <header class="topbar">
             <i class="fa-solid fa-bars btn-menu" onclick="toggleMenu()"></i>
             <h2>Mi Perfil</h2>
-            <span id="perfilNombreHeader">Recepcionista</span>
+            <span id="perfilNombreHeader">Personal de Aseo</span>
         </header>
 
         <div class="perfil-container">
 
             <div class="perfil-card">
 
-                <h3 style="margin-bottom:20px;">Información Personal</h3>
+                <h3>Información Personal</h3>
 
                 <div class="perfil-grid">
 
                     <div class="perfil-item">
-                        <label>RUT</label>
+                        <label>RUT:</label>
                         <input type="text" id="perfilRut" disabled>
                     </div>
 
                     <div class="perfil-item">
-                        <label>Nombre</label>
+                        <label>Nombre:</label>
                         <input type="text" id="perfilNombre" disabled>
                     </div>
 
                     <div class="perfil-item">
-                        <label>Apellido</label>
+                        <label>Apellido:</label>
                         <input type="text" id="perfilApellido" disabled>
                     </div>
 
                     <div class="perfil-item">
-                        <label>Rol</label>
-                        <input type="text" id="perfilRol" value="Recepcionista" disabled>
+                        <label>Rol:</label>
+                        <input type="text" id="perfilRol" value="Personal de Aseo" disabled>
                     </div>
 
                     <div class="perfil-item">
-                        <label>Estado</label>
-                        <input type="text" id="perfilEstado" value="Activo" disabled>
+                        <label>Estado:</label>
+                        <input type="text" id="perfilEstado" disabled>
                     </div>
 
                     <div class="perfil-item">
-                        <label>Sucursal</label>
+                        <label>Sucursal:</label>
                         <input type="text" id="perfilSucursal" disabled>
                     </div>
 
                     <div class="perfil-item" style="grid-column: span 2;">
-                        <label>Nueva contraseña</label>
+                        <label>Nueva contraseña:</label>
                         <input type="password" id="perfilPass" disabled>
                     </div>
 
@@ -107,7 +105,7 @@
 <div class="overlay-menu" id="overlayMenu"></div>
 
 <script src="../js/menuMovil.js"></script>
-<script src="../js/perfilRecepcionista.js"></script>
+<script src="../js/perfilAseo.js"></script>
 
 </body>
 </html>
