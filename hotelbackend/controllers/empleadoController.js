@@ -8,7 +8,6 @@ import {
     buscarEmpleadosModel
 } from "../model/empleadoModel.js";
 
-
 export async function obtenerEmpleados(req, res) {
     try {
         const empleados = await obtenerTodosLosEmpleados();
@@ -25,7 +24,6 @@ export async function obtenerEmpleados(req, res) {
     }
 }
 
-
 export async function obtenerEmpleadoPorId(req, res) {
     try {
         const { id } = req.params;
@@ -38,7 +36,6 @@ export async function obtenerEmpleadoPorId(req, res) {
             });
         }
 
-        
         delete empleado.password;
 
         return res.status(200).json({
@@ -54,13 +51,12 @@ export async function obtenerEmpleadoPorId(req, res) {
     }
 }
 
-
 export async function crearEmpleado(req, res) {
     try {
-        const { rut, nombre, apellido, correo, password, rol, idSucursal } = req.body;
+        // ⬅ CAMBIO: ahora usamos idRol en lugar de rol
+        const { rut, nombre, apellido, correo, password, idRol, idSucursal } = req.body;
 
-        
-        if (!rut || !nombre || !apellido || !correo || !password || !rol || !idSucursal) {
+        if (!rut || !nombre || !apellido || !correo || !password || !idRol || !idSucursal) {
             return res.status(400).json({
                 success: false,
                 message: "Todos los campos son obligatorios"
@@ -75,8 +71,8 @@ export async function crearEmpleado(req, res) {
             apellido,
             correo,
             password: passwordHash,
-            rol,
-            idEstadoEmpleado: 1, 
+            idRol: parseInt(idRol),        
+            idEstadoEmpleado: 1,           
             idSucursal: parseInt(idSucursal)
         };
 
@@ -91,7 +87,7 @@ export async function crearEmpleado(req, res) {
         });
     } catch (error) {
         console.error("❌ Error en crearEmpleado:", error);
-        
+
         if (error.message.includes("duplicate") || error.message.includes("UNIQUE")) {
             return res.status(409).json({
                 success: false,
@@ -106,14 +102,14 @@ export async function crearEmpleado(req, res) {
     }
 }
 
-
 export async function actualizarEmpleado(req, res) {
     try {
         const { id } = req.params;
-        const { rut, nombre, apellido, correo, password, rol, idEstadoEmpleado, idSucursal } = req.body;
+        // ⬅ CAMBIO: ahora destructuramos idRol
+        const { rut, nombre, apellido, correo, password, idRol, idEstadoEmpleado, idSucursal } = req.body;
 
-        
-        if (!rut || !nombre || !apellido || !correo || !rol || !idSucursal) {
+        // Validación usando idRol
+        if (!rut || !nombre || !apellido || !correo || !idRol || !idSucursal) {
             return res.status(400).json({
                 success: false,
                 message: "Todos los campos son obligatorios"
@@ -125,11 +121,12 @@ export async function actualizarEmpleado(req, res) {
             nombre,
             apellido,
             correo,
-            rol,
+            idRol: parseInt(idRol),                         
             idEstadoEmpleado: parseInt(idEstadoEmpleado) || 1,
             idSucursal: parseInt(idSucursal)
         };
 
+        // Si viene password, la actualizamos
         if (password && password.trim() !== "") {
             empleadoData.password = await bcrypt.hash(password, 10);
         }
@@ -151,7 +148,6 @@ export async function actualizarEmpleado(req, res) {
     }
 }
 
-
 export async function eliminarEmpleado(req, res) {
     try {
         const { id } = req.params;
@@ -172,7 +168,6 @@ export async function eliminarEmpleado(req, res) {
         });
     }
 }
-
 
 export async function buscarEmpleados(req, res) {
     try {

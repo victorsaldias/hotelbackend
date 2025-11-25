@@ -21,6 +21,7 @@ import comunaRoutes from "./routes/comunaRoutes.js";
 import empleadoAuthRoutes from "./routes/empleadoAuthRoutes.js";
 import sucursalRoutes from "./routes/sucursalRoutes.js";
 import empleadoRoutes from "./routes/empleadoRoutes.js";
+import rolRoutes from "./routes/rolRoutes.js";
 
 import { getConnection } from "./config/dbConfig.js";
 
@@ -86,6 +87,7 @@ app.use("/api/comunas", comunaRoutes);
 app.use("/api/sucursales", sucursalRoutes);
 app.use("/api/empleados", empleadoAuthRoutes);
 app.use("/api/empleados-admin", empleadoRoutes);
+app.use("/api/roles", rolRoutes);
 
 console.log("Rutas cargadas:");
 app._router.stack.forEach(r => {

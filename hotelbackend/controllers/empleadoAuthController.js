@@ -1,5 +1,6 @@
 import bcrypt from "bcrypt";
 import { buscarEmpleadoPorCorreo } from "../model/empleadoAuthModel.js";
+import jwt from "jsonwebtoken";
 
 function validarCorreo(correo) {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -16,84 +17,47 @@ function normalizarRol(rol) {
 }
 
 export async function loginEmpleado(req, res) {
+    const { correo, password } = req.body;
+
     try {
-        const { correo, password } = req.body;
-
-        console.log("📥 Intento de login:", correo);
-
-        // Validaciones
-        if (!correo || !password) {
-            return res.status(400).json({ 
-                message: "Correo y contraseña son obligatorios" 
-            });
-        }
-
-        if (!validarCorreo(correo)) {
-            return res.status(400).json({ 
-                message: "Formato de correo inválido" 
-            });
-        }
-
-        // Buscar empleado
+        // Buscar empleado por correo
         const empleado = await buscarEmpleadoPorCorreo(correo);
 
         if (!empleado) {
-            console.log("❌ Empleado no encontrado");
-            return res.status(401).json({ 
-                message: "Correo o contraseña incorrectos" 
-            });
+            return res.status(404).json({ message: "Empleado no encontrado" });
         }
 
-        console.log("✅ Empleado encontrado:", empleado.nombre);
-
-        // Verificar contraseña
-        let passwordValida = false;
-
-        // Si está hasheada con bcrypt
-        if (empleado.password.startsWith('$2b$') || empleado.password.startsWith('$2a$')) {
-            passwordValida = await bcrypt.compare(password, empleado.password);
-            console.log("🔑 Comparación bcrypt:", passwordValida ? "✅" : "❌");
-        } else {
-            // Si está en texto plano (SOLO PARA DESARROLLO)
-            passwordValida = (password === empleado.password);
-            console.log("⚠️ Comparación texto plano:", passwordValida ? "✅" : "❌");
-        }
+        // Validar contraseña
+        const passwordValida = await bcrypt.compare(password, empleado.password);
 
         if (!passwordValida) {
-            console.log("❌ Contraseña incorrecta");
-            return res.status(401).json({ 
-                message: "Correo o contraseña incorrectos" 
-            });
+            return res.status(401).json({ message: "Contraseña incorrecta" });
         }
 
-        console.log("✅ Contraseña correcta");
-
-        // Normalizar rol
-        const rolNormalizado = normalizarRol(empleado.rol);
-
-        // Guardar en sesión
-        req.session.userId = empleado.idEmpleado;
-        req.session.rol = rolNormalizado;
-
-        console.log("💾 Sesión guardada:", {
-            userId: req.session.userId,
-            rol: req.session.rol
-        });
-
-        // Respuesta exitosa
-        return res.status(200).json({
-            message: "Login exitoso",
+        // Generar token con datos del empleado + rol
+        const token = jwt.sign({
             idEmpleado: empleado.idEmpleado,
-            nombre: empleado.nombre,
-            apellido: empleado.apellido,
-            rol: rolNormalizado,
-            sucursal: empleado.idSucursal
+            idRol: empleado.idRol,
+            rolNombre: empleado.rolNombre
+        }, process.env.JWT_SECRET, { expiresIn: "8h" });
+
+        // Respuesta final
+        res.json({
+            message: "Login exitoso",
+            empleado: {
+                idEmpleado: empleado.idEmpleado,
+                nombre: empleado.nombre,
+                apellido: empleado.apellido,
+                idRol: empleado.idRol,
+                rolNombre: empleado.rolNombre
+            },
+            token
         });
 
     } catch (error) {
-        console.error("❌ Error en loginEmpleado:", error);
-        return res.status(500).json({ 
-            message: "Error interno del servidor" 
+        res.status(500).json({
+            message: "Error en login",
+            error: error.message
         });
     }
 }

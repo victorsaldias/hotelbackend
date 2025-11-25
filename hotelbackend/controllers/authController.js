@@ -1,11 +1,55 @@
 import bcrypt from "bcrypt";
-import { buscarClientePorCorreo } from "../model/authModel.js";
+import jwt from "jsonwebtoken";
+import { buscarClientePorCorreo} from "../model/authModel.js";
+import { buscarEmpleadoPorCorreo } from "../model/empleadoAuthModel.js";
+
 
 function validarFormatoCorreo(correo) {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(correo);
 }
 
+export async function loginEmpleado(req, res) {
+    const { correo, password } = req.body;
+
+    try {
+        const empleado = await buscarEmpleadoPorCorreo(correo);
+
+        if (!empleado) {
+            return res.status(404).json({ message: "Empleado no encontrado" });
+        }
+
+        const passwordValida = await bcrypt.compare(password, empleado.password);
+
+        if (!passwordValida) {
+            return res.status(401).json({ message: "Contraseña incorrecta" });
+        }
+
+        const token = jwt.sign({
+            idEmpleado: empleado.idEmpleado,
+            idRol: empleado.idRol,
+            rolNombre: empleado.rolNombre
+        }, process.env.JWT_SECRET, { expiresIn: "8h" });
+
+        res.json({
+            message: "Login exitoso",
+            empleado: {
+                idEmpleado: empleado.idEmpleado,
+                nombre: empleado.nombre,
+                apellido: empleado.apellido,
+                idRol: empleado.idRol,
+                rolNombre: empleado.rolNombre
+            },
+            token
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            message: "Error en login",
+            error: error.message
+        });
+    }
+}
 export async function loginCliente(req, res) {
     try {
         const { correo, password } = req.body;

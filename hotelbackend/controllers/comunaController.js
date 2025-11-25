@@ -1,4 +1,4 @@
-import { obtenerComunasPorProvincia } from "../model/ComunaModel.js";
+import { obtenerComunasPorProvincia } from "../model/comunaModel.js";
 
 export async function listarComunasPorProvincia(req, res) {
     try {
