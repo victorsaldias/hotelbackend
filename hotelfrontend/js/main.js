@@ -1,297 +1,301 @@
-/*  ---------------------------------------------------
-  Template Name: Hiroto
-  Description:  Hiroto Hotel HTML Template
-  Author: Colorlib
-  Author URI: https://colorlib.com
-  Version: 1.0
-  Created: Colorlib
----------------------------------------------------------  */
+/* ---------------------------------------------------
+   Template Name: Hiroto
+   Description:  Hiroto Hotel HTML Template
+   Author: Colorlib
+----------------------------------------------------- */
 
 'use strict';
 
 (function ($) {
 
-    /*------------------
-        Preloader
-    --------------------*/
-    $(window).on('load', function () {
-        $(".loader").fadeOut();
-        $("#preloder").delay(200).fadeOut("slow");
-    });
+/* --------------------------
+      Función para convertir fecha
+   -------------------------- */
+function convertirFecha(fechaString) {
+    const partes = fechaString.split(" "); // ["17","Nov","2025"]
 
-    /*------------------
-        Background Set
-    --------------------*/
-    $('.set-bg').each(function () {
-        var bg = $(this).data('setbg');
-        $(this).css('background-image', 'url(' + bg + ')');
-    });
+    const dia = partes[0];
+    const mes = partes[1];
+    const año = partes[2];
 
-    //Canvas Menu
-    $(".canvas__open").on('click', function () {
-        $(".offcanvas-menu-wrapper").addClass("active");
-        $(".offcanvas-menu-overlay").addClass("active");
-    });
+    const meses = {
+        Jan: "01", Feb: "02", Mar: "03", Apr: "04",
+        May: "05", Jun: "06", Jul: "07", Aug: "08",
+        Sep: "09", Oct: "10", Nov: "11", Dec: "12"
+    };
 
-    $(".offcanvas-menu-overlay").on('click', function () {
-        $(".offcanvas-menu-wrapper").removeClass("active");
-        $(".offcanvas-menu-overlay").removeClass("active");
-    });
+    return `${año}-${meses[mes]}-${dia}`;
+}
 
-    /*------------------
-		Navigation
-	--------------------*/
-    $(".menu__class").slicknav({
-        appendTo: '#mobile-menu-wrap',
-        allowParentLinks: true
-    });
+/* ------------------
+    Preloader
+-------------------- */
+$(window).on('load', function () {
+    $(".loader").fadeOut();
+    $("#preloder").delay(200).fadeOut("slow");
+});
 
-    /*--------------------------
-        Gallery Slider
-    ----------------------------*/
-    $(".gallery__slider").owlCarousel({
-        loop: true,
-        margin: 10,
-        items: 4,
-        dots: false,
-        smartSpeed: 1200,
-        autoHeight: false,
-        autoplay: true,
-        responsive: {
-            992: {
-                items: 4
-            },
-            768: {
-                items: 3
-            },
-            576: {
-                items: 2
-            },
-            0: {
-                items: 1
-            }
-        }
-    });
+/* --------------------------
+    Background Set
+---------------------------- */
+$('.set-bg').each(function () {
+    var bg = $(this).data('setbg');
+    $(this).css('background-image', 'url(' + bg + ')');
+});
 
-    /*--------------------------
-        Room Pic Slider
-    ----------------------------*/
-    $(".room__pic__slider").owlCarousel({
-        loop: true,
-        margin: 0,
-        items: 1,
-        dots: false,
-        nav: true,
-        navText: ["<i class='arrow_carrot-left'></i>", "<i class='arrow_carrot-right'></i>"],
-        smartSpeed: 1200,
-        autoHeight: false,
-        autoplay: false
-    });
+/* ------------------
+    Canvas Menu
+-------------------- */
+$(".canvas__open").on('click', function () {
+    $(".offcanvas-menu-wrapper").addClass("active");
+    $(".offcanvas-menu-overlay").addClass("active");
+});
 
-    /*--------------------------
-        Room Details Pic Slider
-    ----------------------------*/
-    $(".room__details__pic__slider").owlCarousel({
-        loop: true,
-        margin: 10,
-        items: 2,
-        dots: false,
-        nav: true,
-        navText: ["<i class='arrow_carrot-left'></i>", "<i class='arrow_carrot-right'></i>"],
-        autoHeight: false,
-        autoplay: false,
-        mouseDrag: false,
-        responsive: {
-            576: {
-                items: 2
-            },
-            0: {
-                items: 1
-            }
-        }
-    });
-    
-    /*--------------------------
-        Testimonial Slider
-    ----------------------------*/
-    var testimonialSlider = $(".testimonial__slider");
-    testimonialSlider.owlCarousel({
-        loop: true,
-        margin: 30,
-        items: 1,
-        dots: true,
-        nav: true,
-        navText: ["<i class='fa fa-angle-left'></i>", "<i class='fa fa-angle-right'></i>"],
-        smartSpeed: 1200,
-        autoHeight: false,
-        autoplay: true,
-        mouseDrag: false,
-        onInitialized: function(e) {
-        	    var a = this.items().length;
-                $("#snh-1").html("<span>01</span><span>" + "0" + a + "</span>");
-                var presentage = Math.round((100 / a));
-                $('.slider__progress span').css("width", presentage + "%");
-                
-            }
-        }).on("changed.owl.carousel", function(e) {
-            var b = --e.item.index, a = e.item.count;
-            $("#snh-1").html("<span> "+ "0" +(1 > b ? b + a : b > a ? b - a : b) + "</span><span>" + "0" + a + "</span>");
+$(".offcanvas-menu-overlay").on('click', function () {
+    $(".offcanvas-menu-wrapper").removeClass("active");
+    $(".offcanvas-menu-overlay").removeClass("active");
+});
 
-            var current = e.page.index + 1;
-            var presentage = Math.round((100 / e.page.count) * current);
-            $('.slider__progress span').css("width", presentage + "%");
-    });
-    
-    
-    /*--------------------------
-        Logo Slider
-    ----------------------------*/
-    $(".logo__carousel").owlCarousel({
-        loop: true,
-        margin: 100,
-        items: 5,
-        dots: false,
-        smartSpeed: 1200,
-        autoHeight: false,
-        autoplay: false,
-        responsive: {
-            992: {
-                items: 5
-            },
-            768: {
-                items: 3
-            },
-            320: {
-                items: 2
-            },
-            0: {
-                items: 1
-            }
-        }
-    });
+/* ------------------
+    Navigation
+-------------------- */
+$(".menu__class").slicknav({
+    appendTo: '#mobile-menu-wrap',
+    allowParentLinks: true
+});
 
-    /*--------------------------
-        Select
-    ----------------------------*/
-    $("select").not("#sucursalSelect").niceSelect();
-    
-
-    
-    /*--------------------------
-        Datepicker
-    ----------------------------*/
-    var today = new Date(); 
-    var dd = today.getDate(); 
-    var mm = today.getMonth() + 1; 
-
-    var yyyy = today.getFullYear(); 
-    if (dd < 10) { 
-        dd = '0' + dd; 
+/* --------------------------
+    Gallery Slider
+---------------------------- */
+$(".gallery__slider").owlCarousel({
+    loop: true,
+    margin: 10,
+    items: 4,
+    dots: false,
+    smartSpeed: 1200,
+    autoHeight: false,
+    autoplay: true,
+    responsive: {
+        992: { items: 4 },
+        768: { items: 3 },
+        576: { items: 2 },
+        0: { items: 1 }
     }
-    var mS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+});
 
-    var month;
+/* --------------------------
+    Room Pic Slider
+---------------------------- */
+$(".room__pic__slider").owlCarousel({
+    loop: true,
+    margin: 0,
+    items: 1,
+    dots: false,
+    nav: true,
+    navText: ["<i class='arrow_carrot-left'></i>", "<i class='arrow_carrot-right'></i>"],
+    smartSpeed: 1200,
+    autoHeight: false,
+    autoplay: false
+});
 
-    for (let i = 0; i <= 12; i++) {
-        const element = mS[i];
-        if (mm == mS.indexOf(mS[i])) {
-            month = mS[i-1];
-        }
+/* --------------------------
+    Room Details Pic Slider
+---------------------------- */
+$(".room__details__pic__slider").owlCarousel({
+    loop: true,
+    margin: 10,
+    items: 2,
+    dots: false,
+    nav: true,
+    navText: ["<i class='arrow_carrot-left'></i>", "<i class='arrow_carrot-right'></i>"],
+    autoHeight: false,
+    autoplay: false,
+    mouseDrag: false,
+    responsive: {
+        576: { items: 2 },
+        0: { items: 1 }
     }
-    var today = dd + ' ' + month + ' ' + yyyy; 
+});
 
-    $(".check__in").val(today);
-    $(".check__out").val(today);
+/* --------------------------
+    Testimonial Slider
+---------------------------- */
+var testimonialSlider = $(".testimonial__slider");
+testimonialSlider.owlCarousel({
+    loop: true,
+    margin: 30,
+    items: 1,
+    dots: true,
+    nav: true,
+    navText: ["<i class='fa fa-angle-left'></i>", "<i class='fa fa-angle-right'></i>"],
+    smartSpeed: 1200,
+    autoHeight: false,
+    autoplay: true,
+    mouseDrag: false,
+    onInitialized: function (e) {
+        var a = this.items().length;
+        $("#snh-1").html("<span>01</span><span>" + "0" + a + "</span>");
+        var presentage = Math.round((100 / a));
+        $('.slider__progress span').css("width", presentage + "%");
+    }
+}).on("changed.owl.carousel", function (e) {
+    var b = --e.item.index, a = e.item.count;
+    $("#snh-1").html("<span> " + "0" + (1 > b ? b + a : b > a ? b - a : b) + "</span><span>" + "0" + a + "</span>");
+    var current = e.page.index + 1;
+    var presentage = Math.round((100 / e.page.count) * current);
+    $('.slider__progress span').css("width", presentage + "%");
+});
 
-    $( ".datepicker_pop" ).datepicker({ 
-        dateFormat: 'dd M yy',
-        minDate: 0
-    });
+/* --------------------------
+    Logo Slider
+---------------------------- */
+$(".logo__carousel").owlCarousel({
+    loop: true,
+    margin: 100,
+    items: 5,
+    dots: false,
+    smartSpeed: 1200,
+    autoHeight: false,
+    autoplay: false,
+    responsive: {
+        992: { items: 5 },
+        768: { items: 3 },
+        320: { items: 2 },
+        0: { items: 1 }
+    }
+});
 
-    async function cargarSucursales() {
+/* --------------------------
+    Select
+---------------------------- */
+$("select").not("#sucursalSelect").niceSelect();
+
+/* --------------------------
+    Datepicker
+---------------------------- */
+var today = new Date();
+var dd = today.getDate();
+var mm = today.getMonth() + 1;
+var yyyy = today.getFullYear();
+
+if (dd < 10) dd = '0' + dd;
+
+var mS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+var month = mS[mm - 1];
+
+var todayFormatted = dd + ' ' + month + ' ' + yyyy;
+
+$(".check__in").val(todayFormatted);
+$(".check__out").val(todayFormatted);
+
+$(".datepicker_pop").datepicker({
+    dateFormat: 'dd M yy',
+    minDate: 0
+});
+
+/* --------------------------
+      Cargar Sucursales
+---------------------------- */
+async function cargarSucursales() {
     const select = document.getElementById("sucursalSelect");
 
-   try {
-    const response = await fetch("http://localhost:3000/api/sucursales/");
-    const data = await response.json();
+    if (!select) return;
 
-    select.innerHTML = `<option value="">Seleccione una sucursal</option>`;
+    try {
+        const response = await fetch("http://localhost:3000/api/sucursales");
+        const data = await response.json();
 
-    data.forEach(s => {
-        select.innerHTML += `
-            <option value="${s.idSucursal}">
-                ${s.nombre} - ${s.direccion}
-            </option>
-        `;
-    });
+        select.innerHTML = `<option value="">Seleccione una sucursal</option>`;
+
+        data.forEach(s => {
+            select.innerHTML += `
+                <option value="${s.idSucursal}">
+                    ${s.nombre} - ${s.direccion}
+                </option>
+            `;
+        });
 
     } catch (error) {
 
-    Swal.fire({
-        icon: "error",
-        title: "Error al cargar sucursales",
-        text: "No se pudieron cargar las sucursales, intente nuevamente.",
-        confirmButtonColor: "#d33"
-    });
+        if (typeof Swal !== "undefined") {
+            Swal.fire({
+                icon: "error",
+                title: "Error al cargar sucursales",
+                text: "No se pudieron cargar las sucursales.",
+                confirmButtonColor: "#d33"
+            });
+        } else {
+            console.warn("Error al cargar sucursales:", error);
+        }
 
-    select.innerHTML = `<option value="">Error al cargar</option>`;
+        select.innerHTML = `<option value="">Error al cargar</option>`;
     }
 }
 
 document.addEventListener("DOMContentLoaded", cargarSucursales);
 
-// Refrescar selects después de cargar DOM
+
+/* --------------------------
+    Actualizar nice-select
+---------------------------- */
 document.addEventListener("DOMContentLoaded", () => {
     setTimeout(() => {
         $("select").niceSelect('update');
     }, 200);
 });
 
-function convertirFecha(fechaString) {
-    const d = new Date(fechaString);
-    return d.toISOString().split("T")[0]; // YYYY-MM-DD
-}
+/* --------------------------
+    Enviar búsqueda
+---------------------------- */
+const filterForm = document.querySelector(".filter__form");
 
-document.querySelector(".filter__form").addEventListener("submit", async function (e) {
-    e.preventDefault();
+if (filterForm) {
+    filterForm.addEventListener("submit", async function (e) {
+        e.preventDefault();
 
-    const idSucursal = document.getElementById("sucursalSelect").value;
+        const idSucursal = document.getElementById("sucursalSelect").value;
+        const fechaInicio = convertirFecha(document.querySelector(".check__in").value);
+        const fechaFin = convertirFecha(document.querySelector(".check__out").value);
+        const cantidadHuespedes = document.getElementById("huespedesSelect").value;
 
-    let fechaInicio = convertirFecha(document.querySelector(".check__in").value);
-    let fechaFin = convertirFecha(document.querySelector(".check__out").value);
+        // Validación
+        if (!idSucursal) {
+            if (typeof Swal !== "undefined") Swal.fire("Seleccione una sucursal");
+            return;
+        }
 
-    const cantidadHuespedes = document.getElementById("huespedesSelect").value;
-
-    if (!idSucursal) {
-        alert("Seleccione una sucursal");
-        return;
-    }
-
-    try {
-        const query = new URLSearchParams({
+        console.log("DEBUG → Datos enviados", {
             idSucursal,
             fechaInicio,
             fechaFin,
             cantidadHuespedes
         });
 
-        const response = await fetch(`http://localhost:3000/api/habitaciones/disponibles?${query}`);
-        
-        if (!response.ok) {
-            alert("Error al buscar habitaciones");
-            return;
+        try {
+            const response = await fetch("http://localhost:3000/api/habitaciones/buscar", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    idSucursal,
+                    fechaInicio,
+                    fechaFin,
+                    cantidadHuespedes
+                })
+            });
+
+            if (!response.ok) {
+                if (typeof Swal !== "undefined") Swal.fire("Error al buscar");
+                return;
+            }
+
+            const data = await response.json();
+            localStorage.setItem("habitacionesBusqueda", JSON.stringify(data));
+            window.location.href = "rooms.html";
+
+        } catch (error) {
+            console.error(error);
+            if (typeof Swal !== "undefined") Swal.fire("Error de conexión");
         }
-
-        const data = await response.json();
-
-        localStorage.setItem("habitacionesBusqueda", JSON.stringify(data));
-
-        window.location.href = "rooms.html";
-
-    } catch (error) {
-        console.error(error);
-        alert("Error al conectar con el servidor");
-    }
-});
+    });
 }
-)(jQuery);
+})(jQuery);

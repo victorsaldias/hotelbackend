@@ -3,10 +3,13 @@ import { getConnection } from "../config/dbConfig.js";
 
 export async function ingresarReservaCompleta(data) {
     const { fechaInicio, fechaFin, idCliente, idHabitacion } = data;
+
     const precio = await obtenerPrecioHabitacion(idHabitacion);
     const dias = Math.ceil((new Date(fechaFin) - new Date(fechaInicio)) / (1000 * 60 * 60 * 24));
     const total = dias * precio;
+
     const conn = await getConnection();
+
     const result = await conn.request()
         .input("fechaInicio", fechaInicio)
         .input("fechaFin", fechaFin)
@@ -27,17 +30,30 @@ export async function ingresarReservaCompleta(data) {
     return { idReserva, total };
 }
 
+
 export async function verReservas() {
     const conn = await getConnection();
     const result = await conn.request().query(`
-        SELECT r.*, c.nombre AS cliente
+        SELECT 
+            r.idReserva,
+            r.fechaInicio,
+            r.fechaFin,
+            r.total,
+            r.idEstadoReserva,
+            c.nombre,
+            c.apellido,
+            c.rut,
+            h.numero AS numeroHabitacion
         FROM reserva r
         JOIN cliente c ON r.idCliente = c.idCliente
+        LEFT JOIN reservaHabitacion rh ON r.idReserva = rh.idReserva
+        LEFT JOIN habitacion h ON rh.idHabitacion = h.idHabitacion
         ORDER BY r.idReserva DESC;
     `);
 
     return result.recordset;
 }
+
 
 export async function verReservaPorId(idReserva) {
     const conn = await getConnection();
@@ -48,10 +64,12 @@ export async function verReservaPorId(idReserva) {
         `);
 
     return result.recordset[0];
-}   
+}
+
 
 export async function confirmarReserva(idReserva, idEmpleado) {
     const conn = await getConnection();
+
     await conn.request()
         .input("idReserva", idReserva)
         .input("idEmpleado", idEmpleado)
@@ -66,6 +84,7 @@ export async function confirmarReserva(idReserva, idEmpleado) {
 
 export async function cancelarReserva(idReserva) {
     const conn = await getConnection();
+
     await conn.request()
         .input("idReserva", idReserva)
         .query(`
@@ -92,7 +111,6 @@ export async function verHistorialReserva(idCliente) {
 export async function modificarReserva(idReserva, fechaInicio, fechaFin) {
     const conn = await getConnection();
 
-    // obtener habitación asociada
     const habitacion = await conn.request()
         .input("idReserva", idReserva)
         .query(`
@@ -102,11 +120,8 @@ export async function modificarReserva(idReserva, fechaInicio, fechaFin) {
         `);
 
     const idHabitacion = habitacion.recordset[0].idHabitacion;
-
-    // obtener precio
     const precio = await obtenerPrecioHabitacion(idHabitacion);
 
-    // recalcular días
     const dias = Math.ceil((new Date(fechaFin) - new Date(fechaInicio)) / (1000 * 60 * 60 * 24));
     const total = dias * precio;
 
@@ -129,13 +144,11 @@ export async function modificarReserva(idReserva, fechaInicio, fechaFin) {
 export async function modificarHabitacionDeReserva(idReserva, nuevaHabitacion) {
     const conn = await getConnection();
 
-    // eliminar la anterior
     await conn.request()
         .input("idReserva", idReserva)
         .query(`
             DELETE FROM reservaHabitacion WHERE idReserva = @idReserva;
         `);
 
-    // insertar nueva
     await asignarHabitacion(idReserva, nuevaHabitacion);
 }

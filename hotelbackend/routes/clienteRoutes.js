@@ -7,13 +7,16 @@ import {
 
 const router = express.Router();
 
-// Crear cliente
+
+import { obtenerTodosLosClientes } from "../controllers/clienteController.js";
+router.get("/", obtenerTodosLosClientes);
+
 router.post("/", crearCliente);
 
-// Obtener cliente por RUT
+
 router.get("/:rut", obtenerCliente);
 
-// Modificar cliente por RUT
+
 router.put("/:rut", modificarCliente);
 
 export default router;

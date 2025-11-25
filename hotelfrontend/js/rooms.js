@@ -1,6 +1,5 @@
-// ===============================
-// Render dinámico de habitaciones
-// ===============================
+
+// 
 document.addEventListener("DOMContentLoaded", function () {
 
     const rooms = JSON.parse(localStorage.getItem("habitacionesBusqueda"));
@@ -38,11 +37,11 @@ document.addEventListener("DOMContentLoaded", function () {
                     <h2><sup>$</sup>${h.precio}<span>/día</span></h2>
 
                     <ul>
-                        <li><span>Número:</span> ${h.numero}</li>
-                        <li><span>Tipo:</span> ${tipo}</li>
-                        <li><span>Sucursal:</span> ${h.nombreSucursal}</li>
-                        <li><span>Descripción:</span> ${h.descripcion}</li>
-                    </ul>
+    <li><span>Número:</span> ${h.numero}</li>
+    <li><span>Capacidad:</span> ${h.capacidad} huéspedes</li>
+    <li><span>Cama:</span> ${h.caracteristica}</li>
+    <li><span>Precio:</span> $${h.precio}</li>
+</ul>
 
                     <a href="room-details.html?room=${h.idHabitacion}">
                         Ver Detalles

@@ -139,7 +139,6 @@ export async function obtenerPrecioHabitacionController(req, res) {
   }
 }
 
-//VERR HABITACIIONES DE RESERVA
 export async function verHabitacionesDeReservaController(req, res) {
   try {
     const { idReserva } = req.params; 
@@ -158,21 +157,23 @@ export async function verHabitacionesDeReservaController(req, res) {
     res.status(500).json({ message: "Error al obtener habitaciones de la reserva", error: error.message });
   }
 }
-
 export async function obtenerHabitacionesAdecuadas(req, res) {
     try {
-        const { idSucursal, fechaInicio, fechaFin, huespedes } = req.body;
+        const { idSucursal, fechaInicio, fechaFin, cantidadHuespedes } = req.body;
 
         const habitaciones = await buscarHabitacionesPorCapacidadYFechas(
             idSucursal,
             fechaInicio,
             fechaFin,
-            huespedes
+            cantidadHuespedes
         );
 
         res.json(habitaciones);
     } catch (error) {
-        res.status(500).json({ message: "Error al obtener habitaciones", error });
+        res.status(500).json({
+            message: "Error al obtener habitaciones",
+            error: error.message
+        });
     }
 }
 

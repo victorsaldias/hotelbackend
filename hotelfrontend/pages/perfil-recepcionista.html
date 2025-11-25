@@ -3,8 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <title>Mi Perfil - Recepcionista</title>
+
     <link rel="stylesheet" href="../css/admin.css">
     <link rel="stylesheet" href="../css/perfil.css">
+
+    
+    <link rel="stylesheet" 
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+          integrity="sha512-6wV1jV7WjHtkobaN6D+PfYZ7R6pujISiFDUFxIr05oig3NbS1Ry6j8TDIrS9KuX3sI5Yucs5cjox96D65V+BPw==" 
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 
 <body>
@@ -16,15 +23,17 @@
 
         <ul class="menu">
             <li onclick="location.href='recepcionista.html'">
-                <i class="fa fa-bed"></i> Reservas
+                <i class="fa-solid fa-bed"></i> Registrar Reservas
             </li>
-
+            <li onclick="location.href='registrar-cliente.html'">
+                <i class="fa fa-user-plus"></i> Registrar Cliente
+            </li>
             <li class="active" onclick="location.href='perfil-recepcionista.html'">
-                <i class="fa fa-user"></i> Mi Perfil
+                <i class="fa-solid fa-user"></i> Mi Perfil
             </li>
 
             <li onclick="location.href='../index.html'" style="color:#ff6b6b;">
-                <i class="fa fa-sign-out-alt"></i> Cerrar Sesión
+                <i class="fa-solid fa-right-from-bracket"></i> Cerrar Sesión
             </li>
         </ul>
     </aside>

@@ -5,7 +5,7 @@ export async function listarProvincias(req, res) {
         const { idRegion } = req.params;
         const provincias = await obtenerProvinciasPorRegion(idRegion);
         res.json(provincias);
-    } catch (e) {
-        res.status(500).json({ message: e.message });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
     }
 }

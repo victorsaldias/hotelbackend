@@ -18,28 +18,36 @@ import authRoutes from "./routes/authRoutes.js";
 import regionRoutes from "./routes/regionRoutes.js";
 import provinciaRoutes from "./routes/provinciaRoutes.js";
 import comunaRoutes from "./routes/comunaRoutes.js";
-import empleadoRoutes from "./routes/empleadoRoutes.js";
+import empleadoAuthRoutes from "./routes/empleadoAuthRoutes.js";
 import sucursalRoutes from "./routes/sucursalRoutes.js";
+import empleadoRoutes from "./routes/empleadoRoutes.js";
+
+import { getConnection } from "./config/dbConfig.js";
+
+console.log("Cargando rutas...");
 
 const app = express();
 
-
-
-// MIDDLEWARES
 app.use(cors({
-    origin: [
-        "http://localhost:5500",
-        "http://192.168.0.16:5500",
-        "http://127.0.0.1:5500",
-        "http://localhost:5000",
-        "http://localhost:4000",
-        "http://localhost:3000"
-    ],
+    origin: function (origin, callback) {
+        const allowedOrigins = [
+            "http://localhost:5500",
+            "http://127.0.0.1:5500",
+            "http://localhost:3000",
+            "http://192.168.0.16:5500"
+        ];
+
+        if (!origin || allowedOrigins.includes(origin)) {
+            return callback(null, true);
+        }
+
+        return callback(new Error("CORS bloqueado por seguridad: " + origin));
+    },
     credentials: true
 }));
 
-app.use(express.json()); // JSON
-app.use(express.urlencoded({ extended: true })); // Formularios
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 app.use(session({
     secret: process.env.SESSION_SECRET || "clave-secreta-de-respaldo-muy-fuerte",
@@ -48,20 +56,42 @@ app.use(session({
     cookie: {
         maxAge: 1000 * 60 * 60 * 24,
         httpOnly: true,
-        secure: false
+        secure: false,
+        sameSite: 'lax'
     }
 }));
 
-// RUTAS 
+app.get("/api/test", async (req, res) => {
+    try {
+        const pool = await getConnection();
+        const result = await pool.request().query("SELECT GETDATE() AS fecha");
+        res.json({
+            ok: true,
+            azure: "Conexión exitosa a Azure SQL",
+            result: result.recordset
+        });
+    } catch (err) {
+        res.status(500).json({ ok: false, error: err.message });
+    }
+});
+
 app.use("/", router);
 app.use("/api/habitaciones", habitacionRoutes);
 app.use("/api/clientes", clienteRoutes);
 app.use("/api/reservas", reservaRoutes);
 app.use("/api/auth", authRoutes);
-app.use("/api/empleados", empleadoRoutes);
 app.use("/api/regiones", regionRoutes);
 app.use("/api/provincias", provinciaRoutes);
 app.use("/api/comunas", comunaRoutes);
 app.use("/api/sucursales", sucursalRoutes);
+app.use("/api/empleados", empleadoAuthRoutes);
+app.use("/api/empleados-admin", empleadoRoutes);
+
+console.log("Rutas cargadas:");
+app._router.stack.forEach(r => {
+    if (r.route && r.route.path) {
+        console.log(r.route.stack[0].method.toUpperCase(), r.route.path);
+    }
+});
 
 export default app;

@@ -8,31 +8,34 @@ console.log("DB_USER:", process.env.DB_USER);
 console.log("DB_PASSWORD:", process.env.DB_PASSWORD);
 console.log("DB_SERVER:", process.env.DB_SERVER);
 console.log("DB_DATABASE:", process.env.DB_DATABASE);
-console.log("DB_PORT:", process.env.DB_PORT);
 
 const dbConfig = {
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
     server: process.env.DB_SERVER,
     database: process.env.DB_DATABASE,
-    port: parseInt(process.env.DB_PORT),
+    port: 1433,
     options: {
         encrypt: true,
-        trustServerCertificate: true,
+        trustServerCertificate: false,
         enableArithAbort: true,
-        useUTC: true,
-        tdsVersion: "7_4"
+        useUTC: true
+    },
+    pool: {
+        max: 10,
+        min: 0,
+        idleTimeoutMillis: 30000
     }
 };
 
 export async function getConnection() {
     try {
-        console.log("Intentando conectar al SQL Server...");
+        console.log("Intentando conectar a Azure SQL...");
         const pool = await sql.connect(dbConfig);
-        console.log("Conexión exitosa al SQL Server.");
+        console.log("Conexión exitosa a Azure SQL.");
         return pool;
     } catch (error) {
-        console.log("Error conectando a la BD:", error);
+        console.error("Error conectando a Azure SQL:", error);
         throw error;
     }
 }

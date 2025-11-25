@@ -120,9 +120,7 @@ export async function verHabitacionesDeReserva(idReserva) {
     return result.recordset;
 }
 
-export async function buscarHabitacionesPorCapacidadYFechas(
-    idSucursal, fechaInicio, fechaFin, cantidadHuespedes
-) {
+export async function buscarHabitacionesPorCapacidadYFechas(idSucursal, fechaInicio, fechaFin, cantidadHuespedes) {
     const pool = await getConnection();
 
     const result = await pool.request()
@@ -132,19 +130,26 @@ export async function buscarHabitacionesPorCapacidadYFechas(
         .input("cantidadHuespedes", cantidadHuespedes)
         .query(`
             SELECT 
-                h.*,
-                s.nombre AS nombreSucursal,
-                s.direccion AS direccionSucursal
+                h.idHabitacion,
+                h.numero,
+                h.precio,
+                h.idSucursal,
+                h.idEstadoHabitacion,
+                h.idTipoHabitacion,
+                c.capacidad,
+                c.cama AS caracteristica
             FROM habitacion h
-            INNER JOIN sucursal s ON s.idSucursal = h.idSucursal
+            INNER JOIN caracteristica c ON h.idCaracteristica = c.idCaracteristica
             WHERE h.idSucursal = @idSucursal
-            AND h.capacidad >= @cantidadHuespedes
-            AND h.idHabitacion NOT IN (
-                SELECT idHabitacion FROM reserva
-                WHERE (fechaInicio <= @fechaFin)
-                AND (fechaFin >= @fechaInicio)
-                AND idEstadoReserva <> 3
-            )
+              AND c.capacidad >= @cantidadHuespedes
+              AND h.idEstadoHabitacion = 1
+              AND h.idHabitacion NOT IN (
+                    SELECT idHabitacion 
+                    FROM reserva
+                    WHERE fechaInicio <= @fechaFin
+                      AND fechaFin >= @fechaInicio
+                      AND idEstadoReserva <> 3
+                )
         `);
 
     return result.recordset;

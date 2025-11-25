@@ -85,3 +85,11 @@ export async function actualizarCliente(rut, data) {
 
   return result.recordset[0];
 }
+export async function obtenerTodosClientesDB() {
+  const pool = await getConnection();
+
+  const result = await pool.request()
+    .query("SELECT * FROM cliente");
+
+  return result.recordset;
+}

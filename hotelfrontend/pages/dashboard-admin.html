@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Panel Administrador</title>
     <link rel="stylesheet" href="../css/admin.css">
+    <link rel="stylesheet" href="../css/responsive.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 
@@ -11,53 +12,46 @@
 
 <div class="layout">
 
-   
     <aside class="sidebar">
         <h2 class="sidebar-title">Hotel XYZ</h2>
 
         <ul class="menu">
-    <li class="active" onclick="location.href='dashboard-admin.html'">
-        <i class="fa fa-users"></i> Registrar Empleados
-    </li>
-
-    <li onclick="location.href='reportes.html'">
-        <i class="fa fa-chart-line"></i> Reportes
-    </li>
-
-    <li onclick="location.href='perfil.html'">
-        <i class="fa fa-user"></i> Mi Perfil
-    </li>
-
-    <li onclick="cerrarSesion()" style="color:#ff6b6b;">
-        <i class="fa fa-right-from-bracket"></i> Cerrar Sesión
-    </li>
-</ul>
-
+            <li class="active" onclick="location.href='dashboard-admin.html'">
+                <i class="fa fa-users"></i> Registrar Empleados
+            </li>
+            <li onclick="location.href='reportes.html'">
+                <i class="fa fa-chart-line"></i> Reportes
+            </li>
+            <li onclick="location.href='perfil.html'">
+                <i class="fa fa-user"></i> Mi Perfil
+            </li>
+            <li onclick="cerrarSesion()" style="color:#ff6b6b;">
+                <i class="fa fa-right-from-bracket"></i> Cerrar Sesión
+            </li>
+        </ul>
     </aside>
+
+    <div class="overlay-sidebar" onclick="toggleSidebar()"></div>
 
     <main class="content">
 
-      
         <header class="topbar">
-    <h2>Panel de Administración</h2>
+            <button class="btn-menu" onclick="toggleSidebar()">
+                <i class="fa fa-bars"></i>
+            </button>
 
-    <div class="topbar-right">
-        <span id="adminName">Administrador</span>
+            <h2>Panel de Administración</h2>
 
-        <button id="btnLogout" class="logout-btn">
-            <i class="fa fa-right-from-bracket"></i> Cerrar sesión
-        </button>
-    </div>
-</header>
+            <div class="topbar-right">
+                <span id="adminName">Administrador</span>
+            </div>
+        </header>
 
-
-       
         <div class="actions">
             <input type="text" id="buscar" placeholder="Buscar empleado..." class="search">
             <button class="btn-add" onclick="abrirModal()">Agregar Empleado</button>
         </div>
 
-        
         <div class="table-container">
             <table class="tabla">
                 <thead>
@@ -73,31 +67,34 @@
                     </tr>
                 </thead>
 
-                <tbody id="listaEmpleados">
-                   
-                </tbody>
+                <tbody id="listaEmpleados"></tbody>
             </table>
         </div>
+
     </main>
 </div>
-
 
 <div class="modal" id="modalEmpleado">
     <div class="modal-content">
         <h3 class="modal-title">Registrar Empleado</h3>
 
         <div class="form-grid">
+
             <input type="text" id="empNombre" placeholder="Nombre">
             <input type="text" id="empApellido" placeholder="Apellido">
             <input type="text" id="empRut" placeholder="RUT">
             <input type="email" id="empCorreo" placeholder="Correo">
-            <input type="password" id="empPass" placeholder="Contraseña">
+
+            <div id="groupPassword">
+                <input type="password" id="empPass" placeholder="Contraseña">
+            </div>
 
             <select id="empRol">
                 <option value="admin">Administrador</option>
                 <option value="recepcionista">Recepcionista</option>
                 <option value="aseo">Personal de aseo</option>
             </select>
+
         </div>
 
         <div class="modal-actions">
@@ -108,6 +105,13 @@
 </div>
 
 <script src="../js/admin.js"></script>
+
+<script>
+function toggleSidebar() {
+    document.querySelector(".sidebar").classList.toggle("show-sidebar");
+    document.querySelector(".overlay-sidebar").classList.toggle("active");
+}
+</script>
 
 </body>
 </html>

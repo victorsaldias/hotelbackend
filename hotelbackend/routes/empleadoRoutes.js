@@ -1,56 +1,30 @@
 import express from "express";
 import {
-  loginEmpleado,
-  crearEmpleado,
-  listarEmpleados,
-  modificarEmpleado,
-  suspenderEmpleado,
-  cambiarPasswordEmpleado
+    obtenerEmpleados,
+    obtenerEmpleadoPorId,
+    crearEmpleado,
+    actualizarEmpleado,
+    eliminarEmpleado,
+    buscarEmpleados
 } from "../controllers/empleadoController.js";
-
-import { verificarToken, permitirRol } from "../middlewares/auth.js";
 
 const router = express.Router();
 
-//LOGIN EMPLEADO 
-router.post("/login", loginEmpleado);
 
-// CREAR EMPLEADO (ADMIN)
-router.post(
-  "/crear",
-  verificarToken,
-  permitirRol("Administrador"),
-  crearEmpleado
-);
-// LISTAR EMPLEADOS (ADMIN)
-router.get(
-  "/",
-  verificarToken,
-  permitirRol("Administrador"),
-  listarEmpleados
-);
+router.get("/", obtenerEmpleados);
 
-// MODIFICAR EMPLEADO (ADMIN)
-router.put(
-  "/modificar/:idEmpleado",
-  verificarToken,
-  permitirRol("Administrador"),
-  modificarEmpleado
-);
 
-// SUSPENDER EMPLEADO (ADMIN)
-router.put(
-  "/suspender/:idEmpleado",
-  verificarToken,
-  permitirRol("Administrador"),
-  suspenderEmpleado
-);
+router.get("/buscar", buscarEmpleados);
 
-// CAMBIAR PASSWORD EMPLEADO (AUTENTICADO)
-router.put(
-  "/cambiar-password",
-  verificarToken, // solo autenticado
-  cambiarPasswordEmpleado
-);
+
+router.get("/:id", obtenerEmpleadoPorId);
+
+
+router.post("/", crearEmpleado);
+
+router.put("/:id", actualizarEmpleado);
+
+
+router.delete("/:id", eliminarEmpleado);
 
 export default router;
