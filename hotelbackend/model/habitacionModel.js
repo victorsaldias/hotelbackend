@@ -120,7 +120,12 @@ export async function verHabitacionesDeReserva(idReserva) {
     return result.recordset;
 }
 
-export async function buscarHabitacionesPorCapacidadYFechas(idSucursal, fechaInicio, fechaFin, cantidadHuespedes) {
+export async function buscarHabitacionesPorCapacidadYFechas(
+    idSucursal,
+    fechaInicio,
+    fechaFin,
+    cantidadHuespedes
+) {
     const pool = await getConnection();
 
     const result = await pool.request()
@@ -129,31 +134,26 @@ export async function buscarHabitacionesPorCapacidadYFechas(idSucursal, fechaIni
         .input("fechaFin", fechaFin)
         .input("cantidadHuespedes", cantidadHuespedes)
         .query(`
-            SELECT 
-                h.idHabitacion,
-                h.numero,
-                h.precio,
-                h.idSucursal,
-                h.idEstadoHabitacion,
-                h.idTipoHabitacion,
-                c.capacidad,
-                c.cama AS caracteristica
+            SELECT h.*, c.capacidad, c.cama, c.tamano
             FROM habitacion h
-            INNER JOIN caracteristica c ON h.idCaracteristica = c.idCaracteristica
+            INNER JOIN tipoHabitacion th ON th.idTipoHabitacion = h.idTipoHabitacion
+            INNER JOIN tipoHabitacionCaracteristica thc ON thc.idTipoHabitacion = th.idTipoHabitacion
+            INNER JOIN caracteristica c ON c.idCaracteristica = thc.idCaracteristica
             WHERE h.idSucursal = @idSucursal
-              AND c.capacidad >= @cantidadHuespedes
-              AND h.idEstadoHabitacion = 1
+              AND c.capacidad = @cantidadHuespedes
               AND h.idHabitacion NOT IN (
-                    SELECT idHabitacion 
-                    FROM reserva
-                    WHERE fechaInicio <= @fechaFin
-                      AND fechaFin >= @fechaInicio
-                      AND idEstadoReserva <> 3
-                )
+                    SELECT rh.idHabitacion
+                    FROM reservaHabitacion rh
+                    INNER JOIN reserva r ON r.idReserva = rh.idReserva
+                    WHERE r.fechaInicio <= @fechaFin
+                      AND r.fechaFin >= @fechaInicio
+                      AND r.idEstadoReserva IN (1, 2)
+              );
         `);
 
     return result.recordset;
 }
+
 
 
 

@@ -67,13 +67,13 @@ document.getElementById("loginEmpleadoForm").addEventListener("submit", async (e
         const rol = data.empleado.rolNombre.toLowerCase();
 
         if (rol === "administrador") {
-            window.location.replace("dashboard-admin.html");
+            window.location.href = "dashboard-admin.html";
         } 
         else if (rol === "recepcionista") {
-            window.location.replace =( "recepcionista.html");
+            window.location.href = "recepcionista.html";
         } 
         else if (rol === "aseo" || rol === "personal de aseo") {
-            window.location.replace = ("personal-aseo.html");
+            window.location.href = "personal-aseo.html";
         } 
         else {
             Swal.fire({

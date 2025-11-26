@@ -1,7 +1,7 @@
-// authStatus.js
 document.addEventListener("DOMContentLoaded", () => {
 
-    const isLogged = localStorage.getItem("userLogged") === "true";
+    const clienteLogueado = localStorage.getItem("userLogged") === "true";
+    const empleadoLogueado = localStorage.getItem("usuario") !== null;
 
     // Desktop
     const loginBtn = document.getElementById("loginBtn");
@@ -13,7 +13,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const mobileRegisterBtn = document.getElementById("mobileRegisterBtn");
     const mobileLogoutBtn = document.getElementById("mobileLogoutBtn");
 
-    function updateUI(logged) {
+    // 🔥 Si es cliente, mostramos botones del cliente
+    // 🔥 Si es empleado, NO mostramos botones del cliente (admin NO usa navbar del cliente)
+    function updateUI() {
+        const logged = clienteLogueado; // SOLO afecta clientes
+
         if (loginBtn) loginBtn.style.display = logged ? "none" : "inline-block";
         if (registerBtn) registerBtn.style.display = logged ? "none" : "inline-block";
         if (logoutBtn) logoutBtn.style.display = logged ? "inline-block" : "none";
@@ -23,19 +27,37 @@ document.addEventListener("DOMContentLoaded", () => {
         if (mobileLogoutBtn) mobileLogoutBtn.style.display = logged ? "block" : "none";
     }
 
-    updateUI(isLogged);
+    updateUI();
 
-    function logout() {
+    // =============================
+    // 🔵 LOGOUT CLIENTE
+    // =============================
+    window.logoutCliente = function () {
         localStorage.removeItem("userLogged");
         localStorage.removeItem("clienteNombre");
         localStorage.removeItem("clienteApellido");
         localStorage.removeItem("clienteId");
+        
 
-        updateUI(false);
+        updateUI();
 
         window.location.href = "index.html";
-    }
+    };
 
-    if (logoutBtn) logoutBtn.addEventListener("click", logout);
-    if (mobileLogoutBtn) mobileLogoutBtn.addEventListener("click", logout);
+    // =============================
+    // 🔴 LOGOUT EMPLEADO
+    // =============================
+    window.logoutEmpleado = function () {
+        localStorage.removeItem("usuario");
+        localStorage.removeItem("empleado");
+    localStorage.removeItem("token");
+
+        // Login empleados está en pages
+        window.location.href = "login-aseo.html";
+        window.history.replaceState(null, null, "login-aseo.html");
+    };
+
+    // Eventos SOLO PARA CLIENTES
+    if (logoutBtn) logoutBtn.addEventListener("click", logoutCliente);
+    if (mobileLogoutBtn) mobileLogoutBtn.addEventListener("click", logoutCliente);
 });
