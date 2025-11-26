@@ -53,6 +53,7 @@ document.getElementById("loginEmpleadoForm").addEventListener("submit", async (e
         // ✔ Guardamos datos del empleado
         localStorage.setItem("token", data.token);
         localStorage.setItem("empleado", JSON.stringify(data.empleado));
+        
 
         // ✔ Mensaje de éxito elegante
         await Swal.fire({

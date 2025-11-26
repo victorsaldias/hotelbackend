@@ -13,10 +13,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const mobileRegisterBtn = document.getElementById("mobileRegisterBtn");
     const mobileLogoutBtn = document.getElementById("mobileLogoutBtn");
 
-    // 🔥 Si es cliente, mostramos botones del cliente
-    // 🔥 Si es empleado, NO mostramos botones del cliente (admin NO usa navbar del cliente)
     function updateUI() {
-        const logged = clienteLogueado; // SOLO afecta clientes
+        const logged = clienteLogueado; 
 
         if (loginBtn) loginBtn.style.display = logged ? "none" : "inline-block";
         if (registerBtn) registerBtn.style.display = logged ? "none" : "inline-block";
@@ -29,9 +27,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     updateUI();
 
-    // =============================
-    // 🔵 LOGOUT CLIENTE
-    // =============================
+    //  LOGOUT CLIENTE
     window.logoutCliente = function () {
         localStorage.removeItem("userLogged");
         localStorage.removeItem("clienteNombre");
@@ -44,9 +40,7 @@ document.addEventListener("DOMContentLoaded", () => {
         window.location.href = "index.html";
     };
 
-    // =============================
-    // 🔴 LOGOUT EMPLEADO
-    // =============================
+    //  LOGOUT EMPLEADO
     window.logoutEmpleado = function () {
         localStorage.removeItem("usuario");
         localStorage.removeItem("empleado");

@@ -1,11 +1,11 @@
 document.getElementById("loginEmpleadoForm").addEventListener("submit", async (e) => {
     e.preventDefault(); // Evita recarga
 
-    // 📌 VALIDACIONES
+    // VALIDACIONES
     const correo = document.getElementById("correoEmpleado").value.trim();
     const password = document.getElementById("passwordEmpleado").value.trim();
 
-    // ⚠ Validar campos vacíos
+    // Validar campos vacíos
     if (!correo || !password) {
         Swal.fire({
             icon: "warning",
@@ -15,7 +15,7 @@ document.getElementById("loginEmpleadoForm").addEventListener("submit", async (e
         return;
     }
 
-    // ⚠ Validar formato de correo
+    // Validar formato de correo
     function validarFormatoCorreo(correo) {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return emailRegex.test(correo);
@@ -30,7 +30,7 @@ document.getElementById("loginEmpleadoForm").addEventListener("submit", async (e
         return;
     }
 
-    // 📡 Inicia solicitud al backend
+    // Inicia solicitud al backend
     try {
         const response = await fetch("http://localhost:3000/api/empleados/login", {
             method: "POST",
@@ -40,7 +40,7 @@ document.getElementById("loginEmpleadoForm").addEventListener("submit", async (e
 
         const data = await response.json();
 
-        // ❌ Error del servidor / login inválido
+        // Error del servidor / login inválido
         if (!response.ok) {
             Swal.fire({
                 icon: "error",
@@ -50,11 +50,15 @@ document.getElementById("loginEmpleadoForm").addEventListener("submit", async (e
             return;
         }
 
-        // ✔ Guardamos datos del empleado
+        // Guarda datos del empleado
         localStorage.setItem("token", data.token);
         localStorage.setItem("empleado", JSON.stringify(data.empleado));
+        localStorage.setItem("empleadoId", data.empleado.idEmpleado);
+        localStorage.setItem("empleadoNombre", data.empleado.nombre);
+        localStorage.setItem("empleadoApellido", data.empleado.apellido);
+        localStorage.setItem("empleadoRol", data.empleado.rolNombre);
 
-        // ✔ Mensaje de éxito elegante
+        // Mensaje de éxito elegante
         await Swal.fire({
             icon: "success",
             title: "¡Bienvenido!",
@@ -63,17 +67,17 @@ document.getElementById("loginEmpleadoForm").addEventListener("submit", async (e
             showConfirmButton: false
         });
 
-        // 🔥 REDIRECCIÓN SEGÚN ROL
+        // REDIRECCIÓN SEGÚN ROL
         const rol = data.empleado.rolNombre.toLowerCase();
 
         if (rol === "administrador") {
-            window.location.replace("dashboard-admin.html");
+            window.location.href ="dashboard-admin.html";
         } 
         else if (rol === "recepcionista") {
-            window.location.replace =( "recepcionista.html");
+            window.location.href = "recepcionista.html";
         } 
         else if (rol === "aseo" || rol === "personal de aseo") {
-            window.location.replace = ("personal-aseo.html");
+            window.location.href ="personal-aseo.html";
         } 
         else {
             Swal.fire({

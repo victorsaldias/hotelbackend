@@ -22,7 +22,7 @@ import empleadoAuthRoutes from "./routes/empleadoAuthRoutes.js";
 import sucursalRoutes from "./routes/sucursalRoutes.js";
 import empleadoRoutes from "./routes/empleadoRoutes.js";
 import rolRoutes from "./routes/rolRoutes.js";
-
+import limpiezaRoutes from "./routes/limpiezaRoutes.js";
 import { getConnection } from "./config/dbConfig.js";
 
 console.log("Cargando rutas...");
@@ -88,7 +88,7 @@ app.use("/api/sucursales", sucursalRoutes);
 app.use("/api/empleados", empleadoAuthRoutes);
 app.use("/api/empleados-admin", empleadoRoutes);
 app.use("/api/roles", rolRoutes);
-
+app.use("/api/limpieza", limpiezaRoutes);
 console.log("Rutas cargadas:");
 app._router.stack.forEach(r => {
     if (r.route && r.route.path) {
