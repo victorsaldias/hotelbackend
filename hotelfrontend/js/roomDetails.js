@@ -1,60 +1,76 @@
+document.addEventListener("DOMContentLoaded", async function () {
 
-        const rooms = {
-            1: {
-                title: "Habitación Premium King",
-                desc: "Habitación amplia con cama King y estilo moderno.",
-                images: ["../img/rooms/room-1.jpg", "../img/rooms/room-2.jpg"],
-                left: ["Tamaño: 30 m²", "Capacidad: 3 personas", "Cama: King"],
-                right: ["WiFi", "TV HD", "Baño privado"]
-            },
-            2: {
-                title: "Habitación Deluxe",
-                desc: "Confort y elegancia en espacio acogedor.",
-                images: ["../img/rooms/room-3.jpg", "../img/rooms/room-4.jpg"],
-                left: ["Tamaño: 28 m²", "Capacidad: 2 personas", "Cama: Queen"],
-                right: ["WiFi", "TV", "Baño privado"]
-            },
-            3: {
-                title: "Suite Ejecutiva",
-                desc: "Espacio ideal para viajes de negocios.",
-                images: ["../img/rooms/details/rd-1.jpg", "../img/rooms/details/rd-2.jpg"],
-                left: ["Tamaño: 40 m²", "Capacidad: 4 personas", "Cama: King + Sofá cama"],
-                right: ["Minibar", "TV Smart", "WiFi"]
-            },
-            4: {
-                title: "Suite Familiar",
-                desc: "Perfecta para grupos y familias.",
-                images: ["../img/rooms/details/rd-3.jpg", "../img/rooms/details/rd-4.jpg"],
-                left: ["Tamaño: 50 m²", "Capacidad: 5 personas", "Cama: 2 Queen"],
-                right: ["Cocina pequeña", "WiFi", "TV"]
-            }
+    // 1. Obtener ID de la URL
+    const roomId = new URLSearchParams(window.location.search).get("room");
+
+    if (!roomId) {
+        alert("ID de habitación no encontrada en la URL");
+        return;
+    }
+
+    try {
+        // 2. Obtener datos reales desde backend
+        const response = await fetch(`http://localhost:3000/api/habitaciones/id/${roomId}`);
+        const room = await response.json();
+
+        if (!response.ok) {
+            alert("No se pudo cargar la habitación");
+            return;
+        }
+
+        // 3. Map de imágenes según tipo
+        const imagenes = {
+            1: ["../img/rooms/room-1.jpg", "../img/rooms/room-2.jpg"],
+            2: ["../img/rooms/room-3.jpg", "../img/rooms/room-4.jpg"],
+            3: ["../img/rooms/details/rd-1.jpg", "../img/rooms/details/rd-2.jpg"],
+            4: ["../img/rooms/details/rd-3.jpg", "../img/rooms/details/rd-4.jpg"],
         };
 
-        const roomId = new URLSearchParams(window.location.search).get("room") || 1;
-        const room = rooms[roomId];
+        const tipos = {
+            1: "Premium King",
+            2: "Habitación Deluxe",
+            3: "Suite Ejecutiva",
+            4: "Suite Familiar"
+        };
 
-        document.getElementById("room-title").textContent = room.title;
-        document.getElementById("room-desc").textContent = room.desc;
+        const imgs = imagenes[room.idTipoHabitacion] || ["../img/rooms/default.jpg"];
 
-      
-        room.images.forEach(img => {
+        // 4. Coloca título y descripción base
+        document.getElementById("room-title").textContent = tipos[room.idTipoHabitacion];
+        document.getElementById("room-desc").textContent =
+            `Habitación número ${room.numero}, ideal para ${room.capacidad} personas.`;
+        document.getElementById("room-price").textContent = room.precio;
+
+        // 5. Cargar imágenes dinámicamente
+        imgs.forEach(img => {
             document.getElementById("slider").innerHTML +=
                 `<div class="room__details__pic__slider__item set-bg" data-setbg="${img}"></div>`;
         });
 
-        
-        room.left.forEach(i => {
+        // 6. Características reales
+        const left = [
+            `Tamaño: ${room.tamano || "No especificado"}`,
+            `Capacidad: ${room.capacidad} personas`,
+            `Cama: ${room.cama || "No especificado"}`
+        ];
+
+        const right = [
+            "WiFi",
+            "TV HD",
+            "Baño privado"
+        ];
+
+        left.forEach(i => {
             document.getElementById("room-details-left").innerHTML +=
                 `<p><span class="icon_check"></span> ${i}</p>`;
         });
 
-       
-        room.right.forEach(i => {
+        right.forEach(i => {
             document.getElementById("room-details-right").innerHTML +=
                 `<p><span class="icon_check"></span> ${i}</p>`;
         });
 
-        
+        // 7. Activar imágenes + slider
         setTimeout(() => {
 
             $('.set-bg').each(function () {
@@ -71,3 +87,10 @@
             });
 
         }, 200);
+
+    } catch (error) {
+        console.error(error);
+        alert("Error cargando habitación");
+    }
+
+});

@@ -29,14 +29,35 @@ export async function obtenerHabitacionPorNumero(numero) {
 }  
 
 export async function obtenerHabitacionPorId(idHabitacion) {
-  const pool = await getConnection();
-    const result = await pool
-    .request()
-    .input("idHabitacion", idHabitacion)
-    .query("SELECT * FROM habitacion WHERE idHabitacion = @idHabitacion;"
-    );
+    const pool = await getConnection();
+
+    const result = await pool.request()
+        .input("idHabitacion", idHabitacion)
+        .query(`
+            SELECT 
+                h.idHabitacion,
+                h.numero,
+                th.nombre AS tipo,
+                th.precio AS precio,
+                c.capacidad,
+                c.cama,
+                c.tamano,
+                h.idSucursal,
+                h.idTipoHabitacion,
+                h.idEstadoHabitacion
+            FROM habitacion h
+            INNER JOIN tipoHabitacion th
+                ON th.idTipoHabitacion = h.idTipoHabitacion
+            INNER JOIN tipoHabitacionCaracteristica thc
+                ON thc.idTipoHabitacion = th.idTipoHabitacion
+            INNER JOIN caracteristica c
+                ON c.idCaracteristica = thc.idCaracteristica
+            WHERE h.idHabitacion = @idHabitacion
+        `);
+
     return result.recordset[0];
 }
+
 
 export  async function actualizarEstadoHabitacion(numero, idEstadoHabitacion) {
   const pool = await getConnection();
@@ -134,11 +155,20 @@ export async function buscarHabitacionesPorCapacidadYFechas(
         .input("fechaFin", fechaFin)
         .input("cantidadHuespedes", cantidadHuespedes)
         .query(`
-            SELECT h.*, c.capacidad, c.cama, c.tamano
+            SELECT 
+                h.idHabitacion,
+                h.numero,
+                ISNULL(h.precioPersonalizado, t.precio) AS precio,
+                h.idTipoHabitacion,
+                h.idSucursal,
+                c.capacidad,
+                c.cama,
+                c.tamano
             FROM habitacion h
-            INNER JOIN tipoHabitacion th ON th.idTipoHabitacion = h.idTipoHabitacion
-            INNER JOIN tipoHabitacionCaracteristica thc ON thc.idTipoHabitacion = th.idTipoHabitacion
-            INNER JOIN caracteristica c ON c.idCaracteristica = thc.idCaracteristica
+            INNER JOIN tipoHabitacion t 
+                ON t.idTipoHabitacion = h.idTipoHabitacion
+            INNER JOIN caracteristica c 
+                ON c.idCaracteristica = h.idCaracteristica
             WHERE h.idSucursal = @idSucursal
               AND c.capacidad = @cantidadHuespedes
               AND h.idHabitacion NOT IN (
@@ -149,8 +179,7 @@ export async function buscarHabitacionesPorCapacidadYFechas(
                       AND r.fechaFin >= @fechaInicio
                       AND r.idEstadoReserva IN (1, 2)
               );
-        `);
-
+      `);
     return result.recordset;
 }
 
