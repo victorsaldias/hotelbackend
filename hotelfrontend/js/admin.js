@@ -16,13 +16,28 @@ function getEstadoTexto(id) {
     }
 }
 
-// Cargar nombre del admin en el header
-function cargarNombreAdmin() {
-    const usuario = JSON.parse(localStorage.getItem('usuario') || '{}');
-    if (usuario.nombre) {
-        document.getElementById('adminName').textContent =
-            `${usuario.nombre} ${usuario.apellido || ''}`;
+function obtenerEmpleadoActual() {
+    const empleadoId = localStorage.getItem('empleadoId');
+    const empleadoNombre = localStorage.getItem('empleadoNombre');
+    const empleadoApellido = localStorage.getItem('empleadoApellido');
+    
+    if (!empleadoId) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Sesión no válida',
+            text: 'Por favor inicia sesión nuevamente'
+        }).then(() => {
+            window.location.href = '../login-aseo.html';
+        });
+        return null;
     }
+    
+    return {
+        id: parseInt(empleadoId),
+        nombre: empleadoNombre,
+        apellido: empleadoApellido,
+        nombreCompleto: `${empleadoNombre} ${empleadoApellido}`
+    };
 }
 
 // =====================
@@ -36,7 +51,21 @@ async function cargarEmpleados() {
         const tbody = document.getElementById("listaEmpleados");
         tbody.innerHTML = "";
 
-        data.empleados.forEach(emp => {
+        // 🔥 Ajustar a cualquier formato de respuesta
+        const empleados = Array.isArray(data) 
+                            ? data 
+                            : data.empleados 
+                                ? data.empleados 
+                                : [];
+
+        if (empleados.length === 0) {
+            tbody.innerHTML = `
+                <tr><td colspan="8" style="text-align:center;">No hay empleados registrados</td></tr>
+            `;
+            return;
+        }
+
+        empleados.forEach(emp => {
             tbody.innerHTML += `
                 <tr>
                     <td>${emp.idEmpleado}</td>
@@ -48,10 +77,10 @@ async function cargarEmpleados() {
                     <td>${getEstadoTexto(emp.idEstadoEmpleado)}</td>
                     <td class="acciones">
                         <button class="btn-edit" onclick="editarEmpleado(${emp.idEmpleado})" title="Editar empleado">
-                            <i class="fa fa-edit"></i>
+                            <i class="fa fa-edit" style="color:#007bff; font-size:18px;"></i>
                         </button>
                         <button class="btn-delete" onclick="eliminarEmpleado(${emp.idEmpleado})" title="Suspender empleado">
-                            <i class="fa fa-trash"></i>
+                            <i class="fa fa-trash" style="color:#dc3545; font-size:18px;"></i>
                         </button>
                     </td>
                 </tr>
@@ -226,8 +255,18 @@ async function eliminarEmpleado(id) {
 // =====================
 // INICIALIZAR
 // =====================
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener("DOMContentLoaded", () => {
     cargarNombreAdmin();
     cargarEmpleados();
+    obtenerEmpleadoActual();
 });
+
+function cargarNombreAdmin() {
+    const empleado = JSON.parse(localStorage.getItem("empleado"));
+
+    if (empleado) {
+        document.getElementById("empNombre").textContent =
+            empleado.nombre + " " + empleado.apellido;
+    }
+}
 

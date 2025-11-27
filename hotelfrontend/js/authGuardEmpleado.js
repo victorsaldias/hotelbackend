@@ -93,3 +93,23 @@ document.getElementById("loginEmpleadoForm").addEventListener("submit", async (e
         });
     }
 });
+
+(function () {
+
+    // 1️⃣ Validar token y empleado ID
+    const token = localStorage.getItem("token");
+    const empleadoId = localStorage.getItem("empleadoId");
+
+    if (!token || !empleadoId) {
+        // si no hay sesión -> fuera
+        window.location.replace("../index.html");
+        return;
+    }
+
+    // 2️⃣ Bloquear botón atrás del navegador
+    history.pushState(null, null, location.href);
+    window.onpopstate = function () {
+        history.go(1);
+    };
+
+})();

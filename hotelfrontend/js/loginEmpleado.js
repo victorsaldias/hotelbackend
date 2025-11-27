@@ -57,6 +57,7 @@ document.getElementById("loginEmpleadoForm").addEventListener("submit", async (e
         localStorage.setItem("empleadoNombre", data.empleado.nombre);
         localStorage.setItem("empleadoApellido", data.empleado.apellido);
         localStorage.setItem("empleadoRol", data.empleado.rolNombre);
+        
 
         // Mensaje de éxito elegante
         await Swal.fire({

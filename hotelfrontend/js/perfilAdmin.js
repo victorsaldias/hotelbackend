@@ -1,5 +1,5 @@
 const LOGIN_URL = "../login-aseo.html";
-const API = "http://localhost:3000/api/perfil";
+const API = "http://localhost:3000/api/empleados-admin";
 
 function obtenerEmpleadoActual() {
     const id = localStorage.getItem("empleadoId");
@@ -24,22 +24,27 @@ async function cargarPerfil() {
         const res = await fetch(`${API}/${id}`);
         const data = await res.json();
 
-        if (!data.ok) {
-            return Swal.fire("Error", "No se pudo cargar el perfil", "error");
+        // Backend devuelve: { success: true, empleado: {...} }
+        if (!data.success || !data.empleado) {
+            return Swal.fire("Error", "No se pudo cargar el perfil de este empleado", "error");
         }
 
         const e = data.empleado;
 
+        // Llenar campos del perfil
         document.getElementById("perfilRut").value = e.rut;
         document.getElementById("perfilNombre").value = e.nombre;
         document.getElementById("perfilApellido").value = e.apellido;
-        document.getElementById("perfilRol").value = e.rol;
-        document.getElementById("perfilEstado").value = e.estado;
-        document.getElementById("perfilSucursal").value = e.sucursal;
+        document.getElementById("perfilRol").value = e.rol;   // usa texto, no idRol
+        document.getElementById("perfilEstado").value = e.idEstadoEmpleado;
+        document.getElementById("perfilSucursal").value = e.idSucursal;
+
+        // Limpiar password
         document.getElementById("perfilPass").value = "";
 
+        // Mostrar nombre en header
         document.getElementById("perfilNombreHeader").textContent =
-            e.nombre + " " + e.apellido;
+            `${e.nombre} ${e.apellido}`;
 
     } catch (error) {
         Swal.fire("Error", "No se pudo conectar con el servidor", "error");

@@ -3368,3 +3368,48 @@ ol {
 		margin-bottom: 15px;
 	}
 }
+
+/* Input de fecha no editable visualmente */
+.datepicker_pop {
+    cursor: pointer !important; /* Evita cursor de texto */
+}
+
+/* Quitar borde/blink azul del focus */
+.datepicker_pop:focus {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+.datepicker_pop {
+    cursor: pointer !important;
+    caret-color: transparent !important; /* Elimina el cursor dentro del input */
+}
+
+.datepicker_pop:focus {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+.stepper-container {
+    margin-top: 15px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.step-pill {
+    padding: 6px 12px;
+    border-radius: 6px;
+    background: #eee;
+    cursor: pointer;
+}
+
+.step-pill.active {
+    background: #ffc107;
+    color: #000;
+}
+
+.step-pill.done {
+    background: #28a745;
+    color: white;
+}

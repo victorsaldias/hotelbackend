@@ -51,6 +51,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 <li><span>Capacidad:</span> ${h.capacidad} huéspedes</li>
                 <li><span>Cama:</span> ${h.cama || h.caracteristica}</li>
                 <li><span>Precio:</span> $${h.precio}</li>
+                <li><span>Sucursal:</span> ${h.nombreSucursal}</li>
             </ul>
 
             <a href="room-details.html?room=${h.idHabitacion}">

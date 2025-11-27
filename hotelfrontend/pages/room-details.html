@@ -86,8 +86,9 @@
                         <div class="header__top__right">
                             <div class="header__top__auth">
                                 <ul>
-                                    <li><a href="login.html">Login</a></li>
-                                    <li><a href="registro.html">Registrarse</a></li>
+                                    <li><a href="login.html" id="loginBtn">Login</a></li>
+                                    <li><a href="registro.html" id="registerBtn">Registrarse</a></li>
+                                    <li><a href="#" id="logoutBtn" onclick="logoutCliente()" style="display:none">Cerrar Sesión</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -210,6 +211,8 @@
     <script src="../js/owl.carousel.min.js"></script>
     <script src="../js/jquery.slicknav.js"></script>
     <script src="../js/main.js"></script>
+    <script src="../js/authStatus.js"></script>
+    <script src="../js/authGuardCliente.js"></script>
     <script src="../js/authGuardReservas.js"></script>
     <script src="../js/roomDetails.js"></script>
     

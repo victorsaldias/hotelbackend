@@ -10,42 +10,45 @@
 
 /* --------------------------
       Función para convertir fecha
-   -------------------------- */
-function convertirFecha(fechaString) {
-    const partes = fechaString.split(" "); // ["17","Nov","2025"]
+-------------------------- */
+function convertirFecha(texto) {
+    if (!texto) return null;
 
-    const dia = partes[0];
-    const mes = partes[1];
-    const año = partes[2];
+    const partes = texto.split(" ");
+    const dia = parseInt(partes[0], 10);
+    const mesTexto = partes[1];
+    const año = parseInt(partes[2], 10);
 
     const meses = {
-        Jan: "01", Feb: "02", Mar: "03", Apr: "04",
-        May: "05", Jun: "06", Jul: "07", Aug: "08",
-        Sep: "09", Oct: "10", Nov: "11", Dec: "12"
+        Jan: 0, Feb: 1, Mar: 2, Apr: 3, May: 4, Jun: 5,
+        Jul: 6, Aug: 7, Sep: 8, Oct: 9, Nov: 10, Dec: 11
     };
 
-    return `${año}-${meses[mes]}-${dia}`;
+    return new Date(año, meses[mesTexto], dia);
 }
 
-/* ------------------
-    Preloader
--------------------- */
+
+/* --------------------------
+      Preloader
+-------------------------- */
 $(window).on('load', function () {
     $(".loader").fadeOut();
     $("#preloder").delay(200).fadeOut("slow");
 });
 
+
 /* --------------------------
-    Background Set
----------------------------- */
+      Background set
+-------------------------- */
 $('.set-bg').each(function () {
     var bg = $(this).data('setbg');
     $(this).css('background-image', 'url(' + bg + ')');
 });
 
-/* ------------------
-    Canvas Menu
--------------------- */
+
+/* --------------------------
+      Canvas Menu
+-------------------------- */
 $(".canvas__open").on('click', function () {
     $(".offcanvas-menu-wrapper").addClass("active");
     $(".offcanvas-menu-overlay").addClass("active");
@@ -56,17 +59,19 @@ $(".offcanvas-menu-overlay").on('click', function () {
     $(".offcanvas-menu-overlay").removeClass("active");
 });
 
-/* ------------------
-    Navigation
--------------------- */
+
+/* --------------------------
+      Navigation
+-------------------------- */
 $(".menu__class").slicknav({
     appendTo: '#mobile-menu-wrap',
     allowParentLinks: true
 });
 
+
 /* --------------------------
-    Gallery Slider
----------------------------- */
+      Gallery Slider
+-------------------------- */
 $(".gallery__slider").owlCarousel({
     loop: true,
     margin: 10,
@@ -83,9 +88,10 @@ $(".gallery__slider").owlCarousel({
     }
 });
 
+
 /* --------------------------
-    Room Pic Slider
----------------------------- */
+      Room pic slider
+-------------------------- */
 $(".room__pic__slider").owlCarousel({
     loop: true,
     margin: 0,
@@ -98,9 +104,10 @@ $(".room__pic__slider").owlCarousel({
     autoplay: false
 });
 
+
 /* --------------------------
-    Room Details Pic Slider
----------------------------- */
+      Room Details pic slider
+-------------------------- */
 $(".room__details__pic__slider").owlCarousel({
     loop: true,
     margin: 10,
@@ -117,9 +124,10 @@ $(".room__details__pic__slider").owlCarousel({
     }
 });
 
+
 /* --------------------------
-    Testimonial Slider
----------------------------- */
+      Testimonial Slider
+-------------------------- */
 var testimonialSlider = $(".testimonial__slider");
 testimonialSlider.owlCarousel({
     loop: true,
@@ -135,20 +143,21 @@ testimonialSlider.owlCarousel({
     onInitialized: function (e) {
         var a = this.items().length;
         $("#snh-1").html("<span>01</span><span>" + "0" + a + "</span>");
-        var presentage = Math.round((100 / a));
-        $('.slider__progress span').css("width", presentage + "%");
+        var percent = Math.round((100 / a));
+        $('.slider__progress span').css("width", percent + "%");
     }
 }).on("changed.owl.carousel", function (e) {
     var b = --e.item.index, a = e.item.count;
-    $("#snh-1").html("<span> " + "0" + (1 > b ? b + a : b > a ? b - a : b) + "</span><span>" + "0" + a + "</span>");
+    $("#snh-1").html("<span>0" + (1 > b ? b + a : b > a ? b - a : b) + "</span><span>0" + a + "</span>");
     var current = e.page.index + 1;
-    var presentage = Math.round((100 / e.page.count) * current);
-    $('.slider__progress span').css("width", presentage + "%");
+    var percent = Math.round((100 / e.page.count) * current);
+    $('.slider__progress span').css("width", percent + "%");
 });
 
+
 /* --------------------------
-    Logo Slider
----------------------------- */
+      Logo Slider
+-------------------------- */
 $(".logo__carousel").owlCarousel({
     loop: true,
     margin: 100,
@@ -165,40 +174,61 @@ $(".logo__carousel").owlCarousel({
     }
 });
 
-/* --------------------------
-    Select
----------------------------- */
-$("select").not("#sucursalSelect").niceSelect();
 
 /* --------------------------
-    Datepicker
----------------------------- */
+      Select
+-------------------------- */
+$("select").not("#sucursalSelect").niceSelect();
+
+
+/* --------------------------
+      Regionalización DatePicker
+-------------------------- */
+$.datepicker.regional['es'] = {
+    closeText: 'Cerrar',
+    prevText: '< Ant',
+    nextText: 'Sig >',
+    currentText: 'Hoy',
+    monthNames: ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'],
+    monthNamesShort: ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'],
+    dayNames: ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'],
+    dayNamesShort: ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'],
+    dayNamesMin: ['Do','Lu','Ma','Mi','Ju','Vi','Sa'],
+    weekHeader: 'Sm',
+    dateFormat: 'dd M yy',
+    firstDay: 1
+};
+$.datepicker.setDefaults($.datepicker.regional['es']);
+
+
+/* --------------------------
+      Datepicker Inputs
+-------------------------- */
 var today = new Date();
-var dd = today.getDate();
+var dd = String(today.getDate()).padStart(2, '0');
 var mm = today.getMonth() + 1;
 var yyyy = today.getFullYear();
 
-if (dd < 10) dd = '0' + dd;
+var mS = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
 
-var mS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-var month = mS[mm - 1];
+$(".check__in").val(`${dd} ${mS[mm - 1]} ${yyyy}`);
+$(".check__out").val(`${dd} ${mS[mm - 1]} ${yyyy}`);
 
-var todayFormatted = dd + ' ' + month + ' ' + yyyy;
+$(".datepicker_pop").datepicker({ minDate: 0 });
 
-$(".check__in").val(todayFormatted);
-$(".check__out").val(todayFormatted);
+$(".datepicker_pop").on("keydown paste", e => e.preventDefault());
+$(".datepicker_pop").on("focus", function(){ $(this).blur(); });
 
-$(".datepicker_pop").datepicker({
-    dateFormat: 'dd M yy',
-    minDate: 0
+$(".arrow_carrot-down").on("click", function () {
+    $(this).siblings(".datepicker_pop").datepicker("show");
 });
+
 
 /* --------------------------
       Cargar Sucursales
----------------------------- */
+-------------------------- */
 async function cargarSucursales() {
     const select = document.getElementById("sucursalSelect");
-
     if (!select) return;
 
     try {
@@ -206,47 +236,29 @@ async function cargarSucursales() {
         const data = await response.json();
 
         select.innerHTML = `<option value="">Seleccione una sucursal</option>`;
-
         data.forEach(s => {
-            select.innerHTML += `
-                <option value="${s.idSucursal}">
-                    ${s.nombre} - ${s.direccion}
-                </option>
-            `;
+            select.innerHTML += `<option value="${s.idSucursal}">${s.nombre} - ${s.direccion}</option>`;
         });
 
     } catch (error) {
-
-        if (typeof Swal !== "undefined") {
-            Swal.fire({
-                icon: "error",
-                title: "Error al cargar sucursales",
-                text: "No se pudieron cargar las sucursales.",
-                confirmButtonColor: "#d33"
-            });
-        } else {
-            console.warn("Error al cargar sucursales:", error);
-        }
-
+        Swal.fire("Error", "No se pudieron cargar las sucursales", "error");
         select.innerHTML = `<option value="">Error al cargar</option>`;
     }
 }
-
 document.addEventListener("DOMContentLoaded", cargarSucursales);
 
 
 /* --------------------------
-    Actualizar nice-select
----------------------------- */
+      Actualizar nice-select
+-------------------------- */
 document.addEventListener("DOMContentLoaded", () => {
-    setTimeout(() => {
-        $("select").niceSelect('update');
-    }, 200);
+    setTimeout(() => $("select").niceSelect("update"), 200);
 });
 
+
 /* --------------------------
-    Enviar búsqueda
----------------------------- */
+      FORMULARIO DE BÚSQUEDA
+-------------------------- */
 const filterForm = document.querySelector(".filter__form");
 
 if (filterForm) {
@@ -254,22 +266,21 @@ if (filterForm) {
         e.preventDefault();
 
         const idSucursal = document.getElementById("sucursalSelect").value;
-        const fechaInicio = convertirFecha(document.querySelector(".check__in").value);
-        const fechaFin = convertirFecha(document.querySelector(".check__out").value);
+        const fechaInicioTexto = document.querySelector(".check__in").value;
+        const fechaFinTexto = document.querySelector(".check__out").value;
         const cantidadHuespedes = document.getElementById("huespedesSelect").value;
 
-        // Validación
-        if (!idSucursal) {
-            if (typeof Swal !== "undefined") Swal.fire("Seleccione una sucursal");
-            return;
-        }
+        if (!idSucursal) return Swal.fire("Seleccione una sucursal");
+        if (!fechaInicioTexto || !fechaFinTexto) return Swal.fire("Debe seleccionar ambas fechas");
 
-        console.log("DEBUG → Datos enviados", {
-            idSucursal,
-            fechaInicio,
-            fechaFin,
-            cantidadHuespedes
-        });
+        const fechaInicio = convertirFecha(fechaInicioTexto);
+        const fechaFin = convertirFecha(fechaFinTexto);
+
+        if (fechaFin <= fechaInicio) return Swal.fire("La fecha de salida debe ser mayor a la de entrada");
+
+        localStorage.setItem("fechaInicioReserva", fechaInicioTexto);
+        localStorage.setItem("fechaFinReserva", fechaFinTexto);
+        localStorage.setItem("cantidadHuespedesReserva", cantidadHuespedes);
 
         try {
             const response = await fetch("http://localhost:3000/api/habitaciones/buscar", {
@@ -283,19 +294,16 @@ if (filterForm) {
                 })
             });
 
-            if (!response.ok) {
-                if (typeof Swal !== "undefined") Swal.fire("Error al buscar");
-                return;
-            }
+            if (!response.ok) return Swal.fire("Error al buscar");
 
             const data = await response.json();
             localStorage.setItem("habitacionesBusqueda", JSON.stringify(data));
             window.location.href = "rooms.html";
 
-        } catch (error) {
-            console.error(error);
-            if (typeof Swal !== "undefined") Swal.fire("Error de conexión");
+        } catch (err) {
+            Swal.fire("Error de conexión");
         }
     });
 }
+
 })(jQuery);

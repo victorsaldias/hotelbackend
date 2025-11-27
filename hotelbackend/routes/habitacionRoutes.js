@@ -41,6 +41,8 @@ router.put('/asignar/:numero', asignarHabitacionController);
 // Buscar habitaciones por sucursal + fechas + huéspedes
 router.post("/buscar", obtenerHabitacionesAdecuadas);
 
+router.post
+
 export default router;
 
 

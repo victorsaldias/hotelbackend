@@ -1,3 +1,4 @@
+import { getConnection } from "../config/dbConfig.js";
 import {
   obtenerHabitacionesDisponibles,
   obtenerHabitacionPorId,
@@ -9,9 +10,7 @@ import {
   buscarHabitacionesPorCapacidadYFechas
 } from "../model/habitacionModel.js";
 
-import { getConnection } from "../config/dbConfig.js";
-
-// Habitaciones disponibles
+// 🔹 Habitaciones disponibles
 export async function verHabitacionesDisponibles(req, res) {
   try {
     const habitaciones = await obtenerHabitacionesDisponibles();
@@ -24,7 +23,7 @@ export async function verHabitacionesDisponibles(req, res) {
   }
 }
 
-// Listar con filtros
+// 🔹 Listar con filtros
 export async function listarHabitaciones(req, res) {
   try {
     const filtros = req.query;
@@ -39,7 +38,6 @@ export async function listarHabitaciones(req, res) {
     if (filtros.idTipoHabitacion) { query += " AND idTipoHabitacion = @idTipoHabitacion"; request.input("idTipoHabitacion", filtros.idTipoHabitacion); }
     if (filtros.idEstadoHabitacion) { query += " AND idEstadoHabitacion = @idEstadoHabitacion"; request.input("idEstadoHabitacion", filtros.idEstadoHabitacion); }
     if (filtros.idSucursal) { query += " AND idSucursal = @idSucursal"; request.input("idSucursal", filtros.idSucursal); }
-    if (filtros.capacidad) { query += " AND capacidad >= @capacidad"; request.input("capacidad", filtros.capacidad); }
 
     const result = await request.query(query);
     res.status(200).json(result.recordset);
@@ -52,7 +50,7 @@ export async function listarHabitaciones(req, res) {
   }
 }
 
-// Obtener habitacion por ID
+// 🔹 Obtener habitación por ID
 export async function obtenerHabitacionIdController(req, res) {
   try {
     const habitacion = await obtenerHabitacionPorId(req.params.idHabitacion);
@@ -63,7 +61,7 @@ export async function obtenerHabitacionIdController(req, res) {
   }
 }
 
-// Obtener habitacion por número
+// 🔹 Obtener habitación por número
 export async function obtenerHabitacionNumeroController(req, res) {
   try {
     const habitacion = await obtenerHabitacionPorNumero(req.params.numero);
@@ -74,7 +72,7 @@ export async function obtenerHabitacionNumeroController(req, res) {
   }
 }
 
-// Crear habitación
+// 🔹 Crear habitación
 export async function crearHabitacionController(req, res) {
   try {
     const habitacion = await crearHabitacion(req.body);
@@ -84,7 +82,7 @@ export async function crearHabitacionController(req, res) {
   }
 }
 
-// Actualizar estado de habitación
+// 🔹 Actualizar estado de habitación
 export async function actualizarEstadoHabitacionController(req, res) {
   try {
     const { numero } = req.params;
@@ -101,18 +99,17 @@ export async function actualizarEstadoHabitacionController(req, res) {
   }
 }
 
-// Obtener todas las habitaciones
+// 🔹 Obtener todas las habitaciones
 export async function obtenerTodasLasHabitacionesController(req, res) {
   try {
-    const idHabitacion = req.params.idHabitacion;
-    const habitacion = await obtenerTodasLasHabitaciones(idHabitacion);
+    const habitacion = await obtenerTodasLasHabitaciones();
     res.status(200).json(habitacion);
   } catch (error) {
-    res.status(500).json({ message: "Error al obtener habitación", error: error.message });
+    res.status(500).json({ message: "Error al obtener habitaciones", error: error.message });
   } 
 }
 
-// Asignar habitación (cambiar estado)
+// 🔹 Asignar habitación (cambiar estado)
 export async function asignarHabitacionController(req, res) {
   try {
     const { numero, idEstadoHabitacion } = req.body;
@@ -120,25 +117,26 @@ export async function asignarHabitacionController(req, res) {
     if (!asignado)
       return res.status(404).json({ message: "Habitación no encontrada" });
     res.status(200).json({ message: "Habitación asignada correctamente" });
-    } catch (error) { 
+  } catch (error) { 
     res.status(500).json({ message: "Error al asignar habitación", error: error.message });
   }
 }
 
-// Obtener precio de habitación por número
+// 🔹 Obtener precio de habitación por ID (opcional)
 export async function obtenerPrecioHabitacionController(req, res) {
   try {
-    const { numero } = req.params;
-    const precio = await obtenerPrecioHabitacion(numero);
+    const { idHabitacion } = req.params;
+    const precio = await obtenerPrecioHabitacion(idHabitacion);
     if (precio === null) {
       return res.status(404).json({ message: "Habitación no encontrada" });
     }
-    res.status(200).json({ numero, precio });
+    res.status(200).json({ idHabitacion, precio });
   } catch (error) {
     res.status(500).json({ message: "Error al obtener precio de la habitación", error: error.message });
   }
 }
 
+// 🔹 Ver habitaciones de una reserva
 export async function verHabitacionesDeReservaController(req, res) {
   try {
     const { idReserva } = req.params; 
@@ -157,23 +155,24 @@ export async function verHabitacionesDeReservaController(req, res) {
     res.status(500).json({ message: "Error al obtener habitaciones de la reserva", error: error.message });
   }
 }
+
+// 🔹 Habitaciones adecuadas por sucursal / fechas / capacidad
 export async function obtenerHabitacionesAdecuadas(req, res) {
-    try {
-        const { idSucursal, fechaInicio, fechaFin, cantidadHuespedes } = req.body;
+  try {
+      const { idSucursal, fechaInicio, fechaFin, cantidadHuespedes } = req.body;
 
-        const habitaciones = await buscarHabitacionesPorCapacidadYFechas(
-            idSucursal,
-            fechaInicio,
-            fechaFin,
-            cantidadHuespedes
-        );
+      const habitaciones = await buscarHabitacionesPorCapacidadYFechas(
+          idSucursal,
+          fechaInicio,
+          fechaFin,
+          cantidadHuespedes
+      );
 
-        res.json(habitaciones);
-    } catch (error) {
-        res.status(500).json({
-            message: "Error al obtener habitaciones",
-            error: error.message
-        });
-    }
+      res.json(habitaciones);
+  } catch (error) {
+      res.status(500).json({
+          message: "Error al obtener habitaciones",
+          error: error.message
+      });
+  }
 }
-

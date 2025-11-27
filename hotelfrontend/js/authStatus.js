@@ -1,7 +1,11 @@
 document.addEventListener("DOMContentLoaded", () => {
 
+    // CLIENTE
     const clienteLogueado = localStorage.getItem("userLogged") === "true";
-    const empleadoLogueado = localStorage.getItem("usuario") !== null;
+
+    // EMPLEADO
+    const empleado = localStorage.getItem("empleado");
+    const empleadoLogueado = empleado !== null;
 
     // Desktop
     const loginBtn = document.getElementById("loginBtn");
@@ -14,44 +18,75 @@ document.addEventListener("DOMContentLoaded", () => {
     const mobileLogoutBtn = document.getElementById("mobileLogoutBtn");
 
     function updateUI() {
-        const logged = clienteLogueado; 
 
-        if (loginBtn) loginBtn.style.display = logged ? "none" : "inline-block";
-        if (registerBtn) registerBtn.style.display = logged ? "none" : "inline-block";
-        if (logoutBtn) logoutBtn.style.display = logged ? "inline-block" : "none";
+        // Si está logueado como cliente
+        if (clienteLogueado) {
+            if (loginBtn) loginBtn.style.display = "none";
+            if (registerBtn) registerBtn.style.display = "none";
+            if (logoutBtn) logoutBtn.style.display = "inline-block";
 
-        if (mobileLoginBtn) mobileLoginBtn.style.display = logged ? "none" : "block";
-        if (mobileRegisterBtn) mobileRegisterBtn.style.display = logged ? "none" : "block";
-        if (mobileLogoutBtn) mobileLogoutBtn.style.display = logged ? "block" : "none";
+            if (mobileLoginBtn) mobileLoginBtn.style.display = "none";
+            if (mobileRegisterBtn) mobileRegisterBtn.style.display = "none";
+            if (mobileLogoutBtn) mobileLogoutBtn.style.display = "block";
+            return;
+        }
+
+        // Si está logueado como empleado
+        if (empleadoLogueado) {
+            if (loginBtn) loginBtn.style.display = "none";
+            if (registerBtn) registerBtn.style.display = "none";
+            if (logoutBtn) logoutBtn.style.display = "inline-block";
+
+            if (mobileLoginBtn) mobileLoginBtn.style.display = "none";
+            if (mobileRegisterBtn) mobileRegisterBtn.style.display = "none";
+            if (mobileLogoutBtn) mobileLogoutBtn.style.display = "block";
+            return;
+        }
+
+        // Si NO hay ningún logueado
+        if (loginBtn) loginBtn.style.display = "inline-block";
+        if (registerBtn) registerBtn.style.display = "inline-block";
+        if (logoutBtn) logoutBtn.style.display = "none";
+
+        if (mobileLoginBtn) mobileLoginBtn.style.display = "block";
+        if (mobileRegisterBtn) mobileRegisterBtn.style.display = "block";
+        if (mobileLogoutBtn) mobileLogoutBtn.style.display = "none";
     }
 
     updateUI();
 
-    //  LOGOUT CLIENTE
-    window.logoutCliente = function () {
-        localStorage.removeItem("userLogged");
-        localStorage.removeItem("clienteNombre");
-        localStorage.removeItem("clienteApellido");
-        localStorage.removeItem("clienteId");
-        
+    // ======================================
+    // LOGOUT CLIENTE
+    // ======================================
+   window.logoutCliente = function () {
 
-        updateUI();
+    // Borra todo rastro de sesión
+    localStorage.removeItem("userLogged");
+    localStorage.removeItem("clienteNombre");
+    localStorage.removeItem("clienteApellido");
+    localStorage.removeItem("clienteId");
+    localStorage.removeItem("token"); // por si acaso
 
-        window.location.href = "index.html";
-    };
+    // Previene volver atrás a páginas protegidas
+    history.replaceState(null, null, "index.html");
 
-    //  LOGOUT EMPLEADO
+    // Redirige limpio
+    window.location.href = "index.html";
+
+    // Limpia cache de navegación hacia atrás
+    setTimeout(() => {
+        window.location.reload();
+    }, 50);
+};
+
+    // ======================================
+    // LOGOUT EMPLEADO
+    // ======================================
     window.logoutEmpleado = function () {
-        localStorage.removeItem("usuario");
         localStorage.removeItem("empleado");
-    localStorage.removeItem("token");
+        localStorage.removeItem("token");
 
-        // Login empleados está en pages
         window.location.href = "login-aseo.html";
-        window.history.replaceState(null, null, "login-aseo.html");
     };
 
-    // Eventos SOLO PARA CLIENTES
-    if (logoutBtn) logoutBtn.addEventListener("click", logoutCliente);
-    if (mobileLogoutBtn) mobileLogoutBtn.addEventListener("click", logoutCliente);
 });
