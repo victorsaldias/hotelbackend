@@ -110,3 +110,99 @@ body {
     border-radius: 6px;
     cursor: pointer;
 }
+/* =============================
+   ESTILOS DEL LOGIN
+============================= */
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f6f6f6;
+}
+
+.login-container {
+    width: 100%;
+    max-width: 380px;
+    margin: 0 auto;
+    padding: 20px;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+.login-container img {
+    width: 90px;
+    margin-bottom: 15px;
+}
+
+.login-container p {
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+/* =============================
+   INPUTS RESPONSIVE
+============================= */
+
+.login-container input {
+    width: 100%;
+    max-width: 100%; /* evita que se salga del viewport */
+    padding: 14px;
+    margin: 10px 0;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    box-sizing: border-box; /* evita que el padding aumente el tamaño */
+}
+
+.login-container a {
+    display: block;
+    font-size: 14px;
+    margin-top: 5px;
+    color: #555;
+}
+
+/* =============================
+   BOTÓN
+============================= */
+
+.btn-login {
+    width: 100%;
+    padding: 14px;
+    font-size: 18px;
+    background: #e3a12c;
+    border: none;
+    border-radius: 10px;
+    color: white;
+    margin-top: 15px;
+    cursor: pointer;
+}
+
+.btn-login:hover {
+    background: #d18f22;
+}
+
+/* =============================
+   MODO MÓVIL
+============================= */
+@media (max-width: 480px) {
+
+    .login-container {
+        padding: 15px;
+    }
+
+    .login-container img {
+        width: 75px;
+    }
+
+    .login-container input {
+        font-size: 15px;
+        padding: 12px;
+    }
+
+    .btn-login {
+        font-size: 16px;
+        padding: 12px;
+    }
+}

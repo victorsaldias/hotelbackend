@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Editar Habitación</title>
+
+    <link rel="stylesheet" href="../css/admin.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+    <link rel="stylesheet" href="../css/editarHabitacion.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+</head>
+
+<body>
+
+<div class="layout">
+
+  
+    <aside class="sidebar">
+        <h2 class="sidebar-title">Portal Hotel Arellano</h2>
+
+        <ul class="menu">
+            <li onclick="location.href='dashboard-admin.html'">
+                <i class="fa-solid fa-users"></i> Registrar Empleados
+            </li>
+            <li class="active">
+                <i class="fa-solid fa-bed"></i> Editar Habitación
+            </li>
+            <li onclick="location.href='reportes.html'">
+                <i class="fa-solid fa-chart-line"></i> Reportes
+            </li>
+            <li onclick="location.href='perfil.html'">
+                <i class="fa-solid fa-user"></i> Mi Perfil
+            </li>
+            <li class="logout" onclick="logoutEmpleado()">
+                <i class="fa-solid fa-right-from-bracket"></i> Cerrar Sesión
+            </li>
+        </ul>
+    </aside>
+
+   <main class="content">
+
+    <header class="topbar">
+        <i class="fa-solid fa-bars btn-menu" onclick="toggleMenu()"></i>
+        <h2>Editar Habitación</h2>
+    </header>
+
+    <div class="edit-container">
+
+    <div class="card">
+        <h2 class="title">Editar Habitación</h2>
+
+        <button class="btn-select" id="btnAbrirModalHab">Seleccionar habitación</button>
+
+        <h3 class="subtitle">Seleccione una habitación</h3>
+
+        <div class="form-grid">
+
+            <div class="form-group">
+                <label>Número</label>
+                <input type="number" id="numero">
+            </div>
+
+            <div class="form-group">
+                <label>Sucursal</label>
+                <select id="idSucursal"></select>
+            </div>
+
+            <div class="form-group full">
+                <label>Descripción</label>
+                <textarea id="descripcion"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Servicios</label>
+                <button id="btnEditarServicios" class="btn-secondary small">Editar servicios</button>
+                <span id="resumenServicios" class="resumen"></span>
+            </div>
+
+            <div class="form-group">
+                <label>Tipo de habitación</label>
+                <select id="idTipoHabitacion"></select>
+            </div>
+
+            <div class="form-group">
+                <label>Características</label>
+                <div class="horizontal">
+                    <select id="idCaracteristica"></select>
+                    <button id="btnEditarCaracteristica" class="btn-secondary small">Editar</button>
+                </div>
+            </div>
+
+            <div class="form-group full">
+                <label>Precio personalizado (CLP)</label>
+                <input id="precioPersonalizado" placeholder="Ej: 45000">
+            </div>
+
+        </div>
+
+        <div class="actions">
+            <button class="btn-primary" id="btnGuardarHabitacion">Guardar cambios</button>
+        </div>
+
+    </div>
+</div>
+
+
+</main>
+
+</div>
+
+<div class="overlay-menu" id="overlayMenu"></div>
+
+
+<div class="modal" id="modalHabitaciones">
+    <div class="modal-content modal-large">
+        <h3 class="modal-title">Lista de Habitaciones</h3>
+
+        <input type="text" id="buscarHabitacion" class="search" placeholder="Buscar por número...">
+
+        <div class="table-container modal-table-scroll">
+            <table class="tabla">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Número</th>
+                        <th>Tipo</th>
+                        <th>Sucursal</th>
+                        <th>Acción</th>
+                    </tr>
+                </thead>
+                <tbody id="listaHabitacionesAdmin"></tbody>
+            </table>
+        </div>
+
+        <div class="modal-actions">
+            <button class="btn-cancel" id="btnCerrarModalHab">Cerrar</button>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="modalCaracteristica">
+    <div class="modal-content modal-medium">
+        <h3 class="modal-title">Editar Característica</h3>
+
+        <div class="form-grid">
+            <input type="number" id="carTamano" placeholder="Tamaño (m²)">
+            <input type="number" id="carCapacidad" placeholder="Capacidad">
+            <input type="text" id="carCama" placeholder="Tipo de cama">
+        </div>
+
+        <div class="modal-actions">
+            <button class="btn-save" id="btnGuardarCaracteristica">Guardar</button>
+            <button class="btn-cancel" id="btnCerrarModalCaracteristica">Cerrar</button>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="modalServicios">
+    <div class="modal-content modal-medium">
+        <h3 class="modal-title">Servicios Disponibles</h3>
+
+        <div class="table-container modal-table-scroll">
+            <table class="tabla">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Servicio</th>
+                    </tr>
+                </thead>
+                <tbody id="listaServicios"></tbody>
+            </table>
+        </div>
+
+        <div class="modal-actions">
+            <button class="btn-save" id="btnGuardarServicios">Guardar</button>
+            <button class="btn-cancel" id="btnCerrarModalServicios">Cerrar</button>
+        </div>
+    </div>
+</div>
+
+<script src="../js/authGuardEmpleado.js"></script>
+<script src="../js/authStatus.js"></script>
+<script src="../js/menuMovil.js"></script>
+<script src="../js/editarHabitacion.js"></script>
+
+</body>
+</html>

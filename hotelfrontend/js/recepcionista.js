@@ -217,3 +217,9 @@ function cerrarModalReserva() {
     document.getElementById("reservaEntrada").value = "";
     document.getElementById("reservaSalida").value = "";
 }
+const empleado = JSON.parse(localStorage.getItem("empleado"));
+
+if (empleado) {
+    document.getElementById("recepName").textContent =
+        empleado.nombre + " " + empleado.apellido;
+}

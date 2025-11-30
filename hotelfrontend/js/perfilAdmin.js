@@ -1,105 +1,99 @@
-const LOGIN_URL = "../login-aseo.html";
-const API = "http://localhost:3000/api/empleados-admin";
+const API = "http://localhost:3000/api/empleados";
 
-function obtenerEmpleadoActual() {
-    const id = localStorage.getItem("empleadoId");
-
-    if (!id) {
-        Swal.fire({
-            icon: "warning",
-            title: "Sesión expirada",
-            text: "Debes iniciar sesión nuevamente"
-        }).then(() => location.href = LOGIN_URL);
-        return null;
-    }
-
-    return id;
+// Obtener datos guardados en localStorage
+const empleadoLocal = JSON.parse(localStorage.getItem("empleado"));
+if (!empleadoLocal) {
+    window.location.href = "../perfil.html";
 }
 
+// Elementos del DOM
+const rutInput = document.getElementById("perfilRut");
+const nombreInput = document.getElementById("perfilNombre");
+const apellidoInput = document.getElementById("perfilApellido");
+const correoInput = document.getElementById("perfilCorreo");
+const passInput = document.getElementById("perfilPass");
+
+const btnEditar = document.getElementById("btnEditar");
+const btnGuardar = document.getElementById("btnGuardar");
+const btnCancelar = document.getElementById("btnCancelar");
+
+// Cargar perfil del backend
 async function cargarPerfil() {
-    const id = obtenerEmpleadoActual();
-    if (!id) return;
-
     try {
-        const res = await fetch(`${API}/${id}`);
-        const data = await res.json();
+        const resp = await fetch(`${API}/perfil/${empleadoLocal.idEmpleado}`);
+        const data = await resp.json();
 
-        // Backend devuelve: { success: true, empleado: {...} }
-        if (!data.success || !data.empleado) {
-            return Swal.fire("Error", "No se pudo cargar el perfil de este empleado", "error");
-        }
-
-        const e = data.empleado;
-
-        // Llenar campos del perfil
-        document.getElementById("perfilRut").value = e.rut;
-        document.getElementById("perfilNombre").value = e.nombre;
-        document.getElementById("perfilApellido").value = e.apellido;
-        document.getElementById("perfilRol").value = e.rol;   // usa texto, no idRol
-        document.getElementById("perfilEstado").value = e.idEstadoEmpleado;
-        document.getElementById("perfilSucursal").value = e.idSucursal;
-
-        // Limpiar password
-        document.getElementById("perfilPass").value = "";
-
-        // Mostrar nombre en header
-        document.getElementById("perfilNombreHeader").textContent =
-            `${e.nombre} ${e.apellido}`;
-
-    } catch (error) {
-        Swal.fire("Error", "No se pudo conectar con el servidor", "error");
+        rutInput.value = data.rut;
+        nombreInput.value = data.nombre;
+        apellidoInput.value = data.apellido;
+        correoInput.value = data.correo;
+        passInput.value = "";
+    } catch (err) {
+        console.error(err);
+        Swal.fire("Error", "No se pudo cargar el perfil", "error");
     }
 }
 
+// Activar modo edición
 function activarEdicion() {
-    perfilPass.disabled = false;
+    correoInput.disabled = false;
+    passInput.disabled = false;
+
     btnEditar.style.display = "none";
     btnGuardar.style.display = "inline-block";
     btnCancelar.style.display = "inline-block";
 }
 
+// Cancelar edición
 function cancelarEdicion() {
-    perfilPass.value = "";
-    perfilPass.disabled = true;
+    correoInput.disabled = true;
+    passInput.disabled = true;
+
     btnEditar.style.display = "inline-block";
     btnGuardar.style.display = "none";
     btnCancelar.style.display = "none";
+
+    cargarPerfil();
 }
 
-async function guardar() {
-    const id = obtenerEmpleadoActual();
-    if (!id) return;
+// Guardar cambios
+async function guardarCambios() {
+    const correo = correoInput.value.trim();
+    const password = passInput.value.trim();
 
-    const nuevaPass = perfilPass.value.trim();
-    if (!nuevaPass) {
-        return Swal.fire("Advertencia", "Ingrese una nueva contraseña", "warning");
+    if (!correo) {
+        Swal.fire("Atención", "El correo no puede estar vacío", "warning");
+        return;
     }
 
     try {
-        const res = await fetch(`${API}/${id}`, {
+        const resp = await fetch(`${API}/perfil/${empleadoLocal.idEmpleado}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ password: nuevaPass })
+            body: JSON.stringify({
+                correo,
+                password: password || null
+            })
         });
 
-        const data = await res.json();
-
-        if (!data.ok) {
-            return Swal.fire("Error", data.message, "error");
+        if (!resp.ok) {
+            Swal.fire("Error", "No se pudo actualizar el perfil", "error");
+            return;
         }
 
-        Swal.fire("Listo", "Contraseña actualizada", "success");
-        cancelarEdicion();
+        Swal.fire("Listo", "Perfil actualizado correctamente", "success");
 
-    } catch (error) {
-        Swal.fire("Error", "No se pudo actualizar la contraseña", "error");
+        cancelarEdicion();
+    } catch (err) {
+        console.error(err);
+        Swal.fire("Error", "Ocurrió un problema al guardar", "error");
     }
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-    cargarPerfil();
+// Eventos
+btnEditar.addEventListener("click", activarEdicion);
+btnCancelar.addEventListener("click", cancelarEdicion);
+btnGuardar.addEventListener("click", guardarCambios);
 
-    btnEditar.addEventListener("click", activarEdicion);
-    btnGuardar.addEventListener("click", guardar);
-    btnCancelar.addEventListener("click", cancelarEdicion);
-});
+// Cargar datos al entrar
+cargarPerfil();

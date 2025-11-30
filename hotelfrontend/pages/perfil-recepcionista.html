@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="../css/components.css">
     <link rel="stylesheet" href="../css/responsive.css">
     <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 
 <body>
@@ -22,7 +22,7 @@
 
         <ul class="menu">
             <li onclick="location.href='recepcionista.html'">
-                <i class="fa-solid fa-bed"></i> Registrar Reservas
+                <i class="fa-solid fa-calendar-check"></i> Registrar Reservas
             </li>
 
             <li onclick="location.href='registrar-cliente.html'">
@@ -33,7 +33,7 @@
                 <i class="fa-solid fa-user"></i> Mi Perfil
             </li>
 
-            <li class="logout" onclick="location.href='../index.html'">
+            <li class="logout" onclick="logoutEmpleado()">
                 <i class="fa-solid fa-right-from-bracket"></i> Cerrar Sesión
             </li>
         </ul>
@@ -44,7 +44,6 @@
         <header class="topbar">
             <i class="fa-solid fa-bars btn-menu" onclick="toggleMenu()"></i>
             <h2>Mi Perfil</h2>
-            <span id="perfilNombreHeader">Recepcionista</span>
         </header>
 
         <div class="perfil-container">
@@ -71,29 +70,20 @@
                     </div>
 
                     <div class="perfil-item">
-                        <label>Rol</label>
-                        <input type="text" id="perfilRol" value="Recepcionista" disabled>
-                    </div>
-
-                    <div class="perfil-item">
-                        <label>Estado</label>
-                        <input type="text" id="perfilEstado" disabled>
-                    </div>
-
-                    <div class="perfil-item">
-                        <label>Sucursal</label>
-                        <input type="text" id="perfilSucursal" disabled>
+                        <label>Correo</label>
+                        <input type="email" id="perfilCorreo" disabled>
                     </div>
 
                     <div class="perfil-item" style="grid-column: span 2;">
                         <label>Nueva contraseña</label>
-                        <input type="password" id="perfilPass" disabled>
+                        <input type="password" id="perfilPass"
+                               placeholder="Dejar vacío para no cambiar" disabled>
                     </div>
 
                 </div>
 
                 <div class="perfil-actions">
-                    <button class="btn-save" id="btnEditar" onclick="activarEdicion()">Editar</button>
+                    <button class="btn-save" id="btnEditar">Editar</button>
                     <button class="btn-save" id="btnGuardar" style="display:none">Guardar</button>
                     <button class="btn-cancel" id="btnCancelar" style="display:none">Cancelar</button>
                 </div>
@@ -107,11 +97,13 @@
 </div>
 
 <div class="overlay-menu" id="overlayMenu"></div>
+
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="../js/menuMovil.js"></script>
 <script src="../js/authGuardEmpleado.js"></script>
 <script src="../js/authStatus.js"></script>
-<script src="../js/perfilRecepcionista.js"></script>
+<script src="../js/perfilAdmin.js"></script> 
 
 </body>
 </html>
+

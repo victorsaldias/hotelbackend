@@ -16,13 +16,15 @@
 <div class="layout">
 
     <aside class="sidebar">
-        <h2 class="sidebar-title">Hotel XYZ</h2>
+        <h2 class="sidebar-title">Portal Hotel Arellano</h2>
 
         <ul class="menu">
             <li onclick="location.href='dashboard-admin.html'">
                 <i class="fa-solid fa-users"></i> Registrar Empleados
             </li>
-
+            <li onclick="location.href='editarHabitacion.html?id=1'">
+                <i class="fa-solid fa-bed"></i> Editar Habitación
+            </li>
             <li onclick="location.href='reportes.html'">
                 <i class="fa-solid fa-chart-line"></i> Reportes
             </li>
@@ -42,7 +44,6 @@
         <header class="topbar">
             <i class="fa-solid fa-bars btn-menu" onclick="toggleMenu()"></i>
             <h2>Mi Perfil</h2>
-            <span id="perfilNombreHeader">Administrador</span>
         </header>
 
         <div class="perfil-container">
@@ -69,30 +70,20 @@
                     </div>
 
                     <div class="perfil-item">
-                        <label>Rol</label>
-                        <input type="text" id="perfilRol" value="Administrador" disabled>
-                    </div>
-
-                    <div class="perfil-item">
-                        <label>Estado</label>
-                        <input type="text" id="perfilEstado" disabled>
-                    </div>
-
-                    <div class="perfil-item">
-                        <label>Sucursal</label>
-                        <input type="text" id="perfilSucursal" disabled>
+                        <label>Correo</label>
+                        <input type="email" id="perfilCorreo" disabled>
                     </div>
 
                     <div class="perfil-item" style="grid-column: span 2;">
                         <label>Nueva contraseña</label>
-                        <input type="password" id="perfilPass" disabled>
+                        <input type="password" id="perfilPass" placeholder="Dejar vacío para no cambiar" disabled>
                     </div>
 
                 </div>
 
                 <div class="perfil-actions">
 
-                    <button class="btn-save" id="btnEditar" onclick="activarEdicion()">Editar</button>
+                    <button class="btn-save" id="btnEditar">Editar</button>
                     <button class="btn-save" id="btnGuardar" style="display:none">Guardar</button>
                     <button class="btn-cancel" id="btnCancelar" style="display:none">Cancelar</button>
 
@@ -108,12 +99,11 @@
 
 <div class="overlay-menu" id="overlayMenu"></div>
 
-
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="../js/authGuardEmpleado.js"></script>
 <script src="../js/authStatus.js"></script>
-<script src="../js/admin.js"></script>
 <script src="../js/menuMovil.js"></script>
+<script src="../js/perfilAdmin.js"></script>
 
 </body>
 </html>

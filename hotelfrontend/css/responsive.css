@@ -1,31 +1,57 @@
 /* ===================================================
-   RESPONSIVE – ESTILOS PARA CELULAR (MÁX 768px)
+   RESPONSIVE – CELULAR (MÁX 768PX)
    =================================================== */
-
 @media (max-width: 768px) {
 
-    /* BOTÓN HAMBURGUESA */
+    /* ---------------------------------------------------
+       HAMBURGUESA / TOPBAR
+    --------------------------------------------------- */
     .btn-menu {
         font-size: 26px;
-        cursor: pointer;
-        display: block !important;
         padding: 6px 10px;
+        display: block !important;
         color: #111 !important;
+        cursor: pointer;
     }
 
-    /* ESTRUCTURA GENERAL */
+    .topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 12px 18px;
+        background: #F9F8F6 !important;
+    }
+
+    .topbar h2 {
+        font-size: 18px !important;
+        margin-left: -10px !important;
+        text-align: center;
+        flex-grow: 1;
+    }
+
+    #perfilNombreHeader,
+    #adminName,
+    #recepName {
+        display: none !important;
+    }
+
+    /* ---------------------------------------------------
+       LAYOUT GENERAL
+    --------------------------------------------------- */
     .layout {
         display: block !important;
-        width: 100% !important;
+        width: 100%;
         overflow: hidden;
     }
 
-    /* SIDEBAR MÓVIL */
+    /* ---------------------------------------------------
+       SIDEBAR MOBILE
+    --------------------------------------------------- */
     .sidebar {
         position: fixed;
         top: 0;
         left: 0;
-        width: 220px;
+        width: 230px;
         height: 100vh;
         background: #111;
         padding: 25px 20px;
@@ -39,34 +65,10 @@
         transform: translateX(0);
     }
 
-    .sidebar-title {
-        font-size: 22px;
-        font-weight: 800;
-        margin-bottom: 25px;
-        color: #E9AD28;
-        padding-left: 5px;
-    }
-
-    /* MENÚ */
-    .menu {
-        display: flex;
-        flex-direction: column;
-        gap: 15px;
-        padding-top: 5px;
-    }
-
-    .menu li {
-        font-size: 16px;
-        padding: 10px 12px;
-        border-radius: 6px;
-        white-space: nowrap;
-    }
-
-    /* OVERLAY */
     .overlay-menu {
         position: fixed;
         inset: 0;
-        background: rgba(0, 0, 0, 0.55);
+        background: rgba(0,0,0,0.55);
         z-index: 1500;
         display: none;
     }
@@ -75,78 +77,61 @@
         display: block;
     }
 
-    /* TOPBAR */
-    .topbar {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 12px 18px;
-        background: #F9F8F6 !important;
-    }
-
-    .topbar h2 {
-        font-size: 20px !important;
-        text-align: center;
-        flex-grow: 1;
-        margin-left: -20px; /* Centrado perfecto */
-    }
-
-    /* OCULTAR NOMBRE (Admin/Recep) */
-    #perfilNombreHeader,
-    #adminName {
-        display: none !important;
-    }
-
-    /* CONTENIDO GENERAL */
+    /* ---------------------------------------------------
+       CONTENEDOR PRINCIPAL
+    --------------------------------------------------- */
     .content {
-        margin: 0 !important;
         padding: 15px !important;
         width: 100% !important;
-        height: auto !important;
         overflow-y: auto;
-        max-width: 100% !important;
-        box-sizing: border-box !important;
+        box-sizing: border-box;
     }
 
-    /* ===============================================
-       PERFIL – RESPONSIVE IGUAL A RECEPCIONISTA
-       =============================================== */
+    /* ---------------------------------------------------
+       INPUTS Y BOTONES
+    --------------------------------------------------- */
+    input,
+    select,
+    textarea {
+        width: 100%;
+        padding: 12px;
+        font-size: 15px;
+        border-radius: 8px;
+        box-sizing: border-box;
+    }
 
+    button,
+    .btn-save,
+    .btn-cancel,
+    .btn-add {
+        width: 100%;
+        padding: 12px;
+        font-size: 15px;
+        border-radius: 8px;
+        text-align: center;
+    }
+
+    /* ---------------------------------------------------
+       PERFIL – TODOS LOS ROLES
+    --------------------------------------------------- */
     .perfil-container {
-        width: 100% !important;
+        width: 100%;
         display: flex;
         justify-content: center;
     }
 
     .perfil-card {
-        width: 100% !important;
-        max-width: 95% !important;
-        padding: 20px !important;
+        width: 100%;
+        max-width: 95%;
+        padding: 20px;
         border-radius: 12px;
         box-shadow: 0px 2px 10px rgba(0,0,0,0.08);
-        box-sizing: border-box !important;
     }
 
     .perfil-grid {
         display: grid !important;
         grid-template-columns: 1fr !important;
-        gap: 15px !important;
-        width: 100% !important;
-    }
-
-    .perfil-grid label {
-        margin-bottom: 2px;
-        font-weight: 600;
-        display: block;
-    }
-
-    .perfil-grid input {
-        width: 100% !important;
-        height: 42px;
-        border-radius: 6px;
-        padding: 8px 10px;
-        font-size: 15px;
-        box-sizing: border-box;
+        gap: 15px;
     }
 
     .perfil-actions {
@@ -156,89 +141,49 @@
         margin-top: 15px;
     }
 
-    .perfil-actions button {
-        width: 100% !important;
-        height: 42px !important;
-        font-size: 16px;
-    }
-
-    .perfil-card h3 {
-        text-align: left;
-        font-size: 20px;
-        margin-bottom: 15px;
-    }
-
-    /* ===============================================
-       TABLAS / REPORTES / FORMULARIOS – RESPONSIVE
-       =============================================== */
-
-    .report-container,
-    .table-container,
-    .actions {
-        width: 100% !important;
-        max-width: 100% !important;
+    /* ---------------------------------------------------
+       TABLAS
+    --------------------------------------------------- */
+    .table-container {
+        width: 100%;
+        overflow-x: auto;
         padding: 0 !important;
-        box-sizing: border-box !important;
     }
 
-    .report-card {
-        width: 100% !important;
-        max-width: 95% !important;
-        margin: auto;
-        box-sizing: border-box !important;
-    }
-
-    .actions {
-        display: flex;
-        flex-direction: column;
-        gap: 15px;
-    }
-
-    .search {
-        width: 100% !important;
-    }
-
-    .btn-add {
-        width: 100% !important;
-    }
-
-    /* TABLAS */
     table {
+        width: 100%;
         font-size: 14px;
-        width: 100% !important;
+        border-collapse: collapse;
     }
 
     table th,
     table td {
-        padding: 10px 5px !important;
+        padding: 10px 5px;
         word-break: break-word;
     }
-}
 
-/* ===================================================
-   FIX GLOBAL – EVITAR QUE TODO SE VEA CORTADO
-   =================================================== */
-@media (max-width: 768px) {
-
-    .content,
-    .perfil-card,
-    .report-card,
-    .table-container,
-    .actions {
-        width: 100% !important;
-        max-width: 100% !important;
-        box-sizing: border-box !important;
+    /* ---------------------------------------------------
+       TITULOS
+    --------------------------------------------------- */
+    h3,
+    .perfil-card h3,
+    .report-card h3,
+    .table-container h3 {
+        font-size: 18px !important;
+        margin-bottom: 12px;
     }
 
-    .perfil-grid input,
-    .perfil-grid select {
-        width: 100% !important;
+    h4 { 
+        font-size: 16px !important; 
     }
 
-    button,
-    .btn-save,
-    .btn-cancel,
-    .btn-add {
-        width: 100% !important;
+    /* ---------------------------------------------------
+       FORMS COMO REGISTRAR CLIENTE
+    --------------------------------------------------- */
+    .form-grid {
+        display: grid;
+        grid-template-columns: 1fr !important;
+        gap: 15px;
     }
+
 }

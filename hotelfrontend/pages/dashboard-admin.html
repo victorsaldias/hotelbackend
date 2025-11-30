@@ -28,7 +28,9 @@
             <li class="active" onclick="location.href='dashboard-admin.html'">
                 <i class="fa-solid fa-users"></i> Registrar Empleados
             </li>
-
+            <li onclick="location.href='editarHabitacion.html?id=1'">
+                <i class="fa-solid fa-bed"></i> Editar Habitación
+            </li>
             <li onclick="location.href='reportes.html'">
                 <i class="fa-solid fa-chart-line"></i> Reportes
             </li>
@@ -48,7 +50,7 @@
         <header class="topbar">
             <i class="fa-solid fa-bars btn-menu" onclick="toggleMenu()"></i>
             <h2>Panel de Administración</h2>
-            <span id="empNombre">Administrador</span>
+
         </header>
 
         <div class="actions">
@@ -92,12 +94,12 @@
             <input type="text" id="empRut" placeholder="RUT">
             <input type="email" id="empCorreo" placeholder="Correo">
 
-            <!-- Contraseña (solo al crear) -->
+            
             <div id="groupPassword">
                 <input type="password" id="empPassword" placeholder="Contraseña">
             </div>
 
-            <!-- Rol del empleado -->
+           
             <select id="empRol">
                 <option value="1">Administrador</option>
                 <option value="2">Recepcionista</option>
@@ -105,7 +107,7 @@
             </select>
             
 
-            <!-- Estado del empleado -->
+            
             <select id="empEstado">
                 <option value="1">Activo</option>
                 <option value="2">Ocupado</option>
@@ -121,7 +123,7 @@
         </div>
     </div>
 </div>
-
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="../js/authGuardEmpleado.js"></script>
 <script src="../js/authStatus.js"></script>
 <script src="../js/admin.js"></script>

@@ -51,7 +51,6 @@ async function cargarEmpleados() {
         const tbody = document.getElementById("listaEmpleados");
         tbody.innerHTML = "";
 
-        // 🔥 Ajustar a cualquier formato de respuesta
         const empleados = Array.isArray(data) 
                             ? data 
                             : data.empleados 
@@ -93,9 +92,7 @@ async function cargarEmpleados() {
     }
 }
 
-// =====================
-// NUEVO EMPLEADO
-// =====================
+
 function nuevoEmpleado() {
     empleadoEditando = null;
 
@@ -116,13 +113,11 @@ function nuevoEmpleado() {
     document.getElementById('modalEmpleado').classList.add('show');
 }
 
-// =====================
-// CERRAR MODAL
-// =====================
+
 function cerrarModal() {
     document.getElementById('modalEmpleado').classList.remove('show');
     empleadoEditando = null;
-    // opcional: limpiar formulario también
+
     document.getElementById('empNombre').value = "";
     document.getElementById('empApellido').value = "";
     document.getElementById('empRut').value = "";
@@ -132,9 +127,7 @@ function cerrarModal() {
     document.getElementById('empEstado').value = "1";
 }
 
-// =====================
-// EDITAR EMPLEADO
-// =====================
+
 async function editarEmpleado(id) {
     try {
         const response = await fetch(`${API_URL}/${id}`, { credentials: "include" });
@@ -162,9 +155,6 @@ async function editarEmpleado(id) {
     }
 }
 
-// =====================
-// GUARDAR EMPLEADO
-// =====================
 async function guardarEmpleado() {
     const nombre = document.getElementById('empNombre').value.trim();
     const apellido = document.getElementById('empApellido').value.trim();
@@ -225,9 +215,7 @@ async function guardarEmpleado() {
     }
 }
 
-// =====================
-// ELIMINAR (SUSPENDER)
-// =====================
+
 async function eliminarEmpleado(id) {
     if (!confirm("¿Seguro que deseas suspender este empleado?")) return;
 
@@ -252,21 +240,12 @@ async function eliminarEmpleado(id) {
     }
 }
 
-// =====================
-// INICIALIZAR
-// =====================
+
 document.addEventListener("DOMContentLoaded", () => {
     cargarNombreAdmin();
     cargarEmpleados();
     obtenerEmpleadoActual();
 });
 
-function cargarNombreAdmin() {
-    const empleado = JSON.parse(localStorage.getItem("empleado"));
 
-    if (empleado) {
-        document.getElementById("empNombre").textContent =
-            empleado.nombre + " " + empleado.apellido;
-    }
-}
 

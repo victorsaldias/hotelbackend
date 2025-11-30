@@ -1,0 +1,257 @@
+/* CONTENEDOR */
+.edit-container {
+    width: 100%;
+    max-width: 900px;
+    margin: 30px auto;
+    padding: 20px;
+}
+
+/* TARJETA */
+.card {
+    background: #fff;
+    padding: 25px;
+    border-radius: 16px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+}
+
+/* TITULOS */
+.title {
+    font-size: 1.6rem;
+    margin-bottom: 20px;
+    font-weight: 700;
+}
+
+.subtitle {
+    margin-top: 20px;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+/* BOTÓN SELECCIONAR HABITACIÓN */
+.btn-select {
+    padding: 8px 14px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    background: #fafafa;
+    cursor: pointer;
+    margin-bottom: 10px;
+}
+
+/* GRID */
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+/* Una fila completa */
+.full {
+    grid-column: span 2;
+}
+
+/* FORM GROUP */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.form-group label {
+    font-weight: 600;
+    color: #444;
+}
+
+/* INPUTS */
+input,
+select,
+textarea {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 10px;
+    background: #fafafa;
+    font-size: 0.95rem;
+}
+
+textarea {
+    height: 90px;
+    resize: vertical;
+}
+
+/* HORIZONTAL */
+.horizontal {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* BOTONES */
+.btn-primary {
+    background: #e5a52d;
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.btn-secondary {
+    background: #f2f2f2;
+    border: 1px solid #ccc;
+    padding: 8px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.small {
+    padding: 6px 10px;
+    font-size: 0.85rem;
+}
+
+.actions {
+    margin-top: 25px;
+    text-align: right;
+}
+
+/* RESPONSIVE BONITO */
+@media (max-width: 768px) {
+
+    .edit-container {
+        padding: 10px;
+        margin-top: 10px;
+    }
+
+    .card {
+        padding: 18px;
+    }
+
+    .title {
+        font-size: 1.3rem;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .full {
+        grid-column: span 1;
+    }
+
+    .btn-primary,
+    .btn-secondary {
+        width: 100%;
+    }
+
+    .horizontal {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+/* ===== MODALES ===== */
+
+.modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.55);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    padding: 25px;
+    z-index: 9999;
+    backdrop-filter: blur(2px);
+}
+
+.modal-content {
+    background: #ffffff;
+    padding: 25px;
+    border-radius: 16px;
+    width: 100%;
+    max-height: 85vh;
+    overflow: hidden;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+    animation: modalFade 0.25s ease-out;
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-large { max-width: 850px; }
+.modal-medium { max-width: 500px; }
+
+@keyframes modalFade {
+    from { opacity: 0; transform: translateY(-10px) scale(0.95); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.modal-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    text-align: center;
+    color: #333;
+}
+
+.search {
+    width: 100%;
+    padding: 10px 14px;
+    margin-bottom: 15px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    background: #fafafa;
+}
+
+.modal-table-scroll {
+    max-height: 300px;
+    overflow-y: auto;
+    border: 1px solid #e5e5e5;
+    border-radius: 12px;
+}
+
+.modal-table-scroll table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.modal th {
+    background: #f8f8f8;
+    padding: 12px;
+    font-weight: 600;
+}
+
+.modal td {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+/* ===== RESPONSIVE MODAL ===== */
+@media (max-width: 768px) {
+    .modal-content {
+        max-width: 95%;
+        padding: 18px;
+    }
+
+    .modal-title {
+        font-size: 1.2rem;
+    }
+
+    .modal-table-scroll {
+        max-height: 250px;
+    }
+
+    .search {
+        font-size: 14px;
+    }
+
+    table th,
+    table td {
+        font-size: 14px;
+        padding: 8px;
+    }
+}
