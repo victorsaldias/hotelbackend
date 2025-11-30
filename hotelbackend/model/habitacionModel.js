@@ -126,31 +126,43 @@ export async function obtenerServicios() {
 export async function obtenerServiciosHabitacion(id) {
     const pool = await getConnection();
     const r = await pool.request()
-        .input("id", id)
+        .input("idHabitacion", id) 
         .query(`
-            SELECT s.idServicio, s.nombre
-            FROM servicioHabitacion sh
-            INNER JOIN servicio s ON s.idServicio = sh.idServicio
-            WHERE sh.idHabitacion = @id
+            SELECT T3.idServicio, T3.nombre
+            FROM habitacion T1
+            INNER JOIN TipoHabitacionServicio T2 ON T1.idTipoHabitacion = T2.idTipoHabitacion
+            INNER JOIN servicio T3 ON T2.idServicio = T3.idServicio
+            WHERE T1.idHabitacion = @idHabitacion
         `);
     return r.recordset;
 }
 
 export async function actualizarServiciosHabitacionModel(idHabitacion, servicios) {
     const pool = await getConnection();
-
-    await pool.request()
+    
+    
+    const habitacionResult = await pool.request()
         .input("h", idHabitacion)
-        .query(`DELETE FROM servicioHabitacion WHERE idHabitacion = @h`);
+        .query(`SELECT idTipoHabitacion FROM habitacion WHERE idHabitacion = @h`);
+
+    if (habitacionResult.recordset.length === 0) {
+        throw new Error("Habitación no encontrada para actualizar servicios.");
+    }
+    const idTipoHabitacion = habitacionResult.recordset[0].idTipoHabitacion;
+    
+    
+    await pool.request()
+        .input("idTipo", idTipoHabitacion)
+        .query(`DELETE FROM TipoHabitacionServicio WHERE idTipoHabitacion = @idTipo`);
 
     for (const s of servicios) {
         await pool.request()
-            .input("h", idHabitacion)
+            .input("idTipo", idTipoHabitacion)
             .input("s", s)
             .query(`
-                INSERT INTO servicioHabitacion (idHabitacion, idServicio)
-                VALUES (@h, @s)
-            `);
+                INSERT INTO TipoHabitacionServicio (idTipoHabitacion, idServicio)
+                VALUES (@idTipo, @s)
+            `); 
     }
 }
 export async function obtenerPrecioHabitacion(idHabitacion) {

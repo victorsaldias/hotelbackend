@@ -3,14 +3,6 @@ const API = "http://localhost:3000/api";
 const params = new URLSearchParams(window.location.search);
 const idHabitacionURL = params.get("id");
 
-if (!idHabitacionURL) {
-    Swal.fire({
-        icon: "error",
-        title: "Error",
-        text: "Debe seleccionar una habitación"
-    }).then(() => location.href = "dashboard-admin.html");
-}
-
 const inputNumero = document.getElementById("numero");
 const selectTipo = document.getElementById("idTipoHabitacion");
 const selectSucursal = document.getElementById("idSucursal");
@@ -65,16 +57,22 @@ function seleccionarHabitacion(id) {
     location.href = `editarHabitacion.html?id=${id}`;
 }
 
+
 async function cargarSelects() {
     const [tipos, sucursales, caract] = await Promise.all([
-        fetch(`${API}/tipos-habitacion`).then(r => r.json()),
-        fetch(`${API}/sucursales`).then(r => r.json()),
-        fetch(`${API}/caracteristicas-habitacion`).then(r => r.json())
+        fetch(`${API}/habitaciones/tipos-habitacion`).then(r => r.json()),
+        fetch(`${API}/sucursales`).then(r => r.json()), 
+        fetch(`${API}/habitaciones/caracteristicas-habitacion`).then(r => r.json())
     ]);
 
-    llenar(selectTipo, tipos, "idTipoHabitacion", "nombreTipo");
-    llenar(selectSucursal, sucursales, "idSucursal", "nombreSucursal");
-    llenar(selectCarac, caract, "idCaracteristica", "nombreCaracteristica");
+    const caracteristicasConDescripcion = caract.map(c => ({
+        ...c, 
+        descripcionCompleta: `Capacidad: ${c.capacidad} | Cama: ${c.cama}` 
+    }));
+
+    llenar(selectTipo, tipos, "idTipoHabitacion", "nombre");
+    llenar(selectSucursal, sucursales, "idSucursal", "nombre");
+    llenar(selectCarac, caracteristicasConDescripcion, "idCaracteristica", "descripcionCompleta");
 }
 
 function llenar(select, data, valueField, textField) {
@@ -86,6 +84,12 @@ function llenar(select, data, valueField, textField) {
 
 async function cargarHabitacion() {
     const resp = await fetch(`${API}/habitaciones/id/${idHabitacionURL}`);
+
+    if (!resp.ok) {
+        Swal.fire("Error de Carga", "No se pudo encontrar la habitación o la API falló (404).", "error");
+        return; 
+    }
+
     const h = await resp.json();
 
     inputNumero.value = h.numero;
@@ -110,7 +114,7 @@ const carCama = document.getElementById("carCama");
 btnEditarCaracteristica.addEventListener("click", async () => {
     const idCar = selectCarac.value;
     if (!idCar) return Swal.fire("Atención", "Debe seleccionar una característica", "warning");
-    const resp = await fetch(`${API}/caracteristicas/${idCar}`);
+    const resp = await fetch(`${API}/habitaciones/caracteristicas/${idCar}`); 
     const c = await resp.json();
     carTamano.value = c.tamano;
     carCapacidad.value = c.capacidad;
@@ -124,7 +128,7 @@ btnCerrarModalCaracteristica.addEventListener("click", () => {
 
 btnGuardarCaracteristica.addEventListener("click", async () => {
     const idCar = selectCarac.value;
-    await fetch(`${API}/caracteristicas/${idCar}`, {
+    await fetch(`${API}/habitaciones/caracteristicas/${idCar}`, { 
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -159,14 +163,23 @@ btnCerrarModalServicios.addEventListener("click", () => {
 
 async function cargarServicios() {
     if (serviciosDisponibles.length) return;
-    const resp = await fetch(`${API}/servicios`);
+    const resp = await fetch(`${API}/habitaciones/servicios`); 
     serviciosDisponibles = await resp.json();
 }
 
 async function cargarServiciosHabitacion() {
     const resp = await fetch(`${API}/habitaciones/servicios/${idHabitacionURL}`);
+    
+    if (!resp.ok) {
+        console.error("Error al obtener servicios:", resp.status);
+        const errorData = await resp.json().catch(() => ({ mensaje: "Error desconocido del servidor." }));
+        console.error("Detalle del error del servidor:", errorData);
+        actualizarResumenServicios([]);
+        return; 
+    }
+
     const data = await resp.json();
-    serviciosSeleccionados = data.map(s => s.idServicio);
+    serviciosSeleccionados = data.map(s => s.idServicio); 
     actualizarResumenServicios(data);
 }
 
@@ -235,6 +248,12 @@ document.getElementById("btnGuardarHabitacion").addEventListener("click", async 
 });
 
 window.addEventListener("DOMContentLoaded", async () => {
-    await cargarSelects();
+    
+    await cargarSelects(); 
+
+    if (!idHabitacionURL) {
+        return; 
+    }
+
     await cargarHabitacion();
 });

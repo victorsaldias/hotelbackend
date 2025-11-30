@@ -21,6 +21,9 @@
     border: none;
 }
 
+/* ---------------------------------------
+   BUSCADOR + ACCIONES
+--------------------------------------- */
 .search {
     width: 60%;
     padding: 12px;
@@ -31,19 +34,30 @@
 .actions {
     display: flex;
     justify-content: space-between;
+    align-items: center;
+    gap: 12px;
     margin-bottom: 20px;
+    flex-wrap: wrap; /* FIX: evita overflow */
 }
 
+/* ---------------------------------------
+   TABLAS
+--------------------------------------- */
 .table-container {
     background: white;
     padding: 15px;
     border-radius: 12px;
     box-shadow: 0px 4px 12px rgba(0,0,0,0.08);
+
+    width: 100%;
+    overflow-x: auto;        /* FIX overflow horizontal */
+    box-sizing: border-box;  /* Previene aumento del ancho */
 }
 
 .tabla {
     width: 100%;
     border-collapse: collapse;
+    table-layout: auto; /* permite ajustar columnas y evita overflow */
 }
 
 .tabla th,
@@ -51,6 +65,9 @@
     padding: 12px;
     border-bottom: 1px solid #ddd;
     text-align: center;
+    white-space: nowrap;        /* evita romper columnas */
+    text-overflow: ellipsis;
+    overflow: hidden;
 }
 
 .tabla th {
@@ -58,6 +75,9 @@
     font-weight: 700;
 }
 
+/* ---------------------------------------
+   MODAL
+--------------------------------------- */
 .modal {
     display: none;
     position: fixed;
@@ -79,6 +99,8 @@
     width: 90%;
     max-width: 550px;
     box-shadow: 0px 5px 20px rgba(0,0,0,0.2);
+
+    box-sizing: border-box; /* FIX: evita que su ancho se expanda */
 }
 
 .form-grid {
@@ -92,6 +114,7 @@ input, select {
     border: 1px solid #DADADA;
     border-radius: 6px;
     font-size: 14px;
+    box-sizing: border-box; /* FIX importante */
 }
 
 .modal-actions {
@@ -99,7 +122,12 @@ input, select {
     justify-content: flex-end;
     gap: 10px;
     margin-top: 20px;
+    flex-wrap: wrap; /* Previene desbordes */
 }
+
+/* ---------------------------------------
+   PERFIL
+--------------------------------------- */
 .perfil-container {
     display: flex;
     justify-content: center;
@@ -112,6 +140,8 @@ input, select {
     max-width: 900px;
     width: 100%;
     box-shadow: 0px 4px 14px rgba(0,0,0,0.1);
+
+    box-sizing: border-box; 
 }
 
 .perfil-grid {

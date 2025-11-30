@@ -3,8 +3,15 @@
    =================================================== */
 @media (max-width: 768px) {
 
+    /* =======================================
+       FIX GLOBAL – EVITA SCROLL INFINITO
+    ======================================= */
+    html, body {
+        overflow-x: hidden !important;
+    }
+
     /* ---------------------------------------------------
-       HAMBURGUESA / TOPBAR
+        HAMBURGUESA / TOPBAR
     --------------------------------------------------- */
     .btn-menu {
         font-size: 26px;
@@ -20,6 +27,7 @@
         justify-content: space-between;
         padding: 12px 18px;
         background: #F9F8F6 !important;
+        border-bottom: 1px solid #dcdcdc;
     }
 
     .topbar h2 {
@@ -35,23 +43,26 @@
         display: none !important;
     }
 
-    /* ---------------------------------------------------
+
+    /* =======================================
        LAYOUT GENERAL
-    --------------------------------------------------- */
+    ======================================= */
     .layout {
         display: block !important;
         width: 100%;
         overflow: hidden;
     }
 
-    /* ---------------------------------------------------
-       SIDEBAR MOBILE
-    --------------------------------------------------- */
+    
+    /* =======================================
+       SIDEBAR
+    ======================================= */
     .sidebar {
         position: fixed;
         top: 0;
         left: 0;
-        width: 230px;
+        width: 210px !important;
+        max-width: 210px;
         height: 100vh;
         background: #111;
         padding: 25px 20px;
@@ -77,9 +88,10 @@
         display: block;
     }
 
-    /* ---------------------------------------------------
-       CONTENEDOR PRINCIPAL
-    --------------------------------------------------- */
+
+    /* =======================================
+       CONTENIDO PRINCIPAL
+    ======================================= */
     .content {
         padding: 15px !important;
         width: 100% !important;
@@ -87,9 +99,10 @@
         box-sizing: border-box;
     }
 
-    /* ---------------------------------------------------
-       INPUTS Y BOTONES
-    --------------------------------------------------- */
+  
+    /* =======================================
+       INPUTS + BOTONES
+    ======================================= */
     input,
     select,
     textarea {
@@ -111,9 +124,10 @@
         text-align: center;
     }
 
-    /* ---------------------------------------------------
-       PERFIL – TODOS LOS ROLES
-    --------------------------------------------------- */
+    
+    /* =======================================
+       PERFIL
+    ======================================= */
     .perfil-container {
         width: 100%;
         display: flex;
@@ -141,30 +155,46 @@
         margin-top: 15px;
     }
 
-    /* ---------------------------------------------------
-       TABLAS
-    --------------------------------------------------- */
+
+    /* =======================================
+       TABLAS – FIX SCROLL INFINITO
+    ======================================= */
     .table-container {
         width: 100%;
         overflow-x: auto;
         padding: 0 !important;
+
+        /* evita que el contenedor cree ancho extra */
+        max-width: 100%;
+        box-sizing: border-box;
     }
 
-    table {
+    table,
+    .tabla {
         width: 100%;
-        font-size: 14px;
+
+        /* Antes era min-width 750px → CAUSABA scroll infinito */
+        min-width: 100%;
+        table-layout: auto; /* permite ajustar contenido */
+
+        font-size: 13px;
         border-collapse: collapse;
     }
 
     table th,
-    table td {
-        padding: 10px 5px;
-        word-break: break-word;
+    table td,
+    .tabla th,
+    .tabla td {
+        padding: 8px 4px;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
     }
 
-    /* ---------------------------------------------------
+
+    /* =======================================
        TITULOS
-    --------------------------------------------------- */
+    ======================================= */
     h3,
     .perfil-card h3,
     .report-card h3,
@@ -173,17 +203,86 @@
         margin-bottom: 12px;
     }
 
-    h4 { 
-        font-size: 16px !important; 
+    h4 {
+        font-size: 16px !important;
     }
 
-    /* ---------------------------------------------------
-       FORMS COMO REGISTRAR CLIENTE
-    --------------------------------------------------- */
+   
+    /* =======================================
+       FORMULARIOS
+    ======================================= */
     .form-grid {
         display: grid;
         grid-template-columns: 1fr !important;
         gap: 15px;
     }
 
+}
+
+/* =========================================
+   FIX REAL – BOTONES DE ACCIÓN DESAPARECEN
+========================================= */
+@media (max-width: 768px) {
+
+    /* 1. El contenedor DEBE permitir scroll horizontal */
+    .table-container {
+        overflow-x: auto !important;
+        overflow-y: hidden;
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 0 !important;
+        box-sizing: border-box;
+        display: block; /* FORZADO */
+    }
+
+    /* 2. La tabla debe ser MÁS ancha que el contenedor (para que el scroll funcione) */
+    table,
+    .tabla {
+        min-width: 700px !important; /* Ajuste seguro */
+        width: auto !important;
+        table-layout: auto !important;
+        overflow-x: auto;
+    }
+
+    /* 3. Las celdas no pueden forzar ancho infinito */
+    .tabla th,
+    .tabla td {
+        white-space: nowrap !important;
+        text-overflow: ellipsis;
+        overflow: hidden;
+    }
+
+    /* 4. Nunca ocultar scroll horizontal aquí */
+    .content {
+        overflow-x: visible !important;
+    }
+}
+@media (max-width: 768px) {
+
+    .acciones {
+        min-width: 85px !important; /* espacio para editar + borrar */
+        white-space: nowrap !important;
+        text-align: center !important;
+    }
+
+    .btn-edit,
+    .btn-delete {
+        width: 32px !important;
+        height: 32px !important;
+        padding: 6px !important;
+        border-radius: 6px;
+    }
+
+    .btn-edit i,
+    .btn-delete i {
+        font-size: 16px !important;
+    }
+
+    .tabla {
+        min-width: 650px !important; /* evita que se rompa */
+    }
+
+    .table-container {
+        overflow-x: auto !important;
+    }
 }

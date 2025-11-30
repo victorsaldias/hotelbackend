@@ -1,6 +1,6 @@
-/* ===================================================
-   ADMIN.CSS – ESTILO BASE DEL PANEL (ESCRITORIO)
-   =================================================== */
+/* ========================================
+   ADMIN.CSS
+======================================== */
 
 body {
     margin: 0;
@@ -8,11 +8,17 @@ body {
     background: #F9F8F6;
 }
 
+/* El layout no debe permitir overflow horizontal */
 .layout {
     display: flex;
     min-height: 100vh;
+    width: 100%;
+    overflow-x: hidden;
 }
 
+/* ============================
+   SIDEBAR
+============================ */
 .sidebar {
     width: 240px;
     background: #111;
@@ -61,9 +67,15 @@ body {
     color: #111;
 }
 
+/* ============================
+   CONTENT
+============================ */
 .content {
     flex: 1;
     padding: 25px;
+    overflow-y: auto;
+    overflow-x: hidden; /* FIX scroll horizontal */
+    box-sizing: border-box;
 }
 
 .topbar {
@@ -82,6 +94,10 @@ body {
 .btn-menu {
     display: none !important;
 }
+
+/* ============================
+   TARJETAS
+============================ */
 .card-aseo {
     background: #ffffff;
     padding: 18px 20px;
@@ -107,6 +123,10 @@ body {
     cursor: pointer;
     font-weight: 600;
 }
+
+/* ============================
+   REPORTES
+============================ */
 .report-container {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));

@@ -1,11 +1,6 @@
-// ==========================
-// ADMIN JS LIMPIO Y FUNCIONANDO
-// ==========================
-
 const API_URL = "http://localhost:3000/api/empleados-admin";
 let empleadoEditando = null;
 
-// Convertir estado numérico a texto
 function getEstadoTexto(id) {
     switch (id) {
         case 1: return "Activo";
@@ -20,7 +15,7 @@ function obtenerEmpleadoActual() {
     const empleadoId = localStorage.getItem('empleadoId');
     const empleadoNombre = localStorage.getItem('empleadoNombre');
     const empleadoApellido = localStorage.getItem('empleadoApellido');
-    
+
     if (!empleadoId) {
         Swal.fire({
             icon: 'warning',
@@ -31,7 +26,7 @@ function obtenerEmpleadoActual() {
         });
         return null;
     }
-    
+
     return {
         id: parseInt(empleadoId),
         nombre: empleadoNombre,
@@ -40,9 +35,6 @@ function obtenerEmpleadoActual() {
     };
 }
 
-// =====================
-// CARGAR EMPLEADOS
-// =====================
 async function cargarEmpleados() {
     try {
         const response = await fetch(API_URL, { credentials: 'include' });
@@ -51,11 +43,11 @@ async function cargarEmpleados() {
         const tbody = document.getElementById("listaEmpleados");
         tbody.innerHTML = "";
 
-        const empleados = Array.isArray(data) 
-                            ? data 
-                            : data.empleados 
-                                ? data.empleados 
-                                : [];
+        const empleados = Array.isArray(data)
+            ? data
+            : data.empleados
+                ? data.empleados
+                : [];
 
         if (empleados.length === 0) {
             tbody.innerHTML = `
@@ -76,10 +68,10 @@ async function cargarEmpleados() {
                     <td>${getEstadoTexto(emp.idEstadoEmpleado)}</td>
                     <td class="acciones">
                         <button class="btn-edit" onclick="editarEmpleado(${emp.idEmpleado})" title="Editar empleado">
-                            <i class="fa fa-edit" style="color:#007bff; font-size:18px;"></i>
+                            <i class="fa fa-edit"></i>
                         </button>
                         <button class="btn-delete" onclick="eliminarEmpleado(${emp.idEmpleado})" title="Suspender empleado">
-                            <i class="fa fa-trash" style="color:#dc3545; font-size:18px;"></i>
+                            <i class="fa fa-trash"></i>
                         </button>
                     </td>
                 </tr>
@@ -87,11 +79,28 @@ async function cargarEmpleados() {
         });
 
     } catch (error) {
-        console.error("❌ Error cargando empleados:", error);
+        console.error("Error cargando empleados:", error);
         alert("No se pudieron cargar los empleados");
     }
 }
 
+const buscarEmpleadoInput = document.getElementById("buscar");
+const listaEmpleadosBody = document.getElementById("listaEmpleados");
+
+if (buscarEmpleadoInput && listaEmpleadosBody) {
+    buscarEmpleadoInput.addEventListener("input", () => {
+        const filtro = buscarEmpleadoInput.value.trim().toLowerCase();
+        const filas = listaEmpleadosBody.querySelectorAll("tr");
+
+        filas.forEach(fila => {
+            const nombre = fila.children[1].textContent.toLowerCase();
+            const apellido = fila.children[2].textContent.toLowerCase();
+            const rut = fila.children[4].textContent.toLowerCase();
+            const textoFila = `${nombre} ${apellido} ${rut}`;
+            fila.style.display = textoFila.includes(filtro) ? "" : "none";
+        });
+    });
+}
 
 function nuevoEmpleado() {
     empleadoEditando = null;
@@ -104,7 +113,6 @@ function nuevoEmpleado() {
 
     document.getElementById('empRol').value = "1";
     document.getElementById('empEstado').value = "1";
-
     document.getElementById('groupPassword').style.display = "block";
 
     document.querySelector('.modal-title').textContent = 'Nuevo Empleado';
@@ -112,7 +120,6 @@ function nuevoEmpleado() {
 
     document.getElementById('modalEmpleado').classList.add('show');
 }
-
 
 function cerrarModal() {
     document.getElementById('modalEmpleado').classList.remove('show');
@@ -126,7 +133,6 @@ function cerrarModal() {
     document.getElementById('empRol').value = "1";
     document.getElementById('empEstado').value = "1";
 }
-
 
 async function editarEmpleado(id) {
     try {
@@ -150,7 +156,7 @@ async function editarEmpleado(id) {
         document.getElementById('modalEmpleado').classList.add('show');
 
     } catch (error) {
-        console.error("❌ Error al cargar empleado:", error);
+        console.error("Error al cargar empleado:", error);
         alert("Error al cargar empleado");
     }
 }
@@ -210,11 +216,10 @@ async function guardarEmpleado() {
         cargarEmpleados();
 
     } catch (error) {
-        console.error("❌ Error al guardar:", error);
+        console.error("Error al guardar:", error);
         alert("Error al guardar empleado.");
     }
 }
-
 
 async function eliminarEmpleado(id) {
     if (!confirm("¿Seguro que deseas suspender este empleado?")) return;
@@ -235,17 +240,14 @@ async function eliminarEmpleado(id) {
         cargarEmpleados();
 
     } catch (error) {
-        console.error("❌ Error al suspender:", error);
+        console.error("Error al suspender:", error);
         alert("No se pudo suspender empleado");
     }
 }
 
-
 document.addEventListener("DOMContentLoaded", () => {
-    cargarNombreAdmin();
     cargarEmpleados();
     obtenerEmpleadoActual();
 });
-
 
 
