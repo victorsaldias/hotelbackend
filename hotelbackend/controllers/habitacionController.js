@@ -1,178 +1,170 @@
-import { getConnection } from "../config/dbConfig.js";
 import {
-  obtenerHabitacionesDisponibles,
-  obtenerHabitacionPorId,
-  obtenerHabitacionPorNumero,
-  crearHabitacion,
-  actualizarEstadoHabitacion,
-  obtenerTodasLasHabitaciones,
-  obtenerPrecioHabitacion,
-  buscarHabitacionesPorCapacidadYFechas
+    obtenerHabitacionesDisponibles,
+    obtenerHabitacionPorId,
+    obtenerHabitacionPorNumero,
+    crearHabitacion,
+    actualizarEstadoHabitacion,
+    obtenerTodasLasHabitaciones,
+    obtenerPrecioHabitacion,
+    asignarHabitacion,
+    listarConFiltros,
+
+    obtenerTiposHabitacion,
+    obtenerCaracteristicas,
+    obtenerCaracteristicaPorId,
+    actualizarCaracteristica,
+    obtenerServicios,
+    obtenerServiciosHabitacion,
+    actualizarServiciosHabitacionModel,
+
+    editarHabitacionModel
 } from "../model/habitacionModel.js";
 
-// 🔹 Habitaciones disponibles
 export async function verHabitacionesDisponibles(req, res) {
-  try {
-    const habitaciones = await obtenerHabitacionesDisponibles();
-    res.status(200).json(habitaciones);
-  } catch (error) {
-    res.status(500).json({
-      message: "Error al obtener habitaciones disponibles",
-      error: error.message
-    });
-  }
-}
-
-// 🔹 Listar con filtros
-export async function listarHabitaciones(req, res) {
-  try {
-    const filtros = req.query;
-
-    const pool = await getConnection();
-    let query = "SELECT * FROM habitacion WHERE 1=1 ";
-    const request = pool.request();
-
-    if (filtros.numero) { query += " AND numero = @numero"; request.input("numero", filtros.numero); }
-    if (filtros.precioMin) { query += " AND precio >= @precioMin"; request.input("precioMin", filtros.precioMin); }
-    if (filtros.precioMax) { query += " AND precio <= @precioMax"; request.input("precioMax", filtros.precioMax); }
-    if (filtros.idTipoHabitacion) { query += " AND idTipoHabitacion = @idTipoHabitacion"; request.input("idTipoHabitacion", filtros.idTipoHabitacion); }
-    if (filtros.idEstadoHabitacion) { query += " AND idEstadoHabitacion = @idEstadoHabitacion"; request.input("idEstadoHabitacion", filtros.idEstadoHabitacion); }
-    if (filtros.idSucursal) { query += " AND idSucursal = @idSucursal"; request.input("idSucursal", filtros.idSucursal); }
-
-    const result = await request.query(query);
-    res.status(200).json(result.recordset);
-
-  } catch (error) {
-    res.status(500).json({
-      message: "Error al obtener habitaciones",
-      error: error.message
-    });
-  }
-}
-
-// 🔹 Obtener habitación por ID
-export async function obtenerHabitacionIdController(req, res) {
-  try {
-    const habitacion = await obtenerHabitacionPorId(req.params.idHabitacion);
-    if (!habitacion) return res.status(404).json({ message: "Habitación no encontrada" });
-    res.status(200).json(habitacion);
-  } catch (error) {
-    res.status(500).json({ message: "Error al buscar habitación", error: error.message });
-  }
-}
-
-// 🔹 Obtener habitación por número
-export async function obtenerHabitacionNumeroController(req, res) {
-  try {
-    const habitacion = await obtenerHabitacionPorNumero(req.params.numero);
-    if (!habitacion) return res.status(404).json({ message: "Habitación no encontrada" });
-    res.status(200).json(habitacion);
-  } catch (error) {
-    res.status(500).json({ message: "Error al buscar habitación", error: error.message });
-  }
-}
-
-// 🔹 Crear habitación
-export async function crearHabitacionController(req, res) {
-  try {
-    const habitacion = await crearHabitacion(req.body);
-    res.status(201).json({ message: "Habitación creada", habitacion });
-  } catch (error) {
-    res.status(500).json({ message: "Error al crear habitación", error: error.message });
-  }
-}
-
-// 🔹 Actualizar estado de habitación
-export async function actualizarEstadoHabitacionController(req, res) {
-  try {
-    const { numero } = req.params;
-    const { idEstadoHabitacion } = req.body;
-
-    const actualizado = await actualizarEstadoHabitacion(numero, idEstadoHabitacion);
-
-    if (!actualizado)
-      return res.status(404).json({ message: "Habitación no encontrada" });
-
-    res.status(200).json({ message: "Estado actualizado correctamente" });
-  } catch (error) {
-    res.status(500).json({ message: "Error al actualizar estado", error: error.message });
-  }
-}
-
-// 🔹 Obtener todas las habitaciones
-export async function obtenerTodasLasHabitacionesController(req, res) {
-  try {
-    const habitacion = await obtenerTodasLasHabitaciones();
-    res.status(200).json(habitacion);
-  } catch (error) {
-    res.status(500).json({ message: "Error al obtener habitaciones", error: error.message });
-  } 
-}
-
-// 🔹 Asignar habitación (cambiar estado)
-export async function asignarHabitacionController(req, res) {
-  try {
-    const { numero, idEstadoHabitacion } = req.body;
-    const asignado = await actualizarEstadoHabitacion(numero, idEstadoHabitacion);
-    if (!asignado)
-      return res.status(404).json({ message: "Habitación no encontrada" });
-    res.status(200).json({ message: "Habitación asignada correctamente" });
-  } catch (error) { 
-    res.status(500).json({ message: "Error al asignar habitación", error: error.message });
-  }
-}
-
-// 🔹 Obtener precio de habitación por ID (opcional)
-export async function obtenerPrecioHabitacionController(req, res) {
-  try {
-    const { idHabitacion } = req.params;
-    const precio = await obtenerPrecioHabitacion(idHabitacion);
-    if (precio === null) {
-      return res.status(404).json({ message: "Habitación no encontrada" });
+    try {
+        res.json(await obtenerHabitacionesDisponibles());
+    } catch (err) {
+        res.status(500).json({ error: err.message });
     }
-    res.status(200).json({ idHabitacion, precio });
-  } catch (error) {
-    res.status(500).json({ message: "Error al obtener precio de la habitación", error: error.message });
-  }
 }
 
-// 🔹 Ver habitaciones de una reserva
-export async function verHabitacionesDeReservaController(req, res) {
-  try {
-    const { idReserva } = req.params; 
-    const pool = await getConnection();
-    const result = await pool
-        .request()
-        .input("idReserva", idReserva)
-        .query(`
-            SELECT h.*
-            FROM habitacion h
-            JOIN reservaHabitacion rh ON h.idHabitacion = rh.idHabitacion
-            WHERE rh.idReserva = @idReserva;
-        `);
-    res.status(200).json(result.recordset);
-  } catch (error) {
-    res.status(500).json({ message: "Error al obtener habitaciones de la reserva", error: error.message });
-  }
+export async function listarHabitaciones(req, res) {
+    try {
+        res.json(await listarConFiltros(req.query));
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
 }
 
-// 🔹 Habitaciones adecuadas por sucursal / fechas / capacidad
-export async function obtenerHabitacionesAdecuadas(req, res) {
-  try {
-      const { idSucursal, fechaInicio, fechaFin, cantidadHuespedes } = req.body;
+export async function obtenerHabitacionIdController(req, res) {
+    try {
+        const hab = await obtenerHabitacionPorId(req.params.idHabitacion);
+        if (!hab) return res.status(404).json({ message: "Habitación no encontrada" });
+        res.json(hab);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+}
 
-      const habitaciones = await buscarHabitacionesPorCapacidadYFechas(
-          idSucursal,
-          fechaInicio,
-          fechaFin,
-          cantidadHuespedes
-      );
+export async function obtenerHabitacionNumeroController(req, res) {
+    try {
+        const hab = await obtenerHabitacionPorNumero(req.params.numero);
+        if (!hab) return res.status(404).json({ message: "Habitación no encontrada" });
+        res.json(hab);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+}
 
-      res.json(habitaciones);
-  } catch (error) {
-      res.status(500).json({
-          message: "Error al obtener habitaciones",
-          error: error.message
-      });
-  }
+export async function crearHabitacionController(req, res) {
+    try {
+        res.json(await crearHabitacion(req.body));
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+}
+
+export async function actualizarEstadoHabitacionController(req, res) {
+    try {
+        const ok = await actualizarEstadoHabitacion(req.params.numero, req.body.idEstadoHabitacion);
+        ok ? res.json({ message: "Estado actualizado" }) : res.status(404).json({ message: "No encontrada" });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+}
+
+export async function obtenerTodasLasHabitacionesController(req, res) {
+    try {
+        res.json(await obtenerTodasLasHabitaciones());
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+}
+
+export async function asignarHabitacionController(req, res) {
+    try {
+        await asignarHabitacion(req.body.idReserva, req.body.idHabitacion);
+        res.json({ message: "Habitación asignada" });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+}
+
+export async function obtenerPrecioHabitacionController(req, res) {
+    try {
+        res.json(await obtenerPrecioHabitacion(req.params.idHabitacion));
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+}
+
+// TIPOS HABITACIÓN
+export async function obtenerTiposHabitacionController(req, res) {
+    try {
+        res.json(await obtenerTiposHabitacion());
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+}
+
+// CARACTERISTICAS
+export async function obtenerCaracteristicasController(req, res) {
+    try {
+        res.json(await obtenerCaracteristicas());
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+}
+
+export async function obtenerCaracteristicaPorIdController(req, res) {
+    try {
+        res.json(await obtenerCaracteristicaPorId(req.params.idCaracteristica));
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+}
+
+export async function actualizarCaracteristicaController(req, res) {
+    try {
+        await actualizarCaracteristica(req.params.idCaracteristica, req.body);
+        res.json({ message: "Característica actualizada" });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+}
+
+// SERVICIOS
+export async function obtenerServiciosController(req, res) {
+    try {
+        res.json(await obtenerServicios());
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+}
+
+export async function obtenerServiciosHabitacionController(req, res) {
+    try {
+        res.json(await obtenerServiciosHabitacion(req.params.idHabitacion));
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+}
+
+export async function actualizarServiciosHabitacionController(req, res) {
+    try {
+        await actualizarServiciosHabitacionModel(req.params.idHabitacion, req.body.servicios);
+        res.json({ message: "Servicios actualizados" });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+}
+
+// EDITAR HABITACIÓN GENERAL
+export async function editarHabitacionController(req, res) {
+    try {
+        await editarHabitacionModel(req.params.idHabitacion, req.body);
+        res.json({ message: "Habitación editada" });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
 }

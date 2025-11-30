@@ -1,48 +1,49 @@
-import express from 'express';
+import { Router } from "express";
 import {
-  verHabitacionesDisponibles,
-  listarHabitaciones,
-  obtenerHabitacionIdController,
-  obtenerHabitacionNumeroController,
-  obtenerTodasLasHabitacionesController,
-  crearHabitacionController,
-  actualizarEstadoHabitacionController,
-  asignarHabitacionController,
-  obtenerHabitacionesAdecuadas
+    verHabitacionesDisponibles,
+    listarHabitaciones,
+    obtenerHabitacionIdController,
+    obtenerHabitacionNumeroController,
+    crearHabitacionController,
+    actualizarEstadoHabitacionController,
+    obtenerTodasLasHabitacionesController,
+    asignarHabitacionController,
+    obtenerPrecioHabitacionController,
 
-} from '../controllers/habitacionController.js';
+    obtenerTiposHabitacionController,
+    obtenerCaracteristicasController,
+    obtenerCaracteristicaPorIdController,
+    actualizarCaracteristicaController,
 
-const router = express.Router();
+    obtenerServiciosController,
+    obtenerServiciosHabitacionController,
+    actualizarServiciosHabitacionController,
 
-// Listar habitaciones con filtros
-router.get('/', listarHabitaciones);
+    editarHabitacionController
+} from "../controllers/habitacionController.js";
 
-// Habitaciones disponibles
-router.get('/disponibles', verHabitacionesDisponibles);
+const router = Router();
 
-// Obtener habitación por ID
-router.get('/id/:idHabitacion', obtenerHabitacionIdController);
+router.get("/disponibles", verHabitacionesDisponibles);
+router.get("/listar", listarHabitaciones);
+router.get("/id/:idHabitacion", obtenerHabitacionIdController);
+router.get("/numero/:numero", obtenerHabitacionNumeroController);
+router.post("/crear", crearHabitacionController);
+router.put("/estado/:numero", actualizarEstadoHabitacionController);
+router.get("/todas", obtenerTodasLasHabitacionesController);
+router.post("/asignar", asignarHabitacionController);
+router.get("/precio/:idHabitacion", obtenerPrecioHabitacionController);
+router.get("/tipos-habitacion", obtenerTiposHabitacionController);
 
-// Obtener habitación por número
-router.get('/numero/:numero', obtenerHabitacionNumeroController);
+router.get("/caracteristicas-habitacion", obtenerCaracteristicasController);
+router.get("/caracteristicas/:idCaracteristica", obtenerCaracteristicaPorIdController);
+router.put("/caracteristicas/:idCaracteristica", actualizarCaracteristicaController);
 
-// Obtener todas las habitaciones
-router.get('/todas', obtenerTodasLasHabitacionesController);
+router.get("/servicios", obtenerServiciosController);
+router.get("/servicios/:idHabitacion", obtenerServiciosHabitacionController);
+router.put("/servicios/:idHabitacion", actualizarServiciosHabitacionController);
 
-// Crear habitación
-router.post('/', crearHabitacionController);
-
-// Actualizar estado de habitación
-router.put('/estado/:numero', actualizarEstadoHabitacionController);
-
-// Asignar habitación (ejemplo adicional)
-router.put('/asignar/:numero', asignarHabitacionController);
-
-// Buscar habitaciones por sucursal + fechas + huéspedes
-router.post("/buscar", obtenerHabitacionesAdecuadas);
-
-router.post
+router.put("/editar/:idHabitacion", editarHabitacionController);
 
 export default router;
-
 
