@@ -36,11 +36,15 @@ function obtenerEmpleadoActual() {
 }
 
 async function cargarEmpleados() {
+
+    // ⛔ EVITAR QUE SE EJECUTE SI NO EXISTE LA TABLA
+    const tbody = document.getElementById("listaEmpleados");
+    if (!tbody) return; // No estamos en la página empleados.html
+
     try {
         const response = await fetch(API_URL, { credentials: 'include' });
         const data = await response.json();
 
-        const tbody = document.getElementById("listaEmpleados");
         tbody.innerHTML = "";
 
         const empleados = Array.isArray(data)
@@ -80,28 +84,10 @@ async function cargarEmpleados() {
 
     } catch (error) {
         console.error("Error cargando empleados:", error);
-        alert("No se pudieron cargar los empleados");
+        // Ya no mostramos alerta porque no siempre es un error real
+        if (tbody) alert("No se pudieron cargar los empleados");
     }
 }
-
-const buscarEmpleadoInput = document.getElementById("buscar");
-const listaEmpleadosBody = document.getElementById("listaEmpleados");
-
-if (buscarEmpleadoInput && listaEmpleadosBody) {
-    buscarEmpleadoInput.addEventListener("input", () => {
-        const filtro = buscarEmpleadoInput.value.trim().toLowerCase();
-        const filas = listaEmpleadosBody.querySelectorAll("tr");
-
-        filas.forEach(fila => {
-            const nombre = fila.children[1].textContent.toLowerCase();
-            const apellido = fila.children[2].textContent.toLowerCase();
-            const rut = fila.children[4].textContent.toLowerCase();
-            const textoFila = `${nombre} ${apellido} ${rut}`;
-            fila.style.display = textoFila.includes(filtro) ? "" : "none";
-        });
-    });
-}
-
 function nuevoEmpleado() {
     empleadoEditando = null;
 

@@ -25,6 +25,7 @@ import rolRoutes from "./routes/rolRoutes.js";
 import limpiezaRoutes from "./routes/limpiezaRoutes.js";
 import { getConnection } from "./config/dbConfig.js";
 import empleadoPerfilRoutes from "./routes/empleadoPerfilRoutes.js";
+import reportesRoutes from "./routes/reportesRoutes.js";
 
 console.log("Cargando rutas...");
 
@@ -91,6 +92,8 @@ app.use("/api/empleados-admin", empleadoRoutes);
 app.use("/api/roles", rolRoutes);
 app.use("/api/limpieza", limpiezaRoutes);
 app.use("/api/empleados", empleadoPerfilRoutes);
+app.use("/api/reportes",reportesRoutes)
+
 console.log("Rutas cargadas:");
 app._router.stack.forEach(r => {
     if (r.route && r.route.path) {

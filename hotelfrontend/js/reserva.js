@@ -1,12 +1,6 @@
-/* ============================================================
-   RESERVA.JS — VERSIÓN FINAL CON PASARELA STEPPER (OPCIÓN A)
-============================================================ */
 
 document.addEventListener("DOMContentLoaded", async () => {
 
-    /* ============================================================
-       1) Cargar habitación desde API
-    ============================================================= */
     const idHabitacion = new URLSearchParams(window.location.search).get("room");
 
     if (!idHabitacion) {
@@ -21,10 +15,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.getElementById("room-price").textContent = habitacion.precio;
 
 
-    /* ============================================================
-       2) Recuperar datos base
-    ============================================================= */
-
     const fechaInicio = localStorage.getItem("fechaInicioReserva");
     const fechaFin = localStorage.getItem("fechaFinReserva");
     const cantidadHuespedes = parseInt(localStorage.getItem("cantidadHuespedesReserva") || 1);
@@ -33,9 +23,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.getElementById("previewFechaFin").textContent = fechaFin;
     document.getElementById("previewHuespedes").textContent = cantidadHuespedes;
 
-    /* ============================================================
-       3) PASARELA (STEPPER)
-    ============================================================= */
 
     const totalAcomp = cantidadHuespedes - 1;
     const pasosContainer = document.getElementById("pasoPills");
@@ -118,10 +105,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
 
-    /* ============================================================
-       4) MÉTODO DE PAGO
-    ============================================================= */
-
+ // Metodo Pago
     const radios = document.getElementsByName("metodoPago");
     const btnPresencial = document.getElementById("btnReservarPresencial");
     const btnWebPay = document.getElementById("btnPagarWebPay");
@@ -151,9 +135,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
 
-    /* ============================================================
-       5) RESERVA PRESENCIAL — ENVÍA ACOMPAÑANTES YA CAPTURADOS
-    ============================================================= */
+     //RESERVA PRESENCIAL — ENVÍA ACOMPAÑANTES YA CAPTURADOS
 
     btnPresencial.addEventListener("click", async () => {
 
@@ -174,7 +156,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             return;
         }
 
-        const acompanantes = obtenerAcompanantes(); // 🔥 CAPTURADOS DESDE LA PASARELA
+        const acompanantes = obtenerAcompanantes();
 
         try {
             const response = await fetch("http://localhost:3000/api/reservas/completa", {
@@ -213,9 +195,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
 
-    /* ============================================================
-       6) WEBPAY (SIMULACIÓN)
-    ============================================================= */
+    // WEBPAY (SIMULACIÓN)
     btnWebPay.addEventListener("click", () => {
         Swal.fire("Redirigiendo a WebPay… (Simulación)");
     });

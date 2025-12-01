@@ -8,14 +8,16 @@
     <link rel="stylesheet" href="../css/admin.css">
     <link rel="stylesheet" href="../css/components.css">
     <link rel="stylesheet" href="../css/responsive.css">
+
     <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 </head>
 
 <body>
 
 <div class="layout">
 
+    <!-- SIDEBAR -->
     <aside class="sidebar">
         <h2 class="sidebar-title">Portal Hotel Arellano</h2>
 
@@ -23,55 +25,72 @@
             <li onclick="location.href='dashboard-admin.html'">
                 <i class="fa-solid fa-users"></i> Registrar Empleados
             </li>
-            <li onclick="location.href='editarHabitacion.html?id=1'">
+            <li onclick="location.href='editarHabitacion.html'">
                 <i class="fa-solid fa-bed"></i> Editar Habitación
             </li>
-            <li class="active" onclick="location.href='reportes.html'">
+            <li class="active">
                 <i class="fa-solid fa-chart-line"></i> Reportes
             </li>
-
             <li onclick="location.href='perfil.html'">
                 <i class="fa-solid fa-user"></i> Mi Perfil
             </li>
-
-           <li class="logout" onclick="logoutEmpleado()">
+            <li class="logout" onclick="logoutEmpleado()">
                 <i class="fa-solid fa-right-from-bracket"></i> Cerrar Sesión
             </li>
         </ul>
     </aside>
 
+    <!-- CONTENIDO -->
     <main class="content">
 
         <header class="topbar">
             <i class="fa-solid fa-bars btn-menu" onclick="toggleMenu()"></i>
             <h2>Reportes del Hotel</h2>
-            <span id="adminName">Administrador</span>
+            <span id="adminName"></span>
         </header>
 
-        <div class="report-container">
+        <!-- TARJETAS DE REPORTES -->
+<div class="report-container">
 
-            <div class="report-card">
-                <i class="fa-solid fa-calendar-check"></i>
-                <div class="report-title">Reporte de Reservas</div>
-                <div class="report-desc">Genera un informe detallado de todas las reservas.</div>
-                <button onclick="location.href='reporte-reservas.html'" class="btn-report">Generar Reporte</button>
-            </div>
-            <!-- <div class="report-card">
-                <i class="fa-solid fa-bed"></i>
-                <div class="report-title">Habitaciones más ocupadas</div>
-                <div class="report-desc">Conoce cuáles habitaciones tienen más demanda.</div>
-                <button class="btn-report">Ver Informe</button>
-            </div>
+        
 
-            <div class="report-card">
-                <i class="fa-solid fa-chart-pie"></i>
-                <div class="report-title">Afluencia de Clientes</div>
-                <div class="report-desc">Estadísticas de visitas según días y temporadas.</div>
-                <button class="btn-report">Ver Estadísticas</button>
-            </div> -->
-            
+<div class="report-card">
+    <i class="fa-solid fa-bed"></i>
+    <div class="report-title">Habitaciones más ocupadas</div>
+    <div class="report-desc">Conoce qué habitaciones se reservan más.</div>
+    <button onclick="location.href='habitaciones-frecuentes.html'" class="btn-report">Ver Informe</button>
+</div>
 
-        </div>
+<div class="report-card">
+    <i class="fa-solid fa-chart-pie"></i>
+    <div class="report-title">Ocupación por Sucursal</div>
+    <div class="report-desc">Estadísticas del nivel de ocupación por sede.</div>
+    <button onclick="location.href='ocupacion.html'" class="btn-report">Ver Estadísticas</button>
+</div>
+
+<div class="report-card">
+    <i class="fa-solid fa-money-bill-trend-up"></i>
+    <div class="report-title">Ingresos por Habitación</div>
+    <div class="report-desc">Resumen económico mensual, trimestral y semestral.</div>
+    <button onclick="location.href='ingresos-habitacion.html'" class="btn-report">Ver Informe</button>
+</div>
+
+<div class="report-card">
+    <i class="fa-solid fa-broom"></i>
+    <div class="report-title">Estado de Habitaciones</div>
+    <div class="report-desc">Limpias, sucias, mantenimiento.</div>
+    <button onclick="location.href='estado-habitaciones.html'" class="btn-report">Ver Estado</button>
+</div>
+
+<div class="report-card">
+    <i class="fa-solid fa-clock"></i>
+    <div class="report-title">Estadía Promedio</div>
+    <div class="report-desc">Promedio de noches por reserva.</div>
+    <button onclick="location.href='estadia-promedio.html'" class="btn-report">Ver Detalles</button>
+</div>
+
+
+    </div>
 
     </main>
 
@@ -81,5 +100,8 @@
 
 <script src="../js/menuMovil.js"></script>
 <script src="../js/admin.js"></script>
+<script src="../js/authGuardEmpleado.js"></script>
+<script src="../js/authStatus.js"></script>
+
 </body>
 </html>
