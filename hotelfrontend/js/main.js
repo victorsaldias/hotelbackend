@@ -262,6 +262,7 @@ const filterForm = document.querySelector(".filter__form");
 
 if (filterForm) {
     filterForm.addEventListener("submit", async function (e) {
+        localStorage.removeItem("habitacionSeleccionada");
         e.preventDefault();
 
         const idSucursal = document.getElementById("sucursalSelect").value;
@@ -282,14 +283,14 @@ if (filterForm) {
         localStorage.setItem("cantidadHuespedesReserva", cantidadHuespedes);
 
         try {
-            const response = await fetch("http://localhost:3000/api/habitaciones/buscar", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-    idSucursal,
-    fechaInicio: convertirFecha(fechaInicioTexto) + " 14:00:00",
-    fechaFin: convertirFecha(fechaFinTexto) + " 12:00:00",
-    cantidadHuespedes
+           const response = await fetch("http://localhost:3000/api/habitaciones/buscar", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+        idSucursal,
+        fechaInicio: convertirFecha(fechaInicioTexto) + " 14:00:00",
+        fechaFin: convertirFecha(fechaFinTexto) + " 12:00:00",
+        cantidadHuespedes
 })
             });
 

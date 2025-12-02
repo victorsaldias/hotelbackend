@@ -7,79 +7,20 @@ import {
     modificarReserva,
     modificarHabitacionDeReserva
 } from "../model/reservaModel.js";
-import { getConnection } from "../config/dbConfig.js";
-// ===============================================
-// CREAR RESERVA COMPLETA
-// ===============================================
+
+/* ============================================================
+   CREAR RESERVA COMPLETA (USADO POR reserva.js)
+============================================================ */
 export const crearReservaCompleta = async (req, res) => {
     try {
         const data = req.body;
-        
+
+        // Validar que vengan datos mínimos
         if (!data.fechaInicio || !data.fechaFin || !data.idCliente || !data.idHabitacion) {
             return res.status(400).json({ error: "Faltan datos obligatorios" });
         }
 
-        // Convertir string "YYYY-MM-DD" a fecha local con hora
-        function crearFechaLocal(fechaStr, hora) {
-            const [y, m, d] = fechaStr.split("-").map(Number);
-            return new Date(y, m - 1, d, hora, 0, 0, 0);
-        }
-
-        const checkIn = crearFechaLocal(data.fechaInicio, 14);
-        const checkOut = crearFechaLocal(data.fechaFin, 12);
-
-        data.fechaInicio = checkIn;
-        data.fechaFin = checkOut;
-
-        const pool = await getConnection();
-
-        // =======================
-        // DEBUG
-        // =======================
-        console.log("===== DEBUG RESERVA =====");
-        console.log("ID HAB:", data.idHabitacion);
-        console.log("CHECK-IN:", data.fechaInicio);
-        console.log("CHECK-OUT:", data.fechaFin);
-
-        const debugQuery = await pool.request()
-            .input("idHabitacion", data.idHabitacion)
-            .query(`
-                SELECT r.idReserva, r.fechaInicio, r.fechaFin, r.idEstadoReserva
-                FROM reservaHabitacion rh
-                INNER JOIN reserva r ON r.idReserva = rh.idReserva
-                WHERE rh.idHabitacion = @idHabitacion
-            `);
-
-        console.log("RESERVAS QUE EXISTEN EN BD PARA ESTA HAB:", debugQuery.recordset);
-        console.log("===========================");
-
-        // =======================
-        // VALIDAR SOLAPAMIENTO
-        // =======================
-        const conflicto = await pool.request()
-    .input("idHabitacion", data.idHabitacion)
-    .input("fechaInicio", data.fechaInicio)
-    .input("fechaFin", data.fechaFin)
-    .query(`
-        SELECT 1
-        FROM reservaHabitacion rh
-        INNER JOIN reserva r ON r.idReserva = rh.idReserva
-        WHERE rh.idHabitacion = @idHabitacion
-        AND r.idEstadoReserva IN (1,2)
-        AND NOT (
-            r.fechaFin <= @fechaInicio  -- checkout anterior al checkin nuevo
-            OR
-            r.fechaInicio >= @fechaFin  -- checkin posterior al checkout nuevo
-        )
-    `);
-
-        if (conflicto.recordset.length > 0) {
-            return res.status(400).json({
-                error: "La habitación ya está reservada en ese rango de fechas."
-            });
-        }
-
-        // Crear reserva
+        // Llamar al modelo
         const resultado = await ingresarReservaCompleta(data);
 
         return res.status(201).json({
@@ -93,23 +34,22 @@ export const crearReservaCompleta = async (req, res) => {
     }
 };
 
-
-// ===============================================
-// VER TODAS LAS RESERVAS
-// ===============================================
+/* ============================================================
+   VER TODAS LAS RESERVAS
+============================================================ */
 export async function traerReservas(req, res) {
     try {
-        const reservas = await verReservas();
+        const { idReserva } = req.params;
+        const reservas = await verReservas(idReserva);
         res.json(reservas);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 }
 
-
-// ===============================================
-// CONFIRMAR RESERVA
-// ===============================================
+/* ============================================================
+   CONFIRMAR RESERVA
+============================================================ */
 export async function confirmarReservaController(req, res) {
     try {
         const { idEmpleado } = req.body;
@@ -120,10 +60,9 @@ export async function confirmarReservaController(req, res) {
     }
 }
 
-
-// ===============================================
-// CANCELAR RESERVA
-// ===============================================
+/* ============================================================
+   CANCELAR RESERVA
+============================================================ */
 export async function cancelarReservaController(req, res) {
     try {
         await cancelarReserva(req.params.idReserva);
@@ -133,10 +72,9 @@ export async function cancelarReservaController(req, res) {
     }
 }
 
-
-// ===============================================
-// HISTORIAL DEL CLIENTE
-// ===============================================
+/* ============================================================
+   HISTORIAL DEL CLIENTE
+============================================================ */
 export async function traerHistorialReservas(req, res) {
     try {
         const historial = await verHistorialReserva(req.params.idCliente);
@@ -146,10 +84,9 @@ export async function traerHistorialReservas(req, res) {
     }
 }
 
-
-// ===============================================
-// MODIFICAR RESERVA
-// ===============================================
+/* ============================================================
+   MODIFICAR RESERVA COMPLETA
+============================================================ */
 export async function modificarReservaController(req, res) {
     try {
         const { idReserva } = req.params;
@@ -161,10 +98,9 @@ export async function modificarReservaController(req, res) {
     }
 }
 
-
-// ===============================================
-// MODIFICAR HABITACIÓN
-// ===============================================
+/* ============================================================
+   MODIFICAR HABITACIÓN DE LA RESERVA
+============================================================ */
 export async function modificarHabitacionReservaController(req, res) {
     try {
         const { idReserva } = req.params;

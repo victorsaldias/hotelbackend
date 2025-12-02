@@ -1,3 +1,4 @@
+
 document.addEventListener("DOMContentLoaded", async () => {
 
     /* ============================================================
@@ -171,8 +172,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             return;
         }
 
-        const fechaInicioSQL = formatearFechaSQL(fechaI);
-        const fechaFinSQL = formatearFechaSQL(fechaF);
+        const fechaInicioSQL = formatearFechaSQL(fechaI) + " 14:00:00";
+        const fechaFinSQL = formatearFechaSQL(fechaF) + " 12:00:00";
 
         const dias = Math.ceil((fechaF - fechaI) / (1000 * 60 * 60 * 24));
         const total = room.precio * dias;
