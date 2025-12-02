@@ -64,18 +64,6 @@ export async function crearHabitacion(data) {
     return r.recordset[0];
 }
 
-export async function actualizarEstadoHabitacion(numero, estado) {
-    const pool = await getConnection();
-    const r = await pool.request()
-        .input("numero", numero)
-        .input("estado", estado)
-        .query(`
-            UPDATE habitacion SET idEstadoHabitacion = @estado
-            WHERE numero = @numero
-        `);
-
-    return r.rowsAffected[0] > 0;
-}
 
 export async function obtenerTodasLasHabitaciones() {
     const pool = await getConnection();
@@ -210,7 +198,114 @@ export async function editarHabitacionModel(idHabitacion, body) {
             WHERE idHabitacion = @id
         `);
 }
+function toSQL(date) {
+    const pad = n => n.toString().padStart(2,"0");
+    return `${date.getFullYear()}-${pad(date.getMonth()+1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}:00`;
+}
+export async function buscarHabitacionesPorCapacidadYFechas(
+    idSucursal,
+    fechaInicio,   // "YYYY-MM-DD"
+    fechaFin,      // "YYYY-MM-DD"
+    cantidadHuespedes
+) {
+    const pool = await getConnection();
 
+    // MISMAS HORAS que usa la reserva: 14:00 check-in, 12:00 check-out
+    const inicioSQL = fechaInicio.includes(":") ? fechaInicio : `${fechaInicio} 14:00:00`;
+    const finSQL    = fechaFin.includes(":")    ? fechaFin    : `${fechaFin} 12:00:00`;
+
+    console.log("BUSQUEDA →", idSucursal, cantidadHuespedes, inicioSQL, finSQL);
+
+    const result = await pool.request()
+        .input("idSucursal", idSucursal)
+        .input("cantidadHuespedes", cantidadHuespedes)
+        .input("fechaInicio", inicioSQL)
+        .input("fechaFin", finSQL)
+        .query(`
+            SELECT 
+                h.idHabitacion,
+                h.numero,
+                ISNULL(h.precioPersonalizado, t.precio) AS precio,
+                h.idTipoHabitacion,
+                h.idSucursal,
+                s.nombre AS nombreSucursal,
+                s.direccion AS direccionSucursal,
+                c.capacidad,
+                c.cama,
+                c.tamano
+            FROM habitacion h
+            INNER JOIN tipoHabitacion t ON t.idTipoHabitacion = h.idTipoHabitacion
+            INNER JOIN caracteristica c ON c.idCaracteristica = h.idCaracteristica
+            INNER JOIN sucursal s ON s.idSucursal = h.idSucursal
+            WHERE h.idSucursal = @idSucursal
+              AND c.capacidad = @cantidadHuespedes
+              AND h.idHabitacion NOT IN (
+                    SELECT rh.idHabitacion
+                    FROM reservaHabitacion rh
+                    INNER JOIN habitacion h2 ON h2.idHabitacion = rh.idHabitacion
+                    INNER JOIN reserva r ON r.idReserva = rh.idReserva
+                    WHERE h2.idSucursal = @idSucursal
+                      AND r.idEstadoReserva IN (1, 2)    -- mismos estados
+                      AND r.fechaInicio < @fechaFin     -- MISMO solape
+                      AND r.fechaFin > @fechaInicio
+               );
+        `);
+
+    return result.recordset;
+}
+
+
+
+// ===============================
+//  MODELO: CARACTERÍSTICAS POR TIPO
+// ===============================
+export const obtenerCaracteristicasPorTipo = async (idTipo) => {
+    const pool = await getConnection();
+
+    const result = await pool.request()
+        .input("idTipo", idTipo)
+        .query(`
+            SELECT c.*
+            FROM tipoHabitacionCaracteristica thc
+            INNER JOIN Caracteristica c ON c.idCaracteristica = thc.idCaracteristica
+            WHERE thc.idTipoHabitacion = @idTipo
+        `);
+
+    return result.recordset;
+};
+
+// ===============================
+//  MODELO: SERVICIOS POR TIPO
+// ===============================
+export const obtenerServiciosPorTipo = async (idTipo) => {
+    const pool = await getConnection();
+
+    const result = await pool.request()
+        .input("idTipo", idTipo)
+        .query(`
+            SELECT s.idServicio, s.nombre
+            FROM tipoHabitacionServicio ths
+            INNER JOIN Servicio s ON s.idServicio = ths.idServicio
+            WHERE ths.idTipoHabitacion = @idTipo
+        `);
+
+    return result.recordset;
+};
+
+export const actualizarEstadoHabitacion = async (idHabitacion, idEstado) => {
+    const conn = await getConnection();
+
+    await conn.request()
+        .input("idHabitacion", idHabitacion)
+        .input("idEstado", idEstado)
+        .query(`
+            UPDATE habitacion
+            SET idEstadoHabitacion = @idEstado
+            WHERE idHabitacion = @idHabitacion
+        `);
+
+    return true;
+};
 
 
 

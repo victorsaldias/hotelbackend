@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Simulación WebPay</title>
+<link rel="stylesheet" href="../css/bootstrap.min.css">
+
+<style>
+    .card {
+        max-width: 500px;
+        margin: auto;
+        margin-top: 60px;
+        padding: 25px;
+        border-radius: 8px;
+        box-shadow: 0 0 15px #00000022;
+    }
+</style>
+</head>
+
+<body>
+
+<div class="card">
+    <h3 class="text-center mb-3">💳 WebPay Simulado</h3>
+    <p class="text-muted">Confirma si deseas realizar el pago.</p>
+
+    <h4 id="monto" class="text-success"></h4>
+
+    <button id="btnPagar" class="btn btn-success w-100 mt-3">Pagar</button>
+    <button id="btnCancelar" class="btn btn-danger w-100 mt-2">Cancelar</button>
+</div>
+
+<script>
+const params = new URLSearchParams(window.location.search);
+const token = params.get("token");
+
+// Recuperamos datos visuales solo para mostrar el monto
+const reservaMem = JSON.parse(localStorage.getItem("habitacionSeleccionada"));
+const fechaInicio = localStorage.getItem("fechaInicioReserva");
+const fechaFin = localStorage.getItem("fechaFinReserva");
+
+document.getElementById("monto").textContent =
+    `Total a pagar: $${reservaMem.precio}`;
+
+// -------------- Pagar ----------------
+document.getElementById("btnPagar").onclick = async () => {
+    const response = await fetch("http://localhost:3000/api/webpay/confirm", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token, status: "APPROVED" })
+    });
+
+    const data = await response.json();
+
+    if (data.status === "APPROVED") {
+        alert("Pago aprobado, reserva creada.");
+        window.location.href = "index.html";
+    }
+};
+
+// -------------- Cancelar ----------------
+document.getElementById("btnCancelar").onclick = async () => {
+    await fetch("http://localhost:3000/api/webpay/confirm", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token, status: "FAILED" })
+    });
+
+    alert("Pago cancelado.");
+    window.location.href = "index.html";
+};
+</script>
+
+</body>
+</html>

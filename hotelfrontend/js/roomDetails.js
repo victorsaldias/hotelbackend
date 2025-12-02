@@ -1,96 +1,103 @@
 document.addEventListener("DOMContentLoaded", async function () {
 
-    // 1. Obtener ID de la URL
-    const roomId = new URLSearchParams(window.location.search).get("room");
+    const room = JSON.parse(localStorage.getItem("habitacionSeleccionada"));
 
-    if (!roomId) {
-        alert("ID de habitación no encontrada en la URL");
+    if (!room) {
+        alert("No se pudo cargar la habitación seleccionada.");
         return;
     }
 
-    try {
-        // 2. Obtener datos reales desde backend
-        const response = await fetch(`http://localhost:3000/api/habitaciones/id/${roomId}`);
-        const room = await response.json();
+    // --- Maps ---
+    const tipos = {
+        1: "Premium King",
+        2: "Habitación Deluxe",
+        3: "Suite Ejecutiva",
+        4: "Suite Familiar"
+    };
 
-        if (!response.ok) {
-            alert("No se pudo cargar la habitación");
+    const imagenes = {
+        1: ["../img/rooms/room-1.jpg"],
+        2: ["../img/rooms/room-2.jpg"],
+        3: ["../img/rooms/details/rd-1.jpg", "../img/rooms/details/rd-2.jpg"],
+        4: ["../img/rooms/details/rd-3.jpg", "../img/rooms/details/rd-4.jpg"],
+    };
+
+    const imgs = imagenes[room.idTipoHabitacion] || ["../img/rooms/default.jpg"];
+
+    // --- Información principal ---
+    document.getElementById("room-title").textContent = tipos[room.idTipoHabitacion];
+    document.getElementById("room-price").textContent = room.precio || 0;
+    document.getElementById("room-desc").textContent =
+        `Habitación número ${room.numero}, ideal para ${room.capacidad} personas.`;
+
+    // --- Características ---
+    document.getElementById("room-details-left").innerHTML = `
+        <p><span class="icon_check"></span> Tamaño: ${room.tamano || "No especificado"} m2</p>
+        <p><span class="icon_check"></span> Capacidad: ${room.capacidad} personas</p>
+        <p><span class="icon_check"></span> Cama: ${room.cama || "No especificado"}</p>
+    `;
+
+    // --- Cargar servicios desde backend ---
+    cargarServicios(room.idHabitacion);
+
+    // --- Slider ---
+    const slider = document.getElementById("slider");
+    slider.innerHTML = "";
+
+    imgs.forEach(img => {
+        slider.innerHTML += `
+            <div class="room__details__pic__slider__item set-bg" data-setbg="${img}"></div>
+        `;
+    });
+
+    setTimeout(() => {
+        $(".set-bg").each(function () {
+            const bg = $(this).data("setbg");
+            $(this).css("background-image", `url(${bg})`);
+        });
+
+        $("#slider").owlCarousel({
+            loop: true,
+            items: 1,
+            nav: true,
+            dots: true,
+            smartSpeed: 800
+        });
+    }, 200);
+
+    // --- Botón Reservar Ahora ---
+    document.getElementById("btnReservar").addEventListener("click", () => {
+        window.location.href = `reserva.html?room=${room.idHabitacion}`;
+    });
+
+});
+
+
+// =============================
+// FUNCIÓN PARA CARGAR SERVICIOS
+// =============================
+async function cargarServicios(idHabitacion) {
+    try {
+        const response = await fetch(`http://localhost:3000/api/habitaciones/servicios/${idHabitacion}`);
+        const servicios = await response.json();
+
+        const contenedor = document.getElementById("room-details-right");
+        contenedor.innerHTML = "";
+
+        if (!Array.isArray(servicios) || servicios.length === 0) {
+            contenedor.innerHTML = `
+                <p><span class="icon_close"></span> No hay servicios disponibles.</p>
+            `;
             return;
         }
 
-        // 3. Map de imágenes según tipo
-        const imagenes = {
-            1: ["../img/rooms/room-1.jpg", "../img/rooms/room-2.jpg"],
-            2: ["../img/rooms/room-3.jpg", "../img/rooms/room-4.jpg"],
-            3: ["../img/rooms/details/rd-1.jpg", "../img/rooms/details/rd-2.jpg"],
-            4: ["../img/rooms/details/rd-3.jpg", "../img/rooms/details/rd-4.jpg"],
-        };
-
-        const tipos = {
-            1: "Premium King",
-            2: "Habitación Deluxe",
-            3: "Suite Ejecutiva",
-            4: "Suite Familiar"
-        };
-
-        const imgs = imagenes[room.idTipoHabitacion] || ["../img/rooms/default.jpg"];
-
-        // 4. Coloca título y descripción base
-        document.getElementById("room-title").textContent = tipos[room.idTipoHabitacion];
-        document.getElementById("room-desc").textContent =
-            `Habitación número ${room.numero}, ideal para ${room.capacidad} personas.`;
-        document.getElementById("room-price").textContent = room.precio;
-
-        // 5. Cargar imágenes dinámicamente
-        imgs.forEach(img => {
-            document.getElementById("slider").innerHTML +=
-                `<div class="room__details__pic__slider__item set-bg" data-setbg="${img}"></div>`;
+        servicios.forEach(s => {
+            contenedor.innerHTML += `
+                <p><span class="icon_check"></span> ${s.nombre}</p>
+            `;
         });
-
-        // 6. Características reales
-        const left = [
-            `Tamaño: ${room.tamano || "No especificado"}`,
-            `Capacidad: ${room.capacidad} personas`,
-            `Cama: ${room.cama || "No especificado"}`
-        ];
-
-        const right = [
-            "WiFi",
-            "TV HD",
-            "Baño privado"
-        ];
-
-        left.forEach(i => {
-            document.getElementById("room-details-left").innerHTML +=
-                `<p><span class="icon_check"></span> ${i}</p>`;
-        });
-
-        right.forEach(i => {
-            document.getElementById("room-details-right").innerHTML +=
-                `<p><span class="icon_check"></span> ${i}</p>`;
-        });
-
-        // 7. Activar imágenes + slider
-        setTimeout(() => {
-
-            $('.set-bg').each(function () {
-                var bg = $(this).data('setbg');
-                $(this).css('background-image', 'url(' + bg + ')');
-            });
-
-            $("#slider").owlCarousel({
-                loop: true,
-                items: 1,
-                nav: true,
-                dots: false,
-                smartSpeed: 800
-            });
-
-        }, 200);
 
     } catch (error) {
-        console.error(error);
-        alert("Error cargando habitación");
+        console.error("Error al cargar servicios:", error);
     }
-
-});
+}

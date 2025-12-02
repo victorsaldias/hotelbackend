@@ -1,65 +1,69 @@
-
 document.addEventListener("DOMContentLoaded", async () => {
 
-    const idHabitacion = new URLSearchParams(window.location.search).get("room");
+    /* ============================================================
+       1) Recuperar habitación desde localStorage
+    ============================================================ */
+    const room = JSON.parse(localStorage.getItem("habitacionSeleccionada"));
 
-    if (!idHabitacion) {
-        Swal.fire("Error", "Habitación no especificada", "error");
+    if (!room) {
+        Swal.fire("Error", "No se encontró la habitación seleccionada", "error");
         return;
     }
 
-    const res = await fetch(`http://localhost:3000/api/habitaciones/id/${idHabitacion}`);
-    const habitacion = await res.json();
+    document.getElementById("room-title").textContent = room.tipoHabitacion;
+    document.getElementById("previewPrecio").textContent = room.precio;
 
-    document.getElementById("room-title").textContent = habitacion.tipoHabitacion;
-    document.getElementById("room-price").textContent = habitacion.precio;
-
-
+    /* ============================================================
+       2) Recuperar datos de la reserva
+    ============================================================ */
     const fechaInicio = localStorage.getItem("fechaInicioReserva");
     const fechaFin = localStorage.getItem("fechaFinReserva");
-    const cantidadHuespedes = parseInt(localStorage.getItem("cantidadHuespedesReserva") || 1);
+    const cantidadHuespedes = parseInt(localStorage.getItem("cantidadHuespedesReserva"));
 
     document.getElementById("previewFechaInicio").textContent = fechaInicio;
     document.getElementById("previewFechaFin").textContent = fechaFin;
     document.getElementById("previewHuespedes").textContent = cantidadHuespedes;
 
 
+    /* ============================================================
+       3) Calcular total
+    ============================================================ */
+    const fechaI = convertirFecha(fechaInicio);
+    const fechaF = convertirFecha(fechaFin);
+
+    const dias = Math.ceil((fechaF - fechaI) / (1000 * 60 * 60 * 24));
+    const total = dias * room.precio;
+
+
+    /* ============================================================
+       4) PASARELA ACOMPAÑANTES
+    ============================================================ */
     const totalAcomp = cantidadHuespedes - 1;
+    const wrapperPasarela = document.getElementById("pasarelaAcompanantes");
     const pasosContainer = document.getElementById("pasoPills");
     const pasoContenido = document.getElementById("pasoContenido");
-    const wrapperPasarela = document.getElementById("pasarelaAcompanantes");
 
     let datosAcompanantes = {};
     let pasoActual = 1;
 
     if (totalAcomp > 0) {
         wrapperPasarela.style.display = "block";
-
-        // Crear pastillas (A1, A2, A3...)
         pasosContainer.innerHTML = "";
+
         for (let i = 1; i <= totalAcomp; i++) {
-            pasosContainer.innerHTML += `
-                <div class="step-pill" id="pill_${i}">A${i}</div>
-            `;
+            pasosContainer.innerHTML += `<div class="step-pill" id="pill_${i}">A${i}</div>`;
         }
 
         mostrarPaso(1);
-    } else {
-        wrapperPasarela.style.display = "none";
     }
 
     function mostrarPaso(num) {
-        pasoActual = num;
-
         pasoContenido.innerHTML = `
             <h5>Acompañante ${num}</h5>
 
             <input id="nombre_${num}" class="form-control mb-2" placeholder="Nombre" />
-
             <input id="apellido_${num}" class="form-control mb-2" placeholder="Apellido" />
-
             <input id="rut_${num}" class="form-control mb-2" placeholder="RUT" />
-
             <input id="telefono_${num}" class="form-control mb-2" placeholder="Teléfono" />
 
             <select id="tipo_${num}" class="form-control mb-3">
@@ -72,7 +76,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             </button>
         `;
 
-        // actualizar visual stepper
         document.querySelectorAll(".step-pill").forEach(p => p.classList.remove("active"));
         document.getElementById(`pill_${num}`).classList.add("active");
 
@@ -88,116 +91,210 @@ document.addEventListener("DOMContentLoaded", async () => {
             tipoPersona: document.getElementById(`tipo_${num}`).value
         };
 
+        // Guardar inmediatamente
+        localStorage.setItem("acompanantesReserva", JSON.stringify(datosAcompanantes));
+
         document.getElementById(`pill_${num}`).classList.add("done");
 
         if (num < totalAcomp) {
             mostrarPaso(num + 1);
         } else {
             pasoContenido.innerHTML = `
-                <p class="mt-2 text-success">✔ Todos los acompañantes ingresados.</p>
+                <p class="mt-2 text-success">✔ Todos los acompañantes listos.</p>
             `;
         }
-    }
 
-    // Esta función se usará en la reserva
-    function obtenerAcompanantes() {
-        return Object.values(datosAcompanantes);
+        actualizarBoton();
     }
 
 
- // Metodo Pago
-    const radios = document.getElementsByName("metodoPago");
-    const btnPresencial = document.getElementById("btnReservarPresencial");
-    const btnWebPay = document.getElementById("btnPagarWebPay");
+    /* ============================================================
+       5) BOTÓN DINÁMICO – UN SOLO BOTÓN
+    ============================================================ */
+    const btn = document.getElementById("btnReservar");
 
-    let metodoSeleccionado = null;
+    function validarFormulario() {
+        let metodo = document.querySelector("input[name='metodoPago']:checked");
+        if (!metodo) return false;
 
-    btnPresencial.disabled = true;
-    btnPresencial.style.opacity = ".5";
-    btnWebPay.style.display = "none";
-
-    radios.forEach(r => {
-        r.addEventListener("change", () => {
-            metodoSeleccionado = r.value;
-
-            if (metodoSeleccionado === "Presencial") {
-                btnPresencial.disabled = false;
-                btnPresencial.style.opacity = "1";
-                btnWebPay.style.display = "none";
+        // Validar acompañantes
+        if (totalAcomp > 0) {
+            for (let i = 1; i <= totalAcomp; i++) {
+                const acomp = datosAcompanantes[i];
+                if (!acomp || !acomp.nombre || !acomp.apellido) {
+                    return false;
+                }
             }
+        }
 
-            if (metodoSeleccionado === "WebPay") {
-                btnPresencial.disabled = true;
-                btnPresencial.style.opacity = ".5";
-                btnWebPay.style.display = "block";
+        return true;
+    }
+
+    function actualizarBoton() {
+        const metodo = document.querySelector("input[name='metodoPago']:checked");
+
+        if (metodo) {
+            if (metodo.value === "Presencial") {
+                btn.textContent = "Reservar Ahora (Presencial)";
+            } else {
+                btn.textContent = "Pagar con WebPay";
             }
-        });
+        }
+
+        if (validarFormulario()) {
+            btn.disabled = false;
+            btn.style.cursor = "pointer";
+        } else {
+            btn.disabled = true;
+            btn.style.cursor = "not-allowed";
+        }
+    }
+
+    document.querySelectorAll("input[name='metodoPago']").forEach(r => {
+        r.addEventListener("change", actualizarBoton);
     });
 
+    document.addEventListener("input", actualizarBoton);
 
-     //RESERVA PRESENCIAL — ENVÍA ACOMPAÑANTES YA CAPTURADOS
 
-    btnPresencial.addEventListener("click", async () => {
+    /* ============================================================
+       6) ACCIÓN DEL BOTÓN – DINÁMICA
+    ============================================================ */
+    btn.addEventListener("click", async () => {
 
-        if (!metodoSeleccionado) {
-            Swal.fire("Seleccione un método de pago");
-            return;
-        }
+        const metodo = document.querySelector("input[name='metodoPago']:checked");
+        const clienteId = localStorage.getItem("clienteId");
+        const acompanantes = obtenerAcompanantes();
 
-        if (metodoSeleccionado !== "Presencial") {
-            Swal.fire("Seleccione Pago Presencial");
-            return;
-        }
-
-        const idCliente = localStorage.getItem("idCliente");
-
-        if (!idCliente) {
+        if (!clienteId) {
             Swal.fire("Debes iniciar sesión para reservar");
             return;
         }
 
-        const acompanantes = obtenerAcompanantes();
+        const fechaInicioSQL = formatearFechaSQL(fechaI);
+        const fechaFinSQL = formatearFechaSQL(fechaF);
 
-        try {
-            const response = await fetch("http://localhost:3000/api/reservas/completa", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    idCliente,
-                    idHabitacion,
-                    fechaInicio,
-                    fechaFin,
-                    cantidadHuespedes,
-                    acompanantes,
-                    metodoPago: "Presencial"
-                })
-            });
+        const dias = Math.ceil((fechaF - fechaI) / (1000 * 60 * 60 * 24));
+        const total = room.precio * dias;
 
-            const data = await response.json();
+        if (metodo.value === "Presencial") {
+            enviarReservaPresencial();
+        } else {
+            iniciarWebPay();
+        }
 
-            if (!response.ok) {
-                Swal.fire("Error", data.error || "No se pudo crear la reserva", "error");
-                return;
+        async function enviarReservaPresencial() {
+            try {
+                const response = await fetch("http://localhost:3000/api/reservas/completa", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        idCliente: clienteId,
+                        idHabitacion: room.idHabitacion,
+                        fechaInicio: fechaInicioSQL,
+                        fechaFin: fechaFinSQL,
+                        cantidadHuespedes,
+                        total,
+                        acompanantes,
+                        metodoPago: "Presencial"
+                    })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    Swal.fire("Error", data.error || "No se pudo crear la reserva");
+                    return;
+                }
+
+                Swal.fire({
+                    icon: "success",
+                    title: "Reserva realizada",
+                    text: "Tu reserva quedó registrada."
+                }).then(() => window.location.href = "index.html");
+
+            } catch (e) {
+                Swal.fire("Error del servidor");
             }
+        }
 
-            Swal.fire({
-                icon: "success",
-                title: "Reserva confirmada",
-                text: "Pagarás cuando llegues al hotel."
-            }).then(() => {
-                window.location.href = "index.html";
-            });
-
-        } catch (err) {
-            console.error(err);
-            Swal.fire("Error del servidor");
+        function iniciarWebPay() {
+            Swal.fire("WebPay", "Aquí iría la integración WebPay.", "info");
         }
     });
 
 
-    // WEBPAY (SIMULACIÓN)
-    btnWebPay.addEventListener("click", () => {
-        Swal.fire("Redirigiendo a WebPay… (Simulación)");
-    });
+    /* ============================================================
+       7) UTILIDADES
+    ============================================================ */
+    function obtenerAcompanantes() {
+        const data = localStorage.getItem("acompanantesReserva");
+        if (!data) return [];
+        return Object.values(JSON.parse(data));
+    }
+
+    function formatearFechaSQL(date) {
+    const pad = n => String(n).padStart(2, "0");
+    const y = date.getFullYear();
+    const m = pad(date.getMonth() + 1);
+    const d = pad(date.getDate());
+    return `${y}-${m}-${d}`;
+}
+    function convertirFecha(texto) {
+        if (!texto) return null;
+
+        const partes = texto.split(" ");
+        const dia = parseInt(partes[0], 10);
+        const año = parseInt(partes[2], 10);
+
+        const meses = {
+            Ene: 0, Feb: 1, Mar: 2, Abr: 3, May: 4, Jun: 5,
+            Jul: 6, Ago: 7, Sep: 8, Oct: 9, Nov: 10, Dic: 11,
+        };
+
+        return new Date(año, meses[partes[1]], dia);
+    }
+
+    actualizarBoton();
 
 });
+
+
+async function iniciarWebPay() {
+    const clienteId = localStorage.getItem("clienteId");
+
+    const fechaInicioSQL = formatearFechaSQL(fechaI);
+    const fechaFinSQL = formatearFechaSQL(fechaF);
+    const acompanantes = obtenerAcompanantes();
+
+    const dias = Math.ceil((fechaF - fechaI) / (1000 * 60 * 60 * 24));
+    const total = room.precio * dias;
+
+    // 1. Iniciar pago
+    const response = await fetch("http://localhost:3000/api/webpay/init", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            idCliente: clienteId,
+            idHabitacion: room.idHabitacion,
+            fechaInicio: fechaInicioSQL,
+            fechaFin: fechaFinSQL,
+            cantidadHuespedes,
+            total,
+            acompanantes
+        })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+        Swal.fire("Error", data.error);
+        return;
+    }
+
+    // Guardamos token para confirmar después
+    localStorage.setItem("tokenTransbank", data.token);
+
+    // Redirigir a la página de pago WebPay simulada
+    window.location.href = `webpay-pago.html?token=${data.token}`;
+}

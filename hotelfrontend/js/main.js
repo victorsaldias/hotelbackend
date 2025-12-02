@@ -15,19 +15,18 @@ function convertirFecha(texto) {
     if (!texto) return null;
 
     const partes = texto.split(" ");
-    const dia = parseInt(partes[0], 10);
+    const dia = partes[0];
     const mesTexto = partes[1];
-    const año = parseInt(partes[2], 10);
+    const año = partes[2];
 
     const meses = {
-        Jan: 0, Feb: 1, Mar: 2, Apr: 3, May: 4, Jun: 5,
-        Jul: 6, Aug: 7, Sep: 8, Oct: 9, Nov: 10, Dec: 11
+        Ene: "01", Feb: "02", Mar: "03", Abr: "04", May: "05", Jun: "06",
+        Jul: "07", Ago: "08", Sep: "09", Oct: "10", Nov: "11", Dic: "12",
     };
 
-    return new Date(año, meses[mesTexto], dia);
+    // FORMATO: yyyy-mm-dd
+    return `${año}-${meses[mesTexto]}-${dia}`;
 }
-
-
 /* --------------------------
       Preloader
 -------------------------- */
@@ -287,17 +286,17 @@ if (filterForm) {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    idSucursal,
-                    fechaInicio,
-                    fechaFin,
-                    cantidadHuespedes
-                })
+    idSucursal,
+    fechaInicio: convertirFecha(fechaInicioTexto) + " 14:00:00",
+    fechaFin: convertirFecha(fechaFinTexto) + " 12:00:00",
+    cantidadHuespedes
+})
             });
 
             if (!response.ok) return Swal.fire("Error al buscar");
 
             const data = await response.json();
-            localStorage.setItem("habitacionesBusqueda", JSON.stringify(data));
+            localStorage.setItem("habitacionesBusqueda", JSON.stringify(data.habitaciones));
             window.location.href = "rooms.html";
 
         } catch (err) {
@@ -305,5 +304,57 @@ if (filterForm) {
         }
     });
 }
+document.addEventListener("DOMContentLoaded", async () => {
+    const container = document.getElementById("habitacionesHome");
+
+    // Si esta página NO tiene el contenedor → salir
+    if (!container) return;
+    try {
+        const res = await fetch("http://localhost:3000/api/habitaciones/tipos-habitacion");
+        const tipos = await res.json();
+
+        container.innerHTML = ""; // limpiar
+
+        tipos.forEach(tipo => {
+            // Imagen segura
+            const imagen = tipo.imagenPrincipal || "../img/home-room/hr-1.jpg";
+
+            container.innerHTML += `
+                <div class="col-lg-3 col-md-6 col-sm-6 p-0">
+                    <div class="home__room__item set-bg" data-setbg="${imagen}">
+                        <div class="home__room__title">
+                            <h4>${tipo.nombre}</h4>
+                            <h2><sup>$</sup>${tipo.precio}<span>/día</span></h2>
+                        </div>
+
+                        <button class="btn btn-warning ver-detalles-btn"
+                                data-info='${JSON.stringify(tipo)}'>
+                            Ver Detalles
+                        </button>
+                    </div>
+                </div>
+            `;
+        });
+
+        // Aplicar background dinámico
+        document.querySelectorAll(".set-bg").forEach(el => {
+            const bg = el.getAttribute("data-setbg");
+            el.style.backgroundImage = `url(${bg})`;
+        });
+
+        // Eventos para ver detalles
+        document.querySelectorAll(".ver-detalles-btn").forEach(btn => {
+            btn.addEventListener("click", () => {
+                const tipo = JSON.parse(btn.dataset.info);
+                localStorage.setItem("tipoHabitacionSeleccionada", JSON.stringify(tipo));
+                window.location.href = "tipo-habitacion.html";
+            });
+        });
+
+    } catch (err) {
+        console.error("Error cargando tipos:", err);
+        container.innerHTML = "<p>Error al cargar las habitaciones.</p>";
+    }
+});
 
 })(jQuery);

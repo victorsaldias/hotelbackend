@@ -54,9 +54,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 <li><span>Sucursal:</span> ${h.nombreSucursal}</li>
             </ul>
 
-            <a href="room-details.html?room=${h.idHabitacion}">
-                Ver Detalles
-            </a>
+            <a href="room-details.html" onclick="verDetalles(${h.idHabitacion})">
+    Ver Detalles
+</a>
 
             <!-- 🔥 BOTÓN NUEVO AGREGADO -->
             <a href="reserva.html?room=${h.idHabitacion}" class="primary-btn" style="margin-left:10px;">
@@ -94,4 +94,11 @@ function agregarAlCarrito(idHabitacion) {
     localStorage.setItem("carritoReservas", JSON.stringify(carrito));
 
     alert("Habitación añadida a tu reserva.");
+}
+
+function verDetalles(idHabitacion) {
+    const rooms = JSON.parse(localStorage.getItem("habitacionesBusqueda"));
+    const habitacion = rooms.find(r => r.idHabitacion == idHabitacion);
+
+    localStorage.setItem("habitacionSeleccionada", JSON.stringify(habitacion));
 }

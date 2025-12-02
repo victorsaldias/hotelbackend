@@ -1,0 +1,158 @@
+
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Reportes | Panel Administrador</title>
+
+    <link rel="stylesheet" href="../css/admin.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+
+    <!-- Font Awesome (si lo usas en el resto del panel) -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+    <!-- Chart.js para las gráficas -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+<div class="layout">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <h2 class="sidebar-title">Hotel Arellano</h2>
+
+        <ul class="menu">
+            <li onclick="location.href='dashboard-admin.html'">
+                <i class="fa-solid fa-gauge"></i> Dashboard
+            </li>
+            <li onclick="location.href='empleados.html'">
+                <i class="fa-solid fa-users"></i> Empleados
+            </li>
+            <li onclick="location.href='reservas.html'">
+                <i class="fa-solid fa-calendar-check"></i> Reservas
+            </li>
+            <li class="active" onclick="location.href='reportes.html'">
+                <i class="fa-solid fa-chart-line"></i> Reportes
+            </li>
+        </ul>
+    </aside>
+
+    <!-- Contenido principal -->
+    <main class="content">
+        <header class="content-header">
+            <h1>Reportes del Hotel</h1>
+            <div class="period-buttons">
+                <button class="btn" onclick="cambiarPeriodo(1)">Último mes</button>
+                <button class="btn" onclick="cambiarPeriodo(3)">Últimos 3 meses</button>
+                <button class="btn" onclick="cambiarPeriodo(6)">Últimos 6 meses</button>
+            </div>
+        </header>
+
+        <!-- Reporte: Habitaciones más reservadas -->
+        <section class="card">
+            <h2>Habitaciones más reservadas</h2>
+            <div class="chart-container">
+                <canvas id="chartHabitacionesFrecuentes"></canvas>
+            </div>
+            <table class="table" id="tablaHabitacionesFrecuentes">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Número</th>
+                        <th>Tipo</th>
+                        <th>Sucursal</th>
+                        <th>Total reservas</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Se llena por JS -->
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Reporte: Ocupación por sucursal -->
+        <section class="card">
+            <h2>Ocupación por sucursal</h2>
+            <div class="chart-container">
+                <canvas id="chartOcupacion"></canvas>
+            </div>
+            <table class="table" id="tablaOcupacion">
+                <thead>
+                    <tr>
+                        <th>Sucursal</th>
+                        <th>Días ocupados</th>
+                        <th>Días disponibles</th>
+                        <th>% Ocupación</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- JS -->
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Reporte: Ingresos por habitación -->
+        <section class="card">
+            <h2>Ingresos por habitación</h2>
+            <div class="chart-container">
+                <canvas id="chartIngresosHabitacion"></canvas>
+            </div>
+            <table class="table" id="tablaIngresosHabitacion">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Número</th>
+                        <th>Tipo</th>
+                        <th>Sucursal</th>
+                        <th>Ingresos</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- JS -->
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Reporte: Estado de habitaciones (housekeeping) -->
+        <section class="card">
+            <h2>Estados de limpieza de habitaciones</h2>
+            <div class="chart-container">
+                <canvas id="chartEstadoHabitaciones"></canvas>
+            </div>
+            <table class="table" id="tablaEstadoHabitaciones">
+                <thead>
+                    <tr>
+                        <th>Estado</th>
+                        <th>Total habitaciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- JS -->
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Reporte: Estadía promedio -->
+        <section class="card">
+            <h2>Estadía promedio</h2>
+            <p>
+                <strong>Promedio de noches por reserva en el periodo seleccionado:</strong>
+                <span id="lblEstadiaPromedio">-</span> noches
+            </p>
+            <p>
+                <strong>Total de reservas consideradas:</strong>
+                <span id="lblTotalReservasEstadia">-</span>
+            </p>
+        </section>
+
+    </main>
+</div>
+
+<script src="../js/reportes.js"></script>
+</body>
+</html>

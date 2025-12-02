@@ -3,20 +3,21 @@ import {
     obtenerHabitacionPorId,
     obtenerHabitacionPorNumero,
     crearHabitacion,
-    actualizarEstadoHabitacion,
     obtenerTodasLasHabitaciones,
     obtenerPrecioHabitacion,
     asignarHabitacion,
     listarConFiltros,
-
+    obtenerCaracteristicasPorTipo,
+    obtenerServiciosPorTipo,
     obtenerTiposHabitacion,
     obtenerCaracteristicas,
     obtenerCaracteristicaPorId,
     actualizarCaracteristica,
     obtenerServicios,
     obtenerServiciosHabitacion,
+    actualizarEstadoHabitacion,
     actualizarServiciosHabitacionModel,
-
+    buscarHabitacionesPorCapacidadYFechas,
     editarHabitacionModel
 } from "../model/habitacionModel.js";
 
@@ -27,6 +28,39 @@ export async function verHabitacionesDisponibles(req, res) {
         res.status(500).json({ error: err.message });
     }
 }
+
+// 🔹 Habitaciones adecuadas por sucursal / fechas / capacidad
+export async function obtenerHabitacionesAdecuadas(req, res) {
+    try {
+        let { idSucursal, fechaInicio, fechaFin, cantidadHuespedes } = req.body;
+
+        idSucursal = Number(idSucursal);
+        cantidadHuespedes = Number(cantidadHuespedes);
+
+        // NO convertir a Date aquí
+        console.log("FINAL →", idSucursal, fechaInicio, fechaFin);
+
+        const habitaciones = await buscarHabitacionesPorCapacidadYFechas(
+            idSucursal,
+            fechaInicio,   // string limpio
+            fechaFin,      // string limpio
+            cantidadHuespedes
+        );
+
+        return res.status(200).json({
+            success: true,
+            habitaciones
+        });
+
+    } catch (error) {
+        console.error("❌ Error en obtenerHabitacionesAdecuadas:", error);
+        res.status(500).json({
+            success: false,
+            message: "Error interno al buscar habitaciones"
+        });
+    }
+}
+
 
 export async function listarHabitaciones(req, res) {
     try {
@@ -158,6 +192,38 @@ export async function actualizarServiciosHabitacionController(req, res) {
         res.status(500).json({ error: err.message });
     }
 }
+
+// ====================================
+//  CONTROLADOR: CARACTERÍSTICAS POR TIPO
+// ====================================
+export const obtenerCaracteristicasTipoController = async (req, res) => {
+    const { idTipo } = req.params;
+
+    try {
+        const data = await obtenerCaracteristicasPorTipo(idTipo);
+        res.json(data);
+
+    } catch (error) {
+        console.error("Error obteniendo características por tipo:", error);
+        res.status(500).json({ error: "Error interno del servidor" });
+    }
+};
+
+// ====================================
+//  CONTROLADOR: SERVICIOS POR TIPO
+// ====================================
+export const obtenerServiciosTipoController = async (req, res) => {
+    const { idTipo } = req.params;
+
+    try {
+        const data = await obtenerServiciosPorTipo(idTipo);
+        res.json(data);
+
+    } catch (error) {
+        console.error("Error obteniendo servicios por tipo:", error);
+        res.status(500).json({ error: "Error interno del servidor" });
+    }
+};
 
 // EDITAR HABITACIÓN GENERAL
 export async function editarHabitacionController(req, res) {

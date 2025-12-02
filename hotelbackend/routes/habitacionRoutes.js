@@ -9,17 +9,18 @@ import {
     obtenerTodasLasHabitacionesController,
     asignarHabitacionController,
     obtenerPrecioHabitacionController,
-
     obtenerTiposHabitacionController,
     obtenerCaracteristicasController,
     obtenerCaracteristicaPorIdController,
     actualizarCaracteristicaController,
-
     obtenerServiciosController,
     obtenerServiciosHabitacionController,
     actualizarServiciosHabitacionController,
+    obtenerHabitacionesAdecuadas,
+    editarHabitacionController,
+    obtenerCaracteristicasTipoController,
+    obtenerServiciosTipoController
 
-    editarHabitacionController
 } from "../controllers/habitacionController.js";
 
 const router = Router();
@@ -34,7 +35,7 @@ router.get("/todas", obtenerTodasLasHabitacionesController);
 router.post("/asignar", asignarHabitacionController);
 router.get("/precio/:idHabitacion", obtenerPrecioHabitacionController);
 router.get("/tipos-habitacion", obtenerTiposHabitacionController);
-
+router.put('/asignar/:numero', asignarHabitacionController);
 router.get("/caracteristicas-habitacion", obtenerCaracteristicasController);
 router.get("/caracteristicas/:idCaracteristica", obtenerCaracteristicaPorIdController);
 router.put("/caracteristicas/:idCaracteristica", actualizarCaracteristicaController);
@@ -42,7 +43,9 @@ router.put("/caracteristicas/:idCaracteristica", actualizarCaracteristicaControl
 router.get("/servicios", obtenerServiciosController);
 router.get("/servicios/:idHabitacion", obtenerServiciosHabitacionController);
 router.put("/servicios/:idHabitacion", actualizarServiciosHabitacionController);
-
+router.post('/buscar', obtenerHabitacionesAdecuadas);
+router.get("/tipo/:idTipo/caracteristicas", obtenerCaracteristicasTipoController);
+router.get("/tipo/:idTipo/servicios", obtenerServiciosTipoController);
 router.put("/editar/:idHabitacion", editarHabitacionController);
 
 export default router;
