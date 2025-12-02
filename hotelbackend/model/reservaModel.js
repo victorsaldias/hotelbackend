@@ -29,7 +29,26 @@ export async function ingresarReservaCompleta(data) {
 
     return { idReserva, total };
 }
+export async function guardarAcompaniante(idReserva, a) {
+    const conn = await getConnection();
 
+    const tipoNormalizado =
+        a.tipoPersona.toLowerCase() === "adulto"
+            ? "adulto"
+            : "niño"; // OBLIGATORIO con tilde y minúscula
+
+    return await conn.request()
+        .input("nombre", a.nombre)
+        .input("apellido", a.apellido)
+        .input("rut", a.rut || "")
+        .input("telefono", a.telefono || "")
+        .input("tipoPersona", tipoNormalizado)
+        .input("idReserva", idReserva)
+        .query(`
+            INSERT INTO acompaniante (nombre, apellido, rut, telefono, tipoPersona, idReserva)
+            VALUES (@nombre, @apellido, @rut, @telefono, @tipoPersona, @idReserva)
+        `);
+}
 
 export async function verReservas() {
     const conn = await getConnection();

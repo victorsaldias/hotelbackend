@@ -5,7 +5,8 @@ import {
     cancelarReserva,
     verHistorialReserva,
     modificarReserva,
-    modificarHabitacionDeReserva
+    modificarHabitacionDeReserva,
+    guardarAcompaniante              // ⬅️ IMPORTANTE
 } from "../model/reservaModel.js";
 
 /* ============================================================
@@ -20,8 +21,22 @@ export const crearReservaCompleta = async (req, res) => {
             return res.status(400).json({ error: "Faltan datos obligatorios" });
         }
 
-        // Llamar al modelo
+        // Crear reserva principal
         const resultado = await ingresarReservaCompleta(data);
+
+        // Guardar acompañantes (si vienen)
+        if (data.acompanantes && Array.isArray(data.acompanantes)) {
+            for (const a of data.acompanantes) {
+
+                if (!a.nombre || !a.apellido) {
+                    return res.status(400).json({
+                        error: "Nombre y apellido del acompañante son obligatorios."
+                    });
+                }
+
+                await guardarAcompaniante(resultado.idReserva, a);
+            }
+        }
 
         return res.status(201).json({
             msg: "Reserva creada correctamente",

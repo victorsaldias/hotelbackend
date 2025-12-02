@@ -52,36 +52,55 @@ document.addEventListener("DOMContentLoaded", async () => {
         pasosContainer.innerHTML = "";
 
         for (let i = 1; i <= totalAcomp; i++) {
-            pasosContainer.innerHTML += `<div class="step-pill" id="pill_${i}">A${i}</div>`;
-        }
+    pasosContainer.innerHTML += `<div class="step-pill" id="pill_${i}">A${i}</div>`;
+}
+
+// Activar click en cada pill (A1, A2, A3…)
+for (let i = 1; i <= totalAcomp; i++) {
+    document.getElementById(`pill_${i}`).addEventListener("click", () => {
+        mostrarPaso(i);   // ← cargar los datos guardados
+    });
+}
 
         mostrarPaso(1);
     }
 
-    function mostrarPaso(num) {
-        pasoContenido.innerHTML = `
-            <h5>Acompañante ${num}</h5>
+   function mostrarPaso(num) {
+    // Recuperar datos guardados previamente
+    const guardado = datosAcompanantes[num] || {};
 
-            <input id="nombre_${num}" class="form-control mb-2" placeholder="Nombre" />
-            <input id="apellido_${num}" class="form-control mb-2" placeholder="Apellido" />
-            <input id="rut_${num}" class="form-control mb-2" placeholder="RUT" />
-            <input id="telefono_${num}" class="form-control mb-2" placeholder="Teléfono" />
+    pasoContenido.innerHTML = `
+        <h5>Acompañante ${num}</h5>
 
-            <select id="tipo_${num}" class="form-control mb-3">
-                <option value="Adulto">Adulto</option>
-                <option value="Niño">Niño</option>
-            </select>
+        <input id="nombre_${num}" class="form-control mb-2" placeholder="Nombre"
+            value="${guardado.nombre || ""}" />
 
-            <button class="btn ${num === totalAcomp ? 'btn-success' : 'btn-warning'} mt-2" id="btnPaso">
-                ${num === totalAcomp ? "Finalizar" : "Siguiente"}
-            </button>
-        `;
+        <input id="apellido_${num}" class="form-control mb-2" placeholder="Apellido"
+            value="${guardado.apellido || ""}" />
 
-        document.querySelectorAll(".step-pill").forEach(p => p.classList.remove("active"));
-        document.getElementById(`pill_${num}`).classList.add("active");
+        <input id="rut_${num}" class="form-control mb-2" placeholder="RUT"
+            value="${guardado.rut || ""}" />
 
-        document.getElementById("btnPaso").onclick = () => guardarPaso(num);
-    }
+        <input id="telefono_${num}" class="form-control mb-2" placeholder="Teléfono"
+            value="${guardado.telefono || ""}" />
+
+        <select id="tipo_${num}" class="form-control mb-3">
+            <option value="adulto" ${guardado.tipoPersona === "adulto" ? "selected" : ""}>Adulto</option>
+            <option value="niño" ${guardado.tipoPersona === "niño" ? "selected" : ""}>Niño</option>
+        </select>
+
+        <button class="btn ${num === totalAcomp ? 'btn-success' : 'btn-warning'} mt-2" id="btnPaso">
+            ${num === totalAcomp ? "Finalizar" : "Siguiente"}
+        </button>
+    `;
+
+    // Cambiar estado visual de los pills
+    document.querySelectorAll(".step-pill").forEach(p => p.classList.remove("active"));
+    document.getElementById(`pill_${num}`).classList.add("active");
+
+    // Al hacer clic en el botón → guardar datos
+    document.getElementById("btnPaso").onclick = () => guardarPaso(num);
+}
 
     function guardarPaso(num) {
         datosAcompanantes[num] = {
