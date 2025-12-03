@@ -49,19 +49,18 @@ export const crearReservaCompleta = async (req, res) => {
     }
 };
 
-/* ============================================================
-   VER TODAS LAS RESERVAS
-============================================================ */
+
+
 export async function traerReservas(req, res) {
     try {
-        const { idReserva } = req.params;
-        const reservas = await verReservas(idReserva);
+        const { idSucursal } = req.query;
+        const reservas = await verReservas(idSucursal);
         res.json(reservas);
     } catch (error) {
+        console.error('Error en traerReservas:', error);
         res.status(500).json({ error: error.message });
     }
 }
-
 /* ============================================================
    CONFIRMAR RESERVA
 ============================================================ */

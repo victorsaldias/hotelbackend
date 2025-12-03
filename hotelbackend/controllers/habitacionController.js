@@ -23,13 +23,25 @@ import {
 
 export async function verHabitacionesDisponibles(req, res) {
     try {
-        res.json(await obtenerHabitacionesDisponibles());
+        const { idSucursal } = req.query;
+
+        
+        if (!idSucursal) {
+            return res.status(400).json({ 
+                error: 'Se requiere el ID de sucursal' 
+            });
+        }
+
+        const habitaciones = await obtenerHabitacionesDisponibles(idSucursal);
+        res.json(habitaciones);
+        
     } catch (err) {
+        console.error('Error en verHabitacionesDisponibles:', err);
         res.status(500).json({ error: err.message });
     }
 }
 
-// 🔹 Habitaciones adecuadas por sucursal / fechas / capacidad
+
 export async function obtenerHabitacionesAdecuadas(req, res) {
     try {
         let { idSucursal, fechaInicio, fechaFin, cantidadHuespedes } = req.body;
@@ -37,13 +49,13 @@ export async function obtenerHabitacionesAdecuadas(req, res) {
         idSucursal = Number(idSucursal);
         cantidadHuespedes = Number(cantidadHuespedes);
 
-        // NO convertir a Date aquí
+        
         console.log("FINAL →", idSucursal, fechaInicio, fechaFin);
 
         const habitaciones = await buscarHabitacionesPorCapacidadYFechas(
             idSucursal,
-            fechaInicio,   // string limpio
-            fechaFin,      // string limpio
+            fechaInicio,   
+            fechaFin,      
             cantidadHuespedes
         );
 
@@ -132,7 +144,7 @@ export async function obtenerPrecioHabitacionController(req, res) {
     }
 }
 
-// TIPOS HABITACIÓN
+
 export async function obtenerTiposHabitacionController(req, res) {
     try {
         res.json(await obtenerTiposHabitacion());
@@ -141,7 +153,7 @@ export async function obtenerTiposHabitacionController(req, res) {
     }
 }
 
-// CARACTERISTICAS
+
 export async function obtenerCaracteristicasController(req, res) {
     try {
         res.json(await obtenerCaracteristicas());
@@ -167,7 +179,7 @@ export async function actualizarCaracteristicaController(req, res) {
     }
 }
 
-// SERVICIOS
+
 export async function obtenerServiciosController(req, res) {
     try {
         res.json(await obtenerServicios());
@@ -193,9 +205,7 @@ export async function actualizarServiciosHabitacionController(req, res) {
     }
 }
 
-// ====================================
-//  CONTROLADOR: CARACTERÍSTICAS POR TIPO
-// ====================================
+
 export const obtenerCaracteristicasTipoController = async (req, res) => {
     const { idTipo } = req.params;
 
@@ -209,9 +219,7 @@ export const obtenerCaracteristicasTipoController = async (req, res) => {
     }
 };
 
-// ====================================
-//  CONTROLADOR: SERVICIOS POR TIPO
-// ====================================
+
 export const obtenerServiciosTipoController = async (req, res) => {
     const { idTipo } = req.params;
 
@@ -225,7 +233,7 @@ export const obtenerServiciosTipoController = async (req, res) => {
     }
 };
 
-// EDITAR HABITACIÓN GENERAL
+
 export async function editarHabitacionController(req, res) {
     try {
         await editarHabitacionModel(req.params.idHabitacion, req.body);
