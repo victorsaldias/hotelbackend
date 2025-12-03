@@ -58,7 +58,12 @@ export async function obtenerHabitacionesAdecuadas(req, res) {
             fechaFin,      
             cantidadHuespedes
         );
-
+console.log("======== DEBUG BUSQUEDA HABITACIONES ========");
+console.log("Sucursal:", idSucursal);
+console.log("Fecha Inicio (recibida):", fechaInicio);
+console.log("Fecha Fin (recibida):", fechaFin);
+console.log("Tipo:", typeof fechaInicio, typeof fechaFin);
+console.log("=============================================");
         return res.status(200).json({
             success: true,
             habitaciones

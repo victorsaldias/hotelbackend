@@ -219,6 +219,7 @@ function toSQL(date) {
     return `${date.getFullYear()}-${pad(date.getMonth()+1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}:00`;
 }
 export async function buscarHabitacionesPorCapacidadYFechas(
+    
     idSucursal,
     fechaInicio,   
     fechaFin,      
@@ -227,8 +228,8 @@ export async function buscarHabitacionesPorCapacidadYFechas(
     const pool = await getConnection();
 
     
-    const inicioSQL = fechaInicio.includes(":") ? fechaInicio : `${fechaInicio} 14:00:00`;
-    const finSQL    = fechaFin.includes(":")    ? fechaFin    : `${fechaFin} 12:00:00`;
+    const inicioSQL = fechaInicio
+    const finSQL    = fechaFin
 
     console.log("BUSQUEDA →", idSucursal, cantidadHuespedes, inicioSQL, finSQL);
 
@@ -267,7 +268,10 @@ export async function buscarHabitacionesPorCapacidadYFechas(
                       AND r.fechaFin > @fechaInicio
                );
         `);
-
+console.log("=== MODEL BUSQUEDA ===");
+console.log("inicioSQL:", inicioSQL);
+console.log("finSQL:", finSQL);
+console.log("======================");
     return result.recordset;
 }
 

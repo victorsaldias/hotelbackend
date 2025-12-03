@@ -29,12 +29,23 @@ document.addEventListener("DOMContentLoaded", async () => {
     /* ============================================================
        3) Calcular total
     ============================================================ */
-    const fechaI = convertirFecha(fechaInicio);
-    const fechaF = convertirFecha(fechaFin);
 
-    const dias = Math.ceil((fechaF - fechaI) / (1000 * 60 * 60 * 24));
-    const total = dias * room.precio;
+// Convertir fechas desde el texto bonito (06 Dic 2025 → Date real)
+const fechaI = convertirFecha(fechaInicio);
+const fechaF = convertirFecha(fechaFin);
 
+function unirFechaHora(date, hora) {
+    const [h, m, s] = hora.split(":");
+    date.setHours(h, m, s);
+    return date; // ← devolvemos Date, NO string
+}
+
+// Crear fechas tipo SQL con horas correctas
+const fechaInicioSQL = unirFechaHora(new Date(fechaI), "14:00:00");
+const fechaFinSQL   = unirFechaHora(new Date(fechaF), "12:00:00");
+
+// Calcular días reales
+const dias = Math.ceil((fechaFinSQL - fechaInicioSQL) / (1000 * 60 * 60 * 24));
 
     /* ============================================================
        4) PASARELA ACOMPAÑANTES

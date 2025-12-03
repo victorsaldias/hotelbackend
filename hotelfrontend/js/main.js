@@ -259,9 +259,20 @@ document.addEventListener("DOMContentLoaded", () => {
 -------------------------- */
 const filterForm = document.querySelector(".filter__form");
 
+function formatearFechaConHora(date, hora) {
+    const pad = n => n.toString().padStart(2, "0");
+    const y = date.getFullYear();
+    const m = pad(date.getMonth() + 1);
+    const d = pad(date.getDate());
+    return `${y}-${m}-${d} ${hora}`;
+}
+
 if (filterForm) {
+    
     filterForm.addEventListener("submit", async function (e) {
+        
         e.preventDefault();
+        
 
         const idSucursal = document.getElementById("sucursalSelect").value;
         const fechaInicioTexto = document.querySelector(".check__in").value;
@@ -271,15 +282,27 @@ if (filterForm) {
         if (!idSucursal) return Swal.fire("Seleccione una sucursal");
         if (!fechaInicioTexto || !fechaFinTexto) return Swal.fire("Debe seleccionar ambas fechas");
 
-        const fechaInicio = convertirFecha(fechaInicioTexto);
-        const fechaFin = convertirFecha(fechaFinTexto);
+        const fechaInicioDate = convertirFecha(fechaInicioTexto);
+        const fechaFinDate = convertirFecha(fechaFinTexto);
 
-        if (fechaFin <= fechaInicio) return Swal.fire("La fecha de salida debe ser mayor a la de entrada");
+        if (fechaFinDate <= fechaInicioDate) {
+            return Swal.fire("La fecha de salida debe ser mayor a la de entrada");
+        }
 
+        // === GUARDAR PARA LA RESERVA ===
         localStorage.setItem("fechaInicioReserva", fechaInicioTexto);
         localStorage.setItem("fechaFinReserva", fechaFinTexto);
         localStorage.setItem("cantidadHuespedesReserva", cantidadHuespedes);
 
+        // === FORMATO CORRECTO PARA BACKEND ===
+        const fechaInicio = formatearFechaConHora(fechaInicioDate, "14:00:00");
+        const fechaFin = formatearFechaConHora(fechaFinDate, "12:00:00");
+console.log("FECHAS QUE SE ENVIAN →", {
+    fechaInicio,
+    fechaFin,
+    tipoInicio: typeof fechaInicio,
+    tipoFin: typeof fechaFin
+});
         try {
             const response = await fetch("http://localhost:3000/api/habitaciones/buscar", {
                 method: "POST",
