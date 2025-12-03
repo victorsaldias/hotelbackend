@@ -15,17 +15,16 @@ function convertirFecha(texto) {
     if (!texto) return null;
 
     const partes = texto.split(" ");
-    const dia = partes[0];
+    const dia = parseInt(partes[0], 10);
     const mesTexto = partes[1];
-    const año = partes[2];
+    const año = parseInt(partes[2], 10);
 
     const meses = {
-        Ene: "01", Feb: "02", Mar: "03", Abr: "04", May: "05", Jun: "06",
-        Jul: "07", Ago: "08", Sep: "09", Oct: "10", Nov: "11", Dic: "12",
+        Ene: 0, Feb: 1, Mar: 2, Abr: 3, May: 4, Jun: 5,
+        Jul: 6, Ago: 7, Sep: 8, Oct: 9, Nov: 10, Dic: 11,
     };
 
-    // FORMATO: yyyy-mm-dd
-    return `${año}-${meses[mesTexto]}-${dia}`;
+    return new Date(año, meses[mesTexto], dia);
 }
 /* --------------------------
       Preloader
@@ -262,7 +261,6 @@ const filterForm = document.querySelector(".filter__form");
 
 if (filterForm) {
     filterForm.addEventListener("submit", async function (e) {
-        localStorage.removeItem("habitacionSeleccionada");
         e.preventDefault();
 
         const idSucursal = document.getElementById("sucursalSelect").value;
@@ -283,15 +281,15 @@ if (filterForm) {
         localStorage.setItem("cantidadHuespedesReserva", cantidadHuespedes);
 
         try {
-           const response = await fetch("http://localhost:3000/api/habitaciones/buscar", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-        idSucursal,
-        fechaInicio: convertirFecha(fechaInicioTexto) + " 14:00:00",
-        fechaFin: convertirFecha(fechaFinTexto) + " 12:00:00",
-        cantidadHuespedes
-})
+            const response = await fetch("http://localhost:3000/api/habitaciones/buscar", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    idSucursal,
+                    fechaInicio,
+                    fechaFin,
+                    cantidadHuespedes
+                })
             });
 
             if (!response.ok) return Swal.fire("Error al buscar");
@@ -307,8 +305,6 @@ if (filterForm) {
 }
 document.addEventListener("DOMContentLoaded", async () => {
     const container = document.getElementById("habitacionesHome");
-
-    // Si esta página NO tiene el contenedor → salir
     if (!container) return;
     try {
         const res = await fetch("http://localhost:3000/api/habitaciones/tipos-habitacion");
@@ -316,25 +312,35 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         container.innerHTML = ""; // limpiar
 
+        // Mapa de imágenes por ID (1 → 4)
+        const imagenes = {
+            1: "../img/home-room/hr-1.jpg",
+            2: "../img/home-room/hr-2.jpg",
+            3: "../img/home-room/hr-3.jpg",
+            4: "../img/home-room/hr-4.jpg",
+        };
+
         tipos.forEach(tipo => {
-            // Imagen segura
-            const imagen = tipo.imagenPrincipal || "../img/home-room/hr-1.jpg";
 
-            container.innerHTML += `
-                <div class="col-lg-3 col-md-6 col-sm-6 p-0">
-                    <div class="home__room__item set-bg" data-setbg="${imagen}">
-                        <div class="home__room__title">
-                            <h4>${tipo.nombre}</h4>
-                            <h2><sup>$</sup>${tipo.precio}<span>/día</span></h2>
-                        </div>
+            // Elegir imagen según idTipoHabitacion
+            const imagen = imagenes[tipo.idTipoHabitacion] || "../img/home-room/hr-1.jpg";
+container.innerHTML += `
+    <div class="col-lg-3 col-md-6 col-sm-6 p-0">
+        <div class="home__room__item set-bg" data-setbg="${imagen}">
+            <div class="home__room__title">
+                <h4>${tipo.nombre}</h4>
+                <h2><sup>$</sup>${tipo.precio}<span>/día</span></h2>
+            </div>
 
-                        <button class="btn btn-warning ver-detalles-btn"
-                                data-info='${JSON.stringify(tipo)}'>
-                            Ver Detalles
-                        </button>
-                    </div>
-                </div>
-            `;
+            <div class="home__room__footer-right">
+                <button class="btn btn-warning ver-detalles-btn"
+                        data-info='${JSON.stringify(tipo)}'>
+                    Ver Detalles
+                </button>
+            </div>
+        </div>
+    </div>
+`;
         });
 
         // Aplicar background dinámico

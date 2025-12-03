@@ -75,7 +75,7 @@ if (loginForm) {
     const token = localStorage.getItem("token");
 
     if (!empleado || !token) {
-        window.location.href = "../index.html";
+        window.location.href = "login-aseo.html";
         return;
     }
 

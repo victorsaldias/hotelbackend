@@ -37,20 +37,30 @@
 
         <section class="report-section">
 
-            <h3>Estadía Promedio</h3>
+    <h3>Indicadores de Estadía</h3>
 
-            <p><strong>Promedio de noches:</strong> <span id="lblEstadiaPromedio">-</span></p>
-            <p><strong>Total reservas:</strong> <span id="lblTotalReservasEstadia">-</span></p>
+    <div class="kpi-container">
 
-        </section>
+        <div class="kpi-card">
+            <div class="kpi-title">Promedio de noches</div>
+            <i class="fa-solid fa-moon kpi-icon"></i>
+            <div id="lblEstadiaPromedio" class="kpi-value">-</div>
+        </div>
 
+        <div class="kpi-card">
+            <div class="kpi-title">Total de reservas consideradas</div>
+            <i class="fa-solid fa-calendar-check kpi-icon"></i>
+            <div id="lblTotalReservasEstadia" class="kpi-value">-</div>
+        </div>
+
+    </div>
+
+</section>
     </main>
 </div>
 
 <script src="../js/menuMovil.js"></script>
 <script src="../js/admin.js"></script>
-<script src="../js/authGuardEmpleado.js"></script>
-<script src="../js/authStatus.js"></script>
 <script src="../js/reportes.js"></script>
 <script src="../js/estadiaPromedio.js"></script>
 

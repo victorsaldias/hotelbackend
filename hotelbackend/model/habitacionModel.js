@@ -227,6 +227,7 @@ export async function buscarHabitacionesPorCapacidadYFechas(
                 h.numero,
                 ISNULL(h.precioPersonalizado, t.precio) AS precio,
                 h.idTipoHabitacion,
+                h.descripcion,
                 h.idSucursal,
                 s.nombre AS nombreSucursal,
                 s.direccion AS direccionSucursal,

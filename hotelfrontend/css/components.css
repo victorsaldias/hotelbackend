@@ -160,3 +160,146 @@ input, select {
     font-weight: 600;
     color: #333;
 }
+
+.btn-toggle-vista {
+    background: #ffae00;
+    color: #000;
+    border: none;
+    padding: 8px 16px;
+    font-weight: bold;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-bottom: 15px;
+    transition: 0.2s;
+}
+
+.btn-toggle-vista:hover {
+    background: #ffc54d;
+}
+/* ================================
+   TABLAS PROFESIONALES HOTEL ARELLANO
+================================== */
+
+.report-section table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-top: 20px;
+    background: #ffffff;
+    border-radius: 14px;
+    overflow: hidden;
+    font-size: 15px;
+    box-shadow: 0px 4px 12px rgba(0,0,0,0.08);
+}
+
+/* HEADER */
+.report-section table thead {
+    background: #111; /* Negro del dashboard */
+    color: #fff;
+}
+
+.report-section table thead th {
+    padding: 14px 12px;
+    font-weight: bold;
+    border-bottom: 3px solid #ffae00; /* Dorado elegante */
+    text-transform: uppercase;
+    letter-spacing: 0.7px;
+}
+
+/* BODY */
+.report-section table tbody td {
+    padding: 12px 12px;
+    border-bottom: 1px solid #eaeaea;
+}
+
+/* ALTERNAR FILAS */
+.report-section table tbody tr:nth-child(even) {
+    background: #fafafa;
+}
+
+/* HOVER SUAVE */
+.report-section table tbody tr:hover {
+    background: #fff4d6; /* dorado ultra suave */
+    cursor: pointer;
+}
+
+/* PRIMERA COLUMNA DESTACADA */
+.report-section table tbody td:first-child {
+    font-weight: 600;
+    color: #333;
+}
+/* CENTRAR VALORES NUMÉRICOS */
+.report-section table tbody td:nth-child(n+2) {
+    text-align: center;
+}
+
+/* REDONDEAR TABLA */
+.report-section table {
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+/* BOTÓN DE TOGGLE MEJORADO */
+.btn-toggle-vista {
+    background: #ffae00 !important;
+    color: #000 !important;
+    border: none;
+    padding: 8px 16px;
+    font-weight: bold;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.2s;
+    margin-left: auto;
+}
+
+.btn-toggle-vista:hover {
+    background: #ffca4d !important;
+}
+
+/* ================================
+   KPIs para Estadía Promedio
+================================ */
+
+.kpi-container {
+    display: flex;
+    gap: 20px;
+    margin-top: 25px;
+    flex-wrap: wrap;
+}
+
+.kpi-card {
+    flex: 1;
+    min-width: 250px;
+    background: #ffffff;
+    padding: 25px 20px;
+    border-radius: 16px;
+    box-shadow: 0px 4px 12px rgba(0,0,0,0.08);
+    border-left: 6px solid #ffae00;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.kpi-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0px 6px 16px rgba(0,0,0,0.12);
+}
+
+.kpi-title {
+    font-size: 15px;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: #333;
+    margin-bottom: 8px;
+}
+
+.kpi-value {
+    font-size: 32px;
+    font-weight: 700;
+    color: #1e1e2f;
+}
+
+.kpi-icon {
+    font-size: 28px;
+    float: right;
+    color: #ffae00;
+    opacity: 0.85;
+}

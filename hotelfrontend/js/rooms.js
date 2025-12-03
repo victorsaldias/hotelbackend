@@ -1,48 +1,17 @@
 /* ============================================================
-   CARGA DE HABITACIONES EN ROOMS.HTML
+   CARGA DE HABITACIONES EN ROOMS.HTML — VERSION ARREGLADA
 ============================================================ */
 
-function reservarAhora(idHabitacion) {
-    const rooms = JSON.parse(localStorage.getItem("habitacionesBusqueda"));
-    const habitacion = rooms.find(r => r.idHabitacion == idHabitacion);
+document.addEventListener("DOMContentLoaded", () => {
+    const roomsContainer = document.getElementById("roomsContainer");
+    const habitaciones = JSON.parse(localStorage.getItem("habitacionesBusqueda")) || [];
 
-    if (!habitacion) {
-        alert("No se encontró la habitación seleccionada");
+    if (habitaciones.length === 0) {
+        roomsContainer.innerHTML = "<p>No hay habitaciones disponibles.</p>";
         return;
     }
 
-    localStorage.setItem("habitacionSeleccionada", JSON.stringify(habitacion));
-    window.location.href = "reserva.html";
-}
-
-function verDetalles(idHabitacion) {
-    const rooms = JSON.parse(localStorage.getItem("habitacionesBusqueda"));
-    const habitacion = rooms.find(r => r.idHabitacion == idHabitacion);
-
-    if (!habitacion) return;
-
-    localStorage.setItem("habitacionSeleccionada", JSON.stringify(habitacion));
-}
-
-
-document.addEventListener("DOMContentLoaded", function () {
-
-    // SIEMPRE limpiar la anterior selección al entrar a rooms
-    localStorage.removeItem("habitacionSeleccionada");
-
-    const rooms = JSON.parse(localStorage.getItem("habitacionesBusqueda"));
-    const contenedor = document.getElementById("roomsContainer");
-
-    if (!rooms || rooms.length === 0) {
-        contenedor.innerHTML = `
-            <div class="col-lg-12">
-                <h3 style="color:red; text-align:center;">No hay habitaciones disponibles</h3>
-            </div>
-        `;
-        return;
-    }
-
-    // Map de tipos de habitación
+    // Nombres reales del tipo de habitación
     const tipos = {
         1: "Premium King",
         2: "Habitación Deluxe",
@@ -50,69 +19,76 @@ document.addEventListener("DOMContentLoaded", function () {
         4: "Suite Familiar"
     };
 
-    // Map de imágenes
-    const imagenes = {
+    // Imágenes por tipo
+    const imagenesPorTipo = {
         1: "../img/rooms/room-1.jpg",
         2: "../img/rooms/room-2.jpg",
         3: "../img/rooms/room-3.jpg",
         4: "../img/rooms/room-4.jpg"
     };
 
+    roomsContainer.innerHTML = "";
 
-    rooms.forEach(h => {
+    habitaciones.forEach(h => {
 
-        const img = imagenes[h.idTipoHabitacion] || "../img/rooms/room-1.jpg";
-        const tipo = tipos[h.idTipoHabitacion] ?? "Habitación";
+        const nombreTipo = tipos[h.idTipoHabitacion] || "Habitación";
+        const imagen = imagenesPorTipo[h.idTipoHabitacion] || "../img/rooms/room-1.jpg";
 
-        contenedor.innerHTML += `
-            <div class="col-lg-6 mb-4">
+        roomsContainer.innerHTML += `
+            <div class="col-lg-4 col-md-6 col-sm-6">
+                <div class="room__item">
+                    <img src="${imagen}" alt="${nombreTipo}" style="width:100%; height:250px; object-fit:cover;">
 
-                <div class="room__pic__slider owl-carousel">
-                    <div class="room__pic__item set-bg" data-setbg="${img}"></div>
-                </div>
+                    <div class="room__text">
 
-                <div class="room__text">
-                    <h3>${tipo}</h3>
-                    <h2><sup>$</sup>${h.precio}<span>/día</span></h2>
+                        <h3>${nombreTipo}</h3>
+                        <h2>$${h.precio}<span> / día</span></h2>
 
-                    <ul>
-                        <li><span>Número:</span> ${h.numero}</li>
-                        <li><span>Capacidad:</span> ${h.capacidad} huéspedes</li>
-                        <li><span>Cama:</span> ${h.cama || h.caracteristica}</li>
-                        <li><span>Precio:</span> $${h.precio}</li>
-                        <li><span>Sucursal:</span> ${h.nombreSucursal}</li>
-                    </ul>
+                        <ul>
+                            <li><strong>Capacidad:</strong> ${h.capacidad} personas</li>
+                            <li><strong>Camas:</strong> ${h.cama}</li>
+                            <li><strong>Tamaño:</strong> ${h.tamano} m²</li>
+                            <li><strong>Sucursal:</strong> ${h.nombreSucursal}</li>
+                        </ul>
 
-                    <a href="room-details.html" onclick="verDetalles(${h.idHabitacion})">
-                        Ver Detalles
-                    </a>
+     <div class="room-buttons">
 
-                    <a href="#" class="primary-btn" style="margin-left:10px;"
-                        onclick="reservarAhora(${h.idHabitacion})">
-                        Reservar Ahora
-                    </a>
+    <button class="btn-secondary-small ver-detalles-btn"
+            data-info='${JSON.stringify(h)}'>
+        Ver Detalles
+    </button>
 
+    <button class="btn-primary-medium reservar-btn"
+            data-info='${JSON.stringify(h)}'>
+        Reservar Ahora
+    </button>
+
+</div>
+                    </div>
                 </div>
             </div>
         `;
     });
 
-
-    // Aplicar imágenes y sliders
-    setTimeout(() => {
-
-        document.querySelectorAll(".set-bg").forEach(el => {
-            const bg = el.getAttribute("data-setbg");
-            el.style.backgroundImage = `url(${bg})`;
+   document.querySelectorAll(".ver-detalles-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+            const info = JSON.parse(btn.dataset.info);
+            localStorage.setItem("habitacionSeleccionada", JSON.stringify(info));
+            window.location.href = "room-details.html";
         });
+    });
 
-        $(".owl-carousel").owlCarousel({
-            loop: true,
-            margin: 10,
-            items: 1,
-            dots: true,
-            nav: true
+    // CLICK → Reservar Ahora → ir directo a reserva.html
+    document.querySelectorAll(".reservar-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+            const info = JSON.parse(btn.dataset.info);
+
+            // guardamos también la habitación seleccionada
+            localStorage.setItem("habitacionSeleccionada", JSON.stringify(info));
+
+            // redirigir a la página de reserva
+            window.location.href = "reserva.html";
         });
+    });
 
-    }, 200);
 });

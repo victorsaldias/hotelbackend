@@ -45,3 +45,27 @@ async function cargarReporteEstadoHabitaciones() {
 }
 
 document.addEventListener("DOMContentLoaded", cargarReporteEstadoHabitaciones);
+document.addEventListener("DOMContentLoaded", () => {
+    const btnToggle = document.getElementById("btnToggleVista");
+    const chartContainer = document.querySelector(".chart-container");
+    const table = document.querySelector("table");
+
+    // Por defecto mostramos gráfico
+    table.style.display = "none";
+
+    btnToggle.addEventListener("click", () => {
+        const mostrandoGrafico = chartContainer.style.display !== "none";
+
+        if (mostrandoGrafico) {
+            // Ocultar gráfico / mostrar tabla
+            chartContainer.style.display = "none";
+            table.style.display = "table";
+            btnToggle.textContent = "Mostrar Gráfico";
+        } else {
+            // Mostrar gráfico / ocultar tabla
+            chartContainer.style.display = "block";
+            table.style.display = "none";
+            btnToggle.textContent = "Mostrar Tabla";
+        }
+    });
+});

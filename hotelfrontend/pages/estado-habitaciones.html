@@ -10,6 +10,27 @@
     <link rel="stylesheet" href="../css/responsive.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        .toggle-wrapper {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 15px;
+        }
+        .btn-toggle-vista {
+            background: #ffae00;
+            color: #000;
+            border: none;
+            padding: 8px 16px;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .btn-toggle-vista:hover {
+            background: #ffc54d;
+        }
+    </style>
 </head>
 
 <body>
@@ -37,6 +58,10 @@
 
         <section class="report-section">
 
+            <div class="toggle-wrapper">
+                <button id="btnToggleVista" class="btn-toggle-vista">Mostrar Tabla</button>
+            </div>
+
             <div class="chart-container">
                 <canvas id="chartEstadoHabitaciones"></canvas>
             </div>
@@ -58,8 +83,6 @@
 
 <script src="../js/menuMovil.js"></script>
 <script src="../js/admin.js"></script>
-<script src="../js/authGuardEmpleado.js"></script>
-<script src="../js/authStatus.js"></script>
 <script src="../js/reportes.js"></script>
 <script src="../js/estadoHabitaciones.js"></script>
 

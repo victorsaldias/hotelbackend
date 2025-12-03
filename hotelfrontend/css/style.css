@@ -3413,3 +3413,60 @@ ol {
     background: #28a745;
     color: white;
 }
+
+.home__room__item {
+    position: relative;
+    padding-right: 10px; /* pequeño margen */
+    padding-bottom: 10px;
+}
+
+.home__room__footer-right {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+}
+
+.ver-detalles-btn {
+    padding: 8px 14px;
+    font-size: 15px;
+    cursor: pointer;
+    z-index: 10;
+}
+
+.room-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 12px;
+}
+
+/* Botón principal (Reservar Ahora) — UN POCO MÁS GRANDE */
+.btn-primary-medium {
+    background: #ffae00;
+    color: #000;
+    padding: 10px 22px;       /* más grande */
+    font-size: 14px;          /* más grande */
+    font-weight: 700;         /* más fuerte */
+    border: none;
+    border-radius: 4px;
+    transition: 0.2s ease;
+}
+
+.btn-primary-small:hover {
+    background: #ffc54d;
+}
+
+/* Botón secundario (Ver Detalles) */
+.btn-secondary-small {
+    background: rgba(255, 174, 0, 0.18);
+    color: #000;
+    padding: 8px 16px;       /* ligeramente más pequeño */
+    font-size: 13px;         /* más pequeño */
+    font-weight: 600;
+    border-radius: 4px;
+    border: none;
+    transition: 0.2s ease;
+}
+
+.btn-secondary-small:hover {
+    background: rgba(255, 174, 0, 0.32);
+}
