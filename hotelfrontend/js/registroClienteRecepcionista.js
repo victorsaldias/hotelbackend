@@ -34,14 +34,20 @@ async function registrarCliente() {
 
         if (res.ok) {
 
-            Swal.fire({
-                icon: "success",
-                title: "Cliente Registrado",
-                html: `Contraseña generada:<br><b>${r.passwordGenerada}</b>`,
-                timer: 3000,
-                showConfirmButton: true,
-                confirmButtonColor: "#d8c04c"
-            });
+           if (res.ok) {
+
+    Swal.fire({
+        icon: "success",
+        title: "Cliente Registrado",
+        text: "Se envió un correo con la contraseña provisional.",
+        timer: 3000,
+        showConfirmButton: true,
+        confirmButtonColor: "#d8c04c"
+    });
+
+    limpiarFormulario();
+}
+
 
             limpiarFormulario();
 

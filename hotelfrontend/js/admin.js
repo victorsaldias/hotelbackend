@@ -33,22 +33,19 @@ function obtenerEmpleadoActual() {
         nombre: empleadoNombre,
         apellido: empleadoApellido,
         nombreCompleto: `${empleadoNombre} ${empleadoApellido}`,
-        idSucursal: parseInt(empleadoIdSucursal) 
+        idSucursal: parseInt(empleadoIdSucursal)
     };
 }
 
 async function cargarEmpleados() {
 
-    
     const tbody = document.getElementById("listaEmpleados");
     if (!tbody) return; 
 
     try {
-        
         const adminActual = obtenerEmpleadoActual();
         if (!adminActual) return;
-        
-        
+
         const response = await fetch(`${API_URL}?idSucursal=${adminActual.idSucursal}`, { credentials: 'include' });
         const data = await response.json();
 
@@ -91,8 +88,12 @@ async function cargarEmpleados() {
 
     } catch (error) {
         console.error("Error cargando empleados:", error);
-      
-        if (tbody) alert("No se pudieron cargar los empleados");
+
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'No se pudieron cargar los empleados'
+        });
     }
 }
 
@@ -103,11 +104,11 @@ function nuevoEmpleado() {
     document.getElementById('empApellido').value = "";
     document.getElementById('empRut').value = "";
     document.getElementById('empCorreo').value = "";
-    document.getElementById('empPassword').value = "";
+
+    document.getElementById('groupPassword').style.display = "none";
 
     document.getElementById('empRol').value = "1";
     document.getElementById('empEstado').value = "1";
-    document.getElementById('groupPassword').style.display = "block";
 
     document.querySelector('.modal-title').textContent = 'Nuevo Empleado';
     document.getElementById('btnGuardar').textContent = 'Guardar';
@@ -123,7 +124,6 @@ function cerrarModal() {
     document.getElementById('empApellido').value = "";
     document.getElementById('empRut').value = "";
     document.getElementById('empCorreo').value = "";
-    document.getElementById('empPassword').value = "";
     document.getElementById('empRol').value = "1";
     document.getElementById('empEstado').value = "1";
 }
@@ -151,12 +151,17 @@ async function editarEmpleado(id) {
 
     } catch (error) {
         console.error("Error al cargar empleado:", error);
-        alert("Error al cargar empleado");
+
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'No se pudo cargar el empleado'
+        });
     }
 }
 
 async function guardarEmpleado() {
-    
+
     const adminActual = obtenerEmpleadoActual();
     if (!adminActual) return;
 
@@ -164,17 +169,17 @@ async function guardarEmpleado() {
     const apellido = document.getElementById('empApellido').value.trim();
     const rut = document.getElementById('empRut').value.trim();
     const correo = document.getElementById('empCorreo').value.trim();
-    const password = document.getElementById('empPassword').value;
     const idRol = parseInt(document.getElementById('empRol').value);
     const idEstadoEmpleado = parseInt(document.getElementById('empEstado').value);
 
     if (!nombre || !apellido || !rut || !correo || isNaN(idRol) || isNaN(idEstadoEmpleado)) {
-        alert("Completa todos los campos obligatorios.");
-        return;
-    }
 
-    if (!empleadoEditando && !password) {
-        alert("La contraseña es obligatoria para crear un empleado.");
+        Swal.fire({
+            icon: 'warning',
+            title: 'Campos incompletos',
+            text: 'Debes completar todos los campos obligatorios'
+        });
+
         return;
     }
 
@@ -187,12 +192,6 @@ async function guardarEmpleado() {
         idEstadoEmpleado,
         idSucursal: adminActual.idSucursal 
     };
-
-    if (!empleadoEditando) {
-        datos.password = password;
-    }
-
-    console.log("📤 Guardando empleado en sucursal:", adminActual.idSucursal); 
 
     const url = empleadoEditando ? `${API_URL}/${empleadoEditando}` : API_URL;
     const metodo = empleadoEditando ? "PUT" : "POST";
@@ -207,22 +206,50 @@ async function guardarEmpleado() {
 
         const data = await response.json();
         if (!response.ok) {
-            alert(data.message || "No se pudo guardar el empleado");
+
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: data.message || "No se pudo guardar el empleado"
+            });
+
             return;
         }
 
-        alert(data.message || "Empleado guardado correctamente en su sucursal");
+        Swal.fire({
+            icon: 'success',
+            title: 'Éxito',
+            text: data.message || "Empleado guardado correctamente",
+            timer: 1800,
+            showConfirmButton: false
+        });
+
         document.getElementById('modalEmpleado').classList.remove('show');
         cargarEmpleados();
 
     } catch (error) {
         console.error("Error al guardar:", error);
-        alert("Error al guardar empleado.");
+
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Ocurrió un problema al guardar el empleado'
+        });
     }
 }
 
 async function eliminarEmpleado(id) {
-    if (!confirm("¿Seguro que deseas suspender este empleado?")) return;
+
+    const confirm = await Swal.fire({
+        icon: 'warning',
+        title: '¿Suspender empleado?',
+        text: 'Esta acción puede revertirse más tarde',
+        confirmButtonText: 'Sí, suspender',
+        cancelButtonText: 'Cancelar',
+        showCancelButton: true
+    });
+
+    if (!confirm.isConfirmed) return;
 
     try {
         const response = await fetch(`${API_URL}/${id}`, {
@@ -232,16 +259,33 @@ async function eliminarEmpleado(id) {
 
         const data = await response.json();
         if (!response.ok) {
-            alert(data.message || "No se pudo suspender empleado");
+
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: data.message || "No se pudo suspender el empleado"
+            });
+
             return;
         }
 
-        alert("Empleado suspendido");
+        Swal.fire({
+            icon: 'success',
+            title: 'Empleado suspendido',
+            timer: 1500,
+            showConfirmButton: false
+        });
+
         cargarEmpleados();
 
     } catch (error) {
         console.error("Error al suspender:", error);
-        alert("No se pudo suspender empleado");
+
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'No se pudo suspender el empleado'
+        });
     }
 }
 

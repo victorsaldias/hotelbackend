@@ -1,3 +1,4 @@
+import nodemailer from "nodemailer";
 import bcrypt from "bcrypt";
 import {
   insertarCliente,
@@ -6,7 +7,9 @@ import {
   obtenerTodosClientesDB
 } from "../model/clienteModel.js";
 
-
+function limpiarRut(rut) {
+  return rut.replace(/\./g, "").replace(/-/g, "");
+}
 
 export const crearClienteWeb = async (req, res) => {
   try {
@@ -50,20 +53,57 @@ export const crearClienteRecepcionista = async (req, res) => {
           });
       }
 
-      const rutLimpio = nuevoCliente.rut.replace(/\./g, "").replace("-", "");
+      
+      const rutLimpio = limpiarRut(nuevoCliente.rut);
       const passwordFinal = rutLimpio + "123";
 
       const hashedPassword = await bcrypt.hash(passwordFinal, 10);
 
+      
       const cliente = await insertarCliente({
         ...nuevoCliente,
         password: hashedPassword
       });
 
+      const transporter = nodemailer.createTransport({
+  host: "smtp.gmail.com",
+  port: 465,
+  secure: true,
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS
+  },
+  tls: {
+    rejectUnauthorized: false
+  }
+});
+
+
+    
+      await transporter.sendMail({
+        from: `"Hotel Arellano" <${process.env.EMAIL_USER}>`,
+        to: nuevoCliente.correo,
+        subject: "Bienvenido al Hotel Arellano - Credenciales de acceso",
+        html: `
+          <h2>Hola ${nuevoCliente.nombre} ${nuevoCliente.apellido},</h2>
+
+          <p>Tu cuenta ha sido creada exitosamente por nuestro equipo de recepción.</p>
+
+          <p>Tu contraseña provisional es:</p>
+          
+          <p style="font-size:18px;font-weight:bold;">${passwordFinal}</p>
+
+          <p>Por motivos de seguridad, te recomendamos cambiar esta contraseña en tu primer inicio de sesión.</p>
+
+          <br>
+          <p>Atentamente,<br>Hotel Arellano</p>
+        `
+      });
+
+      
       return res.status(201).json({
-        message: "Cliente registrado correctamente",
-        cliente,
-        passwordGenerada: passwordFinal
+        message: "Cliente registrado correctamente. Correo enviado.",
+        cliente
       });
 
   } catch (error) {
@@ -74,7 +114,6 @@ export const crearClienteRecepcionista = async (req, res) => {
       });
   }
 };
-
 
 
 export const obtenerCliente = async (req, res) => {
