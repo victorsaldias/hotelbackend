@@ -1,13 +1,29 @@
 import { getConnection } from "../config/dbConfig.js";
 
-export async function obtenerHabitacionesDisponibles() {
+export async function obtenerHabitacionesDisponibles(idSucursal) {
     const pool = await getConnection();
-    const r = await pool.request().query(`
-        SELECT * FROM habitacion WHERE idEstadoHabitacion = 1
-    `);
+    const r = await pool.request()
+        .input("idSucursal", idSucursal)
+        .query(`
+            SELECT 
+                h.idHabitacion,
+                h.numero,
+                h.idSucursal,
+                t.nombre AS tipoHabitacion,
+                ISNULL(h.precioPersonalizado, t.precio) AS precio,
+                h.idEstadoHabitacion,
+                c.capacidad,
+                c.cama,
+                c.tamano
+            FROM habitacion h
+            INNER JOIN tipoHabitacion t ON h.idTipoHabitacion = t.idTipoHabitacion
+            LEFT JOIN caracteristica c ON c.idCaracteristica = h.idCaracteristica
+            WHERE h.idSucursal = @idSucursal
+            AND h.idEstadoHabitacion = 1
+            ORDER BY h.numero
+        `);
     return r.recordset;
 }
-
 export async function obtenerHabitacionPorNumero(numero) {
     const pool = await getConnection();
     const r = await pool.request()
@@ -204,13 +220,13 @@ function toSQL(date) {
 }
 export async function buscarHabitacionesPorCapacidadYFechas(
     idSucursal,
-    fechaInicio,   // "YYYY-MM-DD"
-    fechaFin,      // "YYYY-MM-DD"
+    fechaInicio,   
+    fechaFin,      
     cantidadHuespedes
 ) {
     const pool = await getConnection();
 
-    // MISMAS HORAS que usa la reserva: 14:00 check-in, 12:00 check-out
+    
     const inicioSQL = fechaInicio.includes(":") ? fechaInicio : `${fechaInicio} 14:00:00`;
     const finSQL    = fechaFin.includes(":")    ? fechaFin    : `${fechaFin} 12:00:00`;
 
@@ -257,9 +273,7 @@ export async function buscarHabitacionesPorCapacidadYFechas(
 
 
 
-// ===============================
-//  MODELO: CARACTERÍSTICAS POR TIPO
-// ===============================
+
 export const obtenerCaracteristicasPorTipo = async (idTipo) => {
     const pool = await getConnection();
 
@@ -275,9 +289,7 @@ export const obtenerCaracteristicasPorTipo = async (idTipo) => {
     return result.recordset;
 };
 
-// ===============================
-//  MODELO: SERVICIOS POR TIPO
-// ===============================
+
 export const obtenerServiciosPorTipo = async (idTipo) => {
     const pool = await getConnection();
 

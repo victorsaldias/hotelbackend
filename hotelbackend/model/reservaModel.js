@@ -50,9 +50,10 @@ export async function guardarAcompaniante(idReserva, a) {
         `);
 }
 
-export async function verReservas() {
+export async function verReservas(idSucursal) {
     const conn = await getConnection();
-    const result = await conn.request().query(`
+    
+    let query = `
         SELECT 
             r.idReserva,
             r.fechaInicio,
@@ -62,17 +63,28 @@ export async function verReservas() {
             c.nombre,
             c.apellido,
             c.rut,
-            h.numero AS numeroHabitacion
+            h.numero AS numeroHabitacion,
+            h.idSucursal,
+            s.nombre AS nombreSucursal
         FROM reserva r
         JOIN cliente c ON r.idCliente = c.idCliente
         LEFT JOIN reservaHabitacion rh ON r.idReserva = rh.idReserva
         LEFT JOIN habitacion h ON rh.idHabitacion = h.idHabitacion
-        ORDER BY r.idReserva DESC;
-    `);
+        LEFT JOIN sucursal s ON h.idSucursal = s.idSucursal
+    `;
 
+    const request = conn.request();
+
+    if (idSucursal) {
+        query += ` WHERE h.idSucursal = @idSucursal`;
+        request.input('idSucursal', parseInt(idSucursal));
+    }
+
+    query += ` ORDER BY r.idReserva DESC`;
+
+    const result = await request.query(query);
     return result.recordset;
 }
-
 
 export async function verReservaPorId(idReserva) {
     const conn = await getConnection();
