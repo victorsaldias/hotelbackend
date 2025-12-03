@@ -387,4 +387,12 @@ container.innerHTML += `
     }
 });
 
+document.addEventListener("DOMContentLoaded", () => {
+    const clienteId = localStorage.getItem("clienteId");
+    const link = document.getElementById("misReservasLink");
+
+    if (clienteId && link) {
+        link.style.display = "block";  // mostrar
+    }
+});
 })(jQuery);

@@ -93,11 +93,12 @@ async function cargarHabitaciones() {
             }
             
             fila.innerHTML = `
-                <td>${h.numero}</td>
-                <td>${h.descripcion}</td>
-                <td>${h.estadoLimpieza || "Sin registro"}</td>
-                <td>${botones}</td>
-            `;
+    <td data-label="Número">${h.numero}</td>
+    <td data-label="Descripción">${h.descripcion}</td>
+    <td data-label="Estado">${h.estadoLimpieza || "Sin registro"}</td>
+    <td data-label="Acción">${botones}</td>
+`;
+
             
             contenedor.appendChild(fila);
         });
@@ -268,7 +269,7 @@ function cerrarSesion() {
             localStorage.removeItem('empleadoNombre');
             localStorage.removeItem('empleadoApellido');
             localStorage.removeItem('empleadoRol');
-            localStorage.removeItem('empleadoIdSucursal'); // 👈 NUEVO
+            localStorage.removeItem('empleadoIdSucursal'); 
             
             window.location.href = "login-aseo.html";
         }

@@ -127,13 +127,29 @@ export async function cancelarReserva(idReserva) {
 
 export async function verHistorialReserva(idCliente) {
     const conn = await getConnection();
+
     const result = await conn.request()
         .input("idCliente", idCliente)
         .query(`
-            SELECT *
-            FROM reserva
-            WHERE idCliente = @idCliente
-            ORDER BY fechaInicio DESC;
+            SELECT 
+                r.idReserva,
+                r.fechaInicio,
+                r.fechaFin,
+                r.total,
+                r.cantidadHuespedes,
+                er.nombre AS estadoReserva,
+                
+                h.numero AS numeroHabitacion,
+                th.nombre AS tipoHabitacion
+
+            FROM reserva r
+            LEFT JOIN reservaHabitacion rh ON rh.idReserva = r.idReserva
+            LEFT JOIN habitacion h ON h.idHabitacion = rh.idHabitacion
+            LEFT JOIN tipoHabitacion th ON th.idTipoHabitacion = h.idTipoHabitacion
+            LEFT JOIN estadoReserva er ON er.idEstadoReserva = r.idEstadoReserva
+
+            WHERE r.idCliente = @idCliente
+            ORDER BY r.fechaInicio DESC;
         `);
 
     return result.recordset;
