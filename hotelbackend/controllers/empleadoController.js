@@ -107,6 +107,8 @@ export async function crearEmpleado(req, res) {
                 <p>Atentamente,<br>Hotel Arellano</p>
             `
         });
+        console.log("EMAIL_USER:", process.env.EMAIL_USER);
+console.log("EMAIL_PASS length:", process.env.EMAIL_PASS?.length)
 
         return res.status(201).json({
             success: true,

@@ -71,6 +71,7 @@ document.addEventListener("DOMContentLoaded", () => {
             chartContainer.style.display = "block";
             table.style.display = "none";
             btnToggle.textContent = "Mostrar Tabla";
+            
         }
     });
 });

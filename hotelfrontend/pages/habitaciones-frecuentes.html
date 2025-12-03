@@ -56,21 +56,35 @@
             <span id="adminName"></span>
         </header>
 
-        <section class="report-section">
+        <section class="report-section" id="exportArea">
 
-            <div class="period-buttons">
-                <button class="period-btn" onclick="cambiarPeriodo(1)">Último mes</button>
-                <button class="period-btn" onclick="cambiarPeriodo(3)">Últimos 3 meses</button>
-                <button class="period-btn" onclick="cambiarPeriodo(6)">Últimos 6 meses</button>
 
-                <button id="btnToggleVista" class="btn-toggle-vista">Mostrar Tabla</button>
-            </div>
+<div class="period-buttons">
+
+    <div class="left-buttons">
+        <button class="period-btn" onclick="cambiarPeriodo(1)">Último mes</button>
+        <button class="period-btn" onclick="cambiarPeriodo(3)">Últimos 3 meses</button>
+        <button class="period-btn" onclick="cambiarPeriodo(6)">Últimos 6 meses</button>
+
+        <!-- Botón Exportar PDF en verde -->
+        
+    </div>
+
+    <div class="right-buttons">
+        <!-- Botón Mostrar Gráfico a la derecha -->
+        <button class="btn-exportar" onclick="exportarPDF('habitaciones_frecuentes.pdf', 'tablaExportar')">
+            Exportar PDF
+        </button>
+        <button id="btnToggleVista" class="btn-toggle-vista">Mostrar Tabla</button>
+    </div>
+
+</div>
 
             <div class="chart-container">
                 <canvas id="chartHabitacionesFrecuentes"></canvas>
             </div>
 
-            <table>
+            <table id="tablaExportar">
                 <thead>
                     <tr>
                         <th>ID</th>
@@ -92,6 +106,9 @@
 <script src="../js/menuMovil.js"></script>
 <script src="../js/admin.js"></script>
 <script src="../js/reportes.js"></script>
+<script type="module" src="../js/exportarPDF.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
 </body>
 </html>

@@ -59,6 +59,9 @@
         <section class="report-section">
 
             <div class="toggle-wrapper">
+                <button class="btn-exportar" onclick="exportarPDF('habitaciones_frecuentes.pdf', 'tablaExportar')">
+            Exportar PDF
+        </button>
                 <button id="btnToggleVista" class="btn-toggle-vista">Mostrar Tabla</button>
             </div>
 
@@ -66,7 +69,7 @@
                 <canvas id="chartEstadoHabitaciones"></canvas>
             </div>
 
-            <table>
+            <table id="tablaExportar">
                 <thead>
                     <tr>
                         <th>Estado</th>
@@ -85,6 +88,10 @@
 <script src="../js/admin.js"></script>
 <script src="../js/reportes.js"></script>
 <script src="../js/estadoHabitaciones.js"></script>
+<script type="module" src="../js/exportarPDF.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
 
 </body>
 </html>

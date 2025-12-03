@@ -3470,3 +3470,66 @@ ol {
 .btn-secondary-small:hover {
     background: rgba(255, 174, 0, 0.32);
 }
+
+.period-buttons {
+    display: flex;
+    justify-content: space-between;  /* izquierda — derecha */
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.left-buttons button {
+    margin-right: 8px;
+}
+
+.right-buttons button {
+    margin-left: 8px;
+}
+
+/* Botones de período: diseño mejorado */
+.period-btn {
+    background: #e7e7e7;
+    border: 1px solid #c5c5c5;
+    color: #333;
+    padding: 8px 14px;
+    font-weight: 600;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.period-btn:hover {
+    background: #d5d5d5;
+}
+
+/* Botón verde PDF */
+.btn-exportar {
+    background: #1ec863;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    font-weight: bold;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn-exportar:hover {
+    background: #17a64f;
+}
+
+/* Botón Mostrar Tabla / Mostrar Gráfico */
+.btn-toggle-vista {
+    background: #ffae00;
+    color: #000;
+    border: none;
+    padding: 8px 16px;
+    font-weight: bold;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn-toggle-vista:hover {
+    background: #ffcb4d;
+}

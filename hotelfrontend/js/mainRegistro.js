@@ -92,18 +92,38 @@ async function registrarCliente(e) {
         idComuna: document.getElementById("regComuna").value
     };
 
-    try {
-        const res = await fetch("http://localhost:3000/api/clientes", {
+     try {
+        const res = await fetch("http://localhost:3000/api/clientes/web", {
             method: "POST",
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify(data)
         });
 
         const resp = await res.json();
-        alert(resp.message);
 
-        if (res.ok) window.location.href = "login.html";
-    } catch (e) {
-        alert("No se pudo registrar el cliente.");
+        if (!res.ok) {
+            Swal.fire({
+                icon: "error",
+                title: "Error al registrar",
+                text: resp.message || "No se pudo registrar el cliente."
+            });
+            return;
+        }
+
+        Swal.fire({
+            icon: "success",
+            title: "Cliente registrado",
+            text: "El cliente fue registrado correctamente.",
+            confirmButtonText: "Ir al login"
+        }).then(() => {
+            window.location.href = "login.html";
+        });
+
+    } catch (error) {
+        Swal.fire({
+            icon: "error",
+            title: "Error de conexión",
+            text: "No se pudo conectar con el servidor."
+        });
     }
 }
