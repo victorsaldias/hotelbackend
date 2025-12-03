@@ -6,13 +6,16 @@ import {
     verHistorialReserva,
     modificarReserva,
     modificarHabitacionDeReserva,
-    guardarAcompaniante              // ⬅️ IMPORTANTE
+    guardarAcompaniante              
 } from "../model/reservaModel.js";
 
 /* ============================================================
    CREAR RESERVA COMPLETA (USADO POR reserva.js)
 ============================================================ */
 export const crearReservaCompleta = async (req, res) => {
+    console.log("======== RESERVA RECIBIDA ========");
+console.log(req.body);
+console.log("==================================");
     try {
         const data = req.body;
 

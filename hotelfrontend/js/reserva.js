@@ -180,69 +180,105 @@ for (let i = 1; i <= totalAcomp; i++) {
     /* ============================================================
        6) ACCIÓN DEL BOTÓN – DINÁMICA
     ============================================================ */
-    btn.addEventListener("click", async () => {
+btn.addEventListener("click", async () => {
 
-        const metodo = document.querySelector("input[name='metodoPago']:checked");
-        const clienteId = localStorage.getItem("clienteId");
-        const acompanantes = obtenerAcompanantes();
+    const metodo = document.querySelector("input[name='metodoPago']:checked");
+    const clienteId = localStorage.getItem("clienteId");
+    const acompanantes = obtenerAcompanantes();
 
-        if (!clienteId) {
-            Swal.fire("Debes iniciar sesión para reservar");
+    if (!clienteId) {
+        Swal.fire("Debes iniciar sesión para reservar");
+        return;
+    }
+
+    const fechaInicioSQL = formatearFechaSQL(fechaI) + " 14:00:00";
+    const fechaFinSQL = formatearFechaSQL(fechaF) + " 12:00:00";
+
+    const dias = Math.ceil((fechaF - fechaI) / (1000 * 60 * 60 * 24));
+    const total = room.precio * dias;
+
+    if (metodo.value === "Presencial") {
+        return enviarReservaPresencial();
+    } 
+    
+    if (metodo.value === "WebPay") {
+        return iniciarWebPay();
+    }
+
+    /* ------------------ PRESENCIAL ------------------ */
+    async function enviarReservaPresencial() {
+        try {
+            const response = await fetch("http://localhost:3000/api/reservas/completa", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    idCliente: clienteId,
+                    idHabitacion: room.idHabitacion,
+                    fechaInicio: fechaInicioSQL,
+                    fechaFin: fechaFinSQL,
+                    cantidadHuespedes,
+                    total,
+                    acompanantes,
+                    metodoPago: "Presencial"
+                })
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                Swal.fire("Error", data.error || "No se pudo crear la reserva");
+                return;
+            }
+
+            Swal.fire({
+                icon: "success",
+                title: "Reserva realizada",
+                text: "Tu reserva quedó registrada."
+            }).then(() => window.location.href = "index.html");
+
+        } catch (e) {
+            Swal.fire("Error del servidor");
+        }
+    }
+
+    /* ------------------ WEBPAY ------------------ */
+    async function iniciarWebPay() {
+
+        const reserva = {
+            idCliente: clienteId,
+            idHabitacion: room.idHabitacion,
+            fechaInicio: fechaInicioSQL,
+            fechaFin: fechaFinSQL,
+            cantidadHuespedes,
+            total,
+            acompanantes,
+            metodoPago: "WebPay"
+        };
+
+        // Guardar reserva completa
+        localStorage.setItem("reservaCompleta", JSON.stringify(reserva));
+
+        const response = await fetch("http://localhost:3000/api/webpay/init", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({})
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            Swal.fire("Error", data.error);
             return;
         }
 
-        const fechaInicioSQL = formatearFechaSQL(fechaI) + " 14:00:00";
-        const fechaFinSQL = formatearFechaSQL(fechaF) + " 12:00:00";
+        // Guardar token
+        localStorage.setItem("tokenTransbank", data.token);
 
-        const dias = Math.ceil((fechaF - fechaI) / (1000 * 60 * 60 * 24));
-        const total = room.precio * dias;
+        // Redirigir
+        window.location.href = `webpay-pago.html?token=${data.token}`;
+    }
 
-        if (metodo.value === "Presencial") {
-            enviarReservaPresencial();
-        } else {
-            iniciarWebPay();
-        }
-
-        async function enviarReservaPresencial() {
-            try {
-                const response = await fetch("http://localhost:3000/api/reservas/completa", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        idCliente: clienteId,
-                        idHabitacion: room.idHabitacion,
-                        fechaInicio: fechaInicioSQL,
-                        fechaFin: fechaFinSQL,
-                        cantidadHuespedes,
-                        total,
-                        acompanantes,
-                        metodoPago: "Presencial"
-                    })
-                });
-
-                const data = await response.json();
-
-                if (!response.ok) {
-                    Swal.fire("Error", data.error || "No se pudo crear la reserva");
-                    return;
-                }
-
-                Swal.fire({
-                    icon: "success",
-                    title: "Reserva realizada",
-                    text: "Tu reserva quedó registrada."
-                }).then(() => window.location.href = "index.html");
-
-            } catch (e) {
-                Swal.fire("Error del servidor");
-            }
-        }
-
-        function iniciarWebPay() {
-            Swal.fire("WebPay", "Aquí iría la integración WebPay.", "info");
-        }
-    });
-
+});
 
     /* ============================================================
        7) UTILIDADES
@@ -278,43 +314,3 @@ for (let i = 1; i <= totalAcomp; i++) {
     actualizarBoton();
 
 });
-
-
-async function iniciarWebPay() {
-    const clienteId = localStorage.getItem("clienteId");
-
-    const fechaInicioSQL = formatearFechaSQL(fechaI);
-    const fechaFinSQL = formatearFechaSQL(fechaF);
-    const acompanantes = obtenerAcompanantes();
-
-    const dias = Math.ceil((fechaF - fechaI) / (1000 * 60 * 60 * 24));
-    const total = room.precio * dias;
-
-    // 1. Iniciar pago
-    const response = await fetch("http://localhost:3000/api/webpay/init", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            idCliente: clienteId,
-            idHabitacion: room.idHabitacion,
-            fechaInicio: fechaInicioSQL,
-            fechaFin: fechaFinSQL,
-            cantidadHuespedes,
-            total,
-            acompanantes
-        })
-    });
-
-    const data = await response.json();
-
-    if (!response.ok) {
-        Swal.fire("Error", data.error);
-        return;
-    }
-
-    // Guardamos token para confirmar después
-    localStorage.setItem("tokenTransbank", data.token);
-
-    // Redirigir a la página de pago WebPay simulada
-    window.location.href = `webpay-pago.html?token=${data.token}`;
-}

@@ -1,74 +1,96 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<title>Simulación WebPay</title>
-<link rel="stylesheet" href="../css/bootstrap.min.css">
+    <meta charset="UTF-8">
+    <title>WebPay - Pago Seguro</title>
 
-<style>
-    .card {
-        max-width: 500px;
-        margin: auto;
-        margin-top: 60px;
-        padding: 25px;
-        border-radius: 8px;
-        box-shadow: 0 0 15px #00000022;
-    }
-</style>
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        body {
+            background: #f2f2f2;
+        }
+
+        .pago-box {
+            width: 450px;
+            margin: 50px auto;
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0px 3px 15px #00000025;
+        }
+
+        .btn-large {
+            width: 100%;
+            padding: 15px;
+            font-size: 18px;
+            border-radius: 8px;
+        }
+
+        .input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            font-size: 16px;
+        }
+
+    </style>
 </head>
-
 <body>
 
-<div class="card">
-    <h3 class="text-center mb-3">💳 WebPay Simulado</h3>
-    <p class="text-muted">Confirma si deseas realizar el pago.</p>
+<div class="pago-box">
+    <h2 class="text-center mb-4">🧾 WebPay — Pago Seguro</h2>
 
-    <h4 id="monto" class="text-success"></h4>
+    <p style="font-size:16px; text-align:center;">
+        Ingresa los datos de tu tarjeta para completar el pago.
+    </p>
 
-    <button id="btnPagar" class="btn btn-success w-100 mt-3">Pagar</button>
-    <button id="btnCancelar" class="btn btn-danger w-100 mt-2">Cancelar</button>
+    <hr>
+
+    <label>Número de Tarjeta</label>
+    <input id="cardNumber" class="input" maxlength="16" placeholder="1234 5678 9012 3456">
+
+    <label>Fecha Expiración</label>
+    <input id="cardExp" class="input" maxlength="5" placeholder="MM/YY">
+
+    <label>CVC</label>
+    <input id="cardCVC" class="input" maxlength="3" placeholder="123">
+
+    <label>Nombre Titular</label>
+    <input id="cardName" class="input" placeholder="Juan Pérez">
+
+    <button id="btnPagar" class="btn btn-success btn-large mb-2">
+        ✔ Pagar Ahora
+    </button>
+
+    <button id="btnCancelar" class="btn btn-danger btn-large">
+        ✖ Cancelar Pago
+    </button>
 </div>
 
+<script src="../js/webpay.js"></script>
 <script>
-const params = new URLSearchParams(window.location.search);
-const token = params.get("token");
-
-// Recuperamos datos visuales solo para mostrar el monto
-const reservaMem = JSON.parse(localStorage.getItem("habitacionSeleccionada"));
-const fechaInicio = localStorage.getItem("fechaInicioReserva");
-const fechaFin = localStorage.getItem("fechaFinReserva");
-
-document.getElementById("monto").textContent =
-    `Total a pagar: $${reservaMem.precio}`;
-
-// -------------- Pagar ----------------
-document.getElementById("btnPagar").onclick = async () => {
-    const response = await fetch("http://localhost:3000/api/webpay/confirm", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ token, status: "APPROVED" })
-    });
-
-    const data = await response.json();
-
-    if (data.status === "APPROVED") {
-        alert("Pago aprobado, reserva creada.");
-        window.location.href = "index.html";
+// SOLO NÚMEROS EN TARJETA
+document.addEventListener("input", (e) => {
+    if (e.target.id === "cardNumber") {
+        e.target.value = e.target.value.replace(/\D/g, "").substring(0, 16);
     }
-};
 
-// -------------- Cancelar ----------------
-document.getElementById("btnCancelar").onclick = async () => {
-    await fetch("http://localhost:3000/api/webpay/confirm", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ token, status: "FAILED" })
-    });
+    // EXPIRACIÓN FORMATO MM/YY
+    if (e.target.id === "cardExp") {
+        let v = e.target.value.replace(/\D/g, "").substring(0, 4);
+        if (v.length >= 3) v = v.substring(0,2) + "/" + v.substring(2,4);
+        e.target.value = v;
+    }
 
-    alert("Pago cancelado.");
-    window.location.href = "index.html";
-};
+    // CVC
+    if (e.target.id === "cardCVC") {
+        e.target.value = e.target.value.replace(/\D/g, "").substring(0, 3);
+    }
+});
 </script>
-
 </body>
 </html>
