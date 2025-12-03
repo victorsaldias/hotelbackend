@@ -1,18 +1,18 @@
 const API_URL = "http://localhost:3000/api/limpieza/habitaciones";
 
-
 function obtenerEmpleadoActual() {
     const empleadoId = localStorage.getItem('empleadoId');
     const empleadoNombre = localStorage.getItem('empleadoNombre');
     const empleadoApellido = localStorage.getItem('empleadoApellido');
+    const empleadoIdSucursal = localStorage.getItem('empleadoIdSucursal'); 
     
-    if (!empleadoId) {
+    if (!empleadoId) { 
         Swal.fire({
             icon: 'warning',
             title: 'Sesión no válida',
             text: 'Por favor inicia sesión nuevamente'
         }).then(() => {
-            window.location.href = '../login-aseo.html';
+            window.location.href = 'login-aseo.html';
         });
         return null;
     }
@@ -21,10 +21,10 @@ function obtenerEmpleadoActual() {
         id: parseInt(empleadoId),
         nombre: empleadoNombre,
         apellido: empleadoApellido,
-        nombreCompleto: `${empleadoNombre} ${empleadoApellido}`
+        nombreCompleto: `${empleadoNombre} ${empleadoApellido}`,
+        idSucursal: empleadoIdSucursal ? parseInt(empleadoIdSucursal) : null 
     };
 }
-
 
 function mostrarNombreEmpleado() {
     const empleado = obtenerEmpleadoActual();
@@ -40,7 +40,12 @@ async function cargarHabitaciones() {
     try {
         console.log("🔄 Cargando habitaciones...");
         
-        const res = await fetch(API_URL);
+        const empleado = obtenerEmpleadoActual(); 
+        if (!empleado) return;
+        
+       
+        const url = `${API_URL}?idSucursal=${empleado.idSucursal}`;
+        const res = await fetch(url);
         const data = await res.json();
 
         if (!data.success) {
@@ -54,6 +59,19 @@ async function cargarHabitaciones() {
 
         const contenedor = document.getElementById("listaHabitaciones");
         contenedor.innerHTML = "";
+
+        
+        if (data.habitaciones.length === 0) {
+            contenedor.innerHTML = `
+                <tr>
+                    <td colspan="4" style="text-align: center; padding: 2rem;">
+                        <i class="fa-solid fa-info-circle"></i> 
+                        No hay habitaciones asignadas a tu sucursal
+                    </td>
+                </tr>
+            `;
+            return;
+        }
 
         data.habitaciones.forEach(h => {
             const fila = document.createElement('tr');
@@ -84,7 +102,7 @@ async function cargarHabitaciones() {
             contenedor.appendChild(fila);
         });
 
-        console.log("✅ Habitaciones cargadas");
+        console.log(`✅ ${data.habitaciones.length} habitaciones cargadas (Sucursal ${empleado.idSucursal})`);
 
     } catch (error) {
         console.error("❌ Error:", error);
@@ -230,11 +248,11 @@ async function terminarLimpieza(idHabitacion, numeroHabitacion) {
     }
 }
 
-
 document.addEventListener('DOMContentLoaded', () => {
     mostrarNombreEmpleado();
     cargarHabitaciones();
 });
+
 function cerrarSesion() {
     Swal.fire({
         title: '¿Cerrar sesión?',
@@ -250,8 +268,9 @@ function cerrarSesion() {
             localStorage.removeItem('empleadoNombre');
             localStorage.removeItem('empleadoApellido');
             localStorage.removeItem('empleadoRol');
+            localStorage.removeItem('empleadoIdSucursal'); // 👈 NUEVO
             
-            window.location.href = "../pages/login-aseo.html";
+            window.location.href = "login-aseo.html";
         }
     });
 }

@@ -15,8 +15,9 @@ function obtenerEmpleadoActual() {
     const empleadoId = localStorage.getItem('empleadoId');
     const empleadoNombre = localStorage.getItem('empleadoNombre');
     const empleadoApellido = localStorage.getItem('empleadoApellido');
+    const empleadoIdSucursal = localStorage.getItem('empleadoIdSucursal'); 
 
-    if (!empleadoId) {
+    if (!empleadoId || !empleadoIdSucursal) { 
         Swal.fire({
             icon: 'warning',
             title: 'Sesión no válida',
@@ -31,18 +32,24 @@ function obtenerEmpleadoActual() {
         id: parseInt(empleadoId),
         nombre: empleadoNombre,
         apellido: empleadoApellido,
-        nombreCompleto: `${empleadoNombre} ${empleadoApellido}`
+        nombreCompleto: `${empleadoNombre} ${empleadoApellido}`,
+        idSucursal: parseInt(empleadoIdSucursal) 
     };
 }
 
 async function cargarEmpleados() {
 
-    // ⛔ EVITAR QUE SE EJECUTE SI NO EXISTE LA TABLA
+    
     const tbody = document.getElementById("listaEmpleados");
-    if (!tbody) return; // No estamos en la página empleados.html
+    if (!tbody) return; 
 
     try {
-        const response = await fetch(API_URL, { credentials: 'include' });
+        
+        const adminActual = obtenerEmpleadoActual();
+        if (!adminActual) return;
+        
+        
+        const response = await fetch(`${API_URL}?idSucursal=${adminActual.idSucursal}`, { credentials: 'include' });
         const data = await response.json();
 
         tbody.innerHTML = "";
@@ -84,10 +91,11 @@ async function cargarEmpleados() {
 
     } catch (error) {
         console.error("Error cargando empleados:", error);
-        // Ya no mostramos alerta porque no siempre es un error real
+      
         if (tbody) alert("No se pudieron cargar los empleados");
     }
 }
+
 function nuevoEmpleado() {
     empleadoEditando = null;
 
@@ -148,6 +156,10 @@ async function editarEmpleado(id) {
 }
 
 async function guardarEmpleado() {
+    
+    const adminActual = obtenerEmpleadoActual();
+    if (!adminActual) return;
+
     const nombre = document.getElementById('empNombre').value.trim();
     const apellido = document.getElementById('empApellido').value.trim();
     const rut = document.getElementById('empRut').value.trim();
@@ -173,12 +185,14 @@ async function guardarEmpleado() {
         correo,
         idRol,
         idEstadoEmpleado,
-        idSucursal: 2
+        idSucursal: adminActual.idSucursal 
     };
 
     if (!empleadoEditando) {
         datos.password = password;
     }
+
+    console.log("📤 Guardando empleado en sucursal:", adminActual.idSucursal); 
 
     const url = empleadoEditando ? `${API_URL}/${empleadoEditando}` : API_URL;
     const metodo = empleadoEditando ? "PUT" : "POST";
@@ -197,7 +211,7 @@ async function guardarEmpleado() {
             return;
         }
 
-        alert(data.message || "Empleado guardado");
+        alert(data.message || "Empleado guardado correctamente en su sucursal");
         document.getElementById('modalEmpleado').classList.remove('show');
         cargarEmpleados();
 
@@ -235,5 +249,4 @@ document.addEventListener("DOMContentLoaded", () => {
     cargarEmpleados();
     obtenerEmpleadoActual();
 });
-
 

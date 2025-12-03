@@ -10,7 +10,10 @@ import {
 
 export async function obtenerEmpleados(req, res) {
     try {
-        const empleados = await obtenerTodosLosEmpleados();
+        const { idSucursal } = req.query; 
+        
+        const empleados = await obtenerTodosLosEmpleados(idSucursal); 
+        
         return res.status(200).json({ success: true, empleados });
     } catch (error) {
         console.error("❌ Error en obtenerEmpleados:", error);
@@ -36,18 +39,16 @@ export async function obtenerEmpleadoPorId(req, res) {
     }
 }
 
-/* ===============================
-   CREAR EMPLEADO (sin idSucursal)
-================================ */
+
 export async function crearEmpleado(req, res) {
     try {
-        const { rut, nombre, apellido, correo, password, idRol } = req.body;
+        const { rut, nombre, apellido, correo, password, idRol, idSucursal } = req.body; 
 
-        // Validación sin idSucursal
-        if (!rut || !nombre || !apellido || !correo || !password || !idRol) {
+     
+        if (!rut || !nombre || !apellido || !correo || !password || !idRol || !idSucursal) {
             return res.status(400).json({
                 success: false,
-                message: "Todos los campos son obligatorios"
+                message: "Todos los campos son obligatorios, incluyendo idSucursal"
             });
         }
 
@@ -61,7 +62,7 @@ export async function crearEmpleado(req, res) {
             password: passwordHash,
             idRol: parseInt(idRol),
             idEstadoEmpleado: 1,
-            idSucursal: 2 // 👈 SE ASIGNA POR DEFECTO DESDE EL BACKEND
+            idSucursal: parseInt(idSucursal) 
         };
 
         const resultado = await crearEmpleadoModel(empleadoData);
@@ -78,13 +79,11 @@ export async function crearEmpleado(req, res) {
     }
 }
 
-/* ===============================
-   ACTUALIZAR EMPLEADO (sin idSucursal)
-================================ */
+
 export async function actualizarEmpleado(req, res) {
     try {
         const { id } = req.params;
-        const { rut, nombre, apellido, correo, password, idRol, idEstadoEmpleado } = req.body;
+        const { rut, nombre, apellido, correo, password, idRol, idEstadoEmpleado, idSucursal } = req.body;
 
         if (!rut || !nombre || !apellido || !correo || !idRol) {
             return res.status(400).json({
@@ -100,10 +99,9 @@ export async function actualizarEmpleado(req, res) {
             correo,
             idRol: parseInt(idRol),
             idEstadoEmpleado: parseInt(idEstadoEmpleado) || 1,
-            idSucursal: 2 // 👈 SE ASIGNA POR DEFECTO
+            idSucursal: parseInt(idSucursal) 
         };
 
-        // Si viene password, la actualizamos
         if (password && password.trim() !== "") {
             empleadoData.password = await bcrypt.hash(password, 10);
         }
@@ -124,9 +122,7 @@ export async function actualizarEmpleado(req, res) {
     }
 }
 
-/* ===============================
-   ELIMINAR
-================================ */
+
 export async function eliminarEmpleado(req, res) {
     try {
         const { id } = req.params;
@@ -144,19 +140,17 @@ export async function eliminarEmpleado(req, res) {
     }
 }
 
-/* ===============================
-   BUSCAR
-================================ */
+
 export async function buscarEmpleados(req, res) {
     try {
-        const { q } = req.query;
+        const { q, idSucursal } = req.query; 
 
         if (!q || q.trim() === "") {
-            const empleados = await obtenerTodosLosEmpleados();
+            const empleados = await obtenerTodosLosEmpleados(idSucursal); 
             return res.status(200).json({ success: true, empleados });
         }
 
-        const empleados = await buscarEmpleadosModel(q);
+        const empleados = await buscarEmpleadosModel(q, idSucursal); 
         return res.status(200).json({ success: true, empleados });
 
     } catch (error) {

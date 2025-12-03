@@ -1,12 +1,11 @@
 import { getConnection } from "../config/dbConfig.js";
 
-/* ============================================================
-   OBTENER TODOS LOS EMPLEADOS
-   ============================================================ */
-export async function obtenerTodosLosEmpleados() {
+
+export async function obtenerTodosLosEmpleados(idSucursal) { 
     try {
         const pool = await getConnection();
-        const result = await pool.request().query(`
+        
+        let query = `
             SELECT 
                 e.idEmpleado,
                 e.rut,
@@ -21,8 +20,22 @@ export async function obtenerTodosLosEmpleados() {
             FROM empleado e
             LEFT JOIN sucursal s ON e.idSucursal = s.idSucursal
             LEFT JOIN rol r ON e.idRol = r.idRol
-            ORDER BY e.idEmpleado DESC
-        `);
+        `;
+        
+        
+        if (idSucursal) {
+            query += ` WHERE e.idSucursal = @idSucursal`;
+        }
+        
+        query += ` ORDER BY e.idEmpleado DESC`;
+        
+        const request = pool.request();
+        
+        if (idSucursal) {
+            request.input('idSucursal', parseInt(idSucursal));
+        }
+        
+        const result = await request.query(query);
         return result.recordset;
     } catch (error) {
         console.error("❌ Error en obtenerTodosLosEmpleados:", error);
@@ -30,9 +43,7 @@ export async function obtenerTodosLosEmpleados() {
     }
 }
 
-/* ============================================================
-   OBTENER EMPLEADO POR ID
-   ============================================================ */
+
 export async function obtenerEmpleadoPorIdModel(idEmpleado) {
     try {
         const pool = await getConnection();
@@ -61,9 +72,6 @@ export async function obtenerEmpleadoPorIdModel(idEmpleado) {
 }
 
 
-/* =====================================================
-   CREAR EMPLEADO
-===================================================== */
 export async function crearEmpleadoModel(empleado) {
     try {
         const pool = await getConnection();
@@ -92,15 +100,13 @@ export async function crearEmpleadoModel(empleado) {
     }
 }
 
-/* ============================================================
-   ACTUALIZAR EMPLEADO
-   ============================================================ */
+
 export async function actualizarEmpleadoModel(idEmpleado, empleado) {
     try {
         const pool = await getConnection();
 
         if (empleado.password) {
-            // Con nueva contraseña
+           
             await pool.request()
                 .input("idEmpleado", idEmpleado)
                 .input("rut", empleado.rut)
@@ -124,7 +130,7 @@ export async function actualizarEmpleadoModel(idEmpleado, empleado) {
                     WHERE idEmpleado = @idEmpleado
                 `);
         } else {
-            // Sin nueva contraseña
+            
             await pool.request()
                 .input("idEmpleado", idEmpleado)
                 .input("rut", empleado.rut)
@@ -155,9 +161,7 @@ export async function actualizarEmpleadoModel(idEmpleado, empleado) {
     }
 }
 
-/* ============================================================
-   ELIMINAR = CAMBIAR A ESTADO SUSPENDIDO
-   ============================================================ */
+
 export async function eliminarEmpleadoModel(idEmpleado) {
     try {
         const pool = await getConnection();
@@ -175,37 +179,48 @@ export async function eliminarEmpleadoModel(idEmpleado) {
     }
 }
 
-/* ============================================================
-   BUSCAR EMPLEADOS POR TÉRMINO
-   ============================================================ */
-export async function buscarEmpleadosModel(termino) {
+
+export async function buscarEmpleadosModel(termino, idSucursal) { 
     try {
         const pool = await getConnection();
-        const result = await pool.request()
-            .input("termino", `%${termino}%`)
-            .query(`
-                SELECT 
-                    e.idEmpleado,
-                    e.rut,
-                    e.nombre,
-                    e.apellido,
-                    e.correo,
-                    e.idRol,
-                    r.nombre AS rolNombre,
-                    e.idEstadoEmpleado,
-                    e.idSucursal,
-                    s.nombre AS nombreSucursal
-                FROM empleado e
-                LEFT JOIN sucursal s ON e.idSucursal = s.idSucursal
-                LEFT JOIN rol r ON e.idRol = r.idRol
-                WHERE 
-                    e.nombre LIKE @termino
-                    OR e.apellido LIKE @termino
-                    OR e.correo LIKE @termino
-                    OR e.rut LIKE @termino
-                ORDER BY e.idEmpleado DESC
-            `);
-
+        
+        let query = `
+            SELECT 
+                e.idEmpleado,
+                e.rut,
+                e.nombre,
+                e.apellido,
+                e.correo,
+                e.idRol,
+                r.nombre AS rolNombre,
+                e.idEstadoEmpleado,
+                e.idSucursal,
+                s.nombre AS nombreSucursal
+            FROM empleado e
+            LEFT JOIN sucursal s ON e.idSucursal = s.idSucursal
+            LEFT JOIN rol r ON e.idRol = r.idRol
+            WHERE 
+                (e.nombre LIKE @termino
+                OR e.apellido LIKE @termino
+                OR e.correo LIKE @termino
+                OR e.rut LIKE @termino)
+        `;
+        
+        
+        if (idSucursal) {
+            query += ` AND e.idSucursal = @idSucursal`;
+        }
+        
+        query += ` ORDER BY e.idEmpleado DESC`;
+        
+        const request = pool.request()
+            .input("termino", `%${termino}%`);
+        
+        if (idSucursal) {
+            request.input('idSucursal', parseInt(idSucursal));
+        }
+        
+        const result = await request.query(query);
         return result.recordset;
 
     } catch (error) {

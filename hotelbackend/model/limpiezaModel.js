@@ -1,8 +1,10 @@
 import { getConnection } from "../config/dbConfig.js";
 
-export async function obtenerEstadoHabitaciones() {
+export async function obtenerEstadoHabitaciones(idSucursal) { // 👈 RECIBIR idSucursal
     const pool = await getConnection();
-    const result = await pool.request().query(`
+    
+    // 👇 CONSTRUCCIÓN DINÁMICA DEL QUERY
+    let query = `
         SELECT 
             h.idHabitacion,
             h.numero,
@@ -19,8 +21,23 @@ export async function obtenerEstadoHabitaciones() {
             WHERE l.idHabitacion = h.idHabitacion
             ORDER BY l.idLimpieza DESC
         ) AS estadoActual
-    `);
-
+    `;
+    
+    // 👇 AGREGAR FILTRO SI SE RECIBE idSucursal
+    if (idSucursal) {
+        query += ` WHERE h.idSucursal = @idSucursal`;
+    }
+    
+    query += ` ORDER BY h.numero`; // 👈 ORDENAR POR NÚMERO
+    
+    const request = pool.request();
+    
+    // 👇 AGREGAR PARÁMETRO SI EXISTE
+    if (idSucursal) {
+        request.input('idSucursal', parseInt(idSucursal));
+    }
+    
+    const result = await request.query(query);
     return result.recordset;
 }
 

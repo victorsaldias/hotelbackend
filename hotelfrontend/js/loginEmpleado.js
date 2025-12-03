@@ -33,16 +33,17 @@ document.getElementById("loginEmpleadoForm").addEventListener("submit", async (e
             return;
         }
 
-        // -------------------------------
-        // GUARDADO DE SESIÓN CORRECTO
-        // -------------------------------
+       
         localStorage.setItem("token", data.token);
         localStorage.setItem("empleado", JSON.stringify(data.empleado));
         localStorage.setItem("empleadoId", data.empleado.idEmpleado);
         localStorage.setItem("empleadoNombre", data.empleado.nombre);
         localStorage.setItem("empleadoApellido", data.empleado.apellido);
         localStorage.setItem("empleadoCorreo", data.empleado.correo);
-        localStorage.setItem("empleadoRol", data.empleado.idRol); 
+        localStorage.setItem("empleadoRol", data.empleado.idRol);
+        localStorage.setItem("empleadoIdSucursal", data.empleado.idSucursal);
+        
+        console.log("✅ Sesión guardada - idSucursal:", data.empleado.idSucursal); 
         
 
         await Swal.fire({

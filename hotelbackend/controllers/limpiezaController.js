@@ -2,7 +2,10 @@ import { obtenerEstadoHabitaciones, iniciarLimpiezaHabitacion, terminarLimpiezaH
 
 export async function listarEstadosHabitaciones(req, res) {
     try {
-        const data = await obtenerEstadoHabitaciones();
+        const { idSucursal } = req.query; 
+        
+        const data = await obtenerEstadoHabitaciones(idSucursal); 
+        
         return res.status(200).json({
             success: true,
             habitaciones: data

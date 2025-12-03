@@ -48,8 +48,10 @@ export async function loginEmpleado(req, res) {
                 idEmpleado: empleado.idEmpleado,
                 nombre: empleado.nombre,
                 apellido: empleado.apellido,
+                correo: empleado.correo,
                 idRol: empleado.idRol,
-                rolNombre: empleado.rolNombre
+                rolNombre: empleado.rolNombre,
+                idSucursal: empleado.idSucursal 
             },
             token
         });

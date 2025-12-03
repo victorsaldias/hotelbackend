@@ -3,7 +3,6 @@ import jwt from "jsonwebtoken";
 import { buscarClientePorCorreo} from "../model/authModel.js";
 import { buscarEmpleadoPorCorreo } from "../model/empleadoAuthModel.js";
 
-
 function validarFormatoCorreo(correo) {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(correo);
@@ -37,8 +36,10 @@ export async function loginEmpleado(req, res) {
                 idEmpleado: empleado.idEmpleado,
                 nombre: empleado.nombre,
                 apellido: empleado.apellido,
+                correo: empleado.correo, 
                 idRol: empleado.idRol,
-                rolNombre: empleado.rolNombre
+                rolNombre: empleado.rolNombre,
+                idSucursal: empleado.idSucursal 
             },
             token
         });
@@ -50,6 +51,7 @@ export async function loginEmpleado(req, res) {
         });
     }
 }
+
 export async function loginCliente(req, res) {
     try {
         const { correo, password } = req.body;
@@ -70,17 +72,19 @@ export async function loginCliente(req, res) {
         if (!cliente) {
             return res.status(401).json({ message: "Correo o contraseña incorrectos." });
         }
-console.log("Password recibido:", password);
-console.log("Password en la BD:", cliente.password);
-console.log("USANDO LIBRERÍA:", bcrypt);
-console.log("TIPO DE COMPARE:", typeof bcrypt.compare);
-console.log("COMPARE IMPLEMENTACIÓN:", bcrypt.compare.toString());
-console.log("Largo hash recibido:", cliente.password.length);
-console.log("Hash recibido:", cliente.password);
+
+        console.log("Password recibido:", password);
+        console.log("Password en la BD:", cliente.password);
+        console.log("USANDO LIBRERÍA:", bcrypt);
+        console.log("TIPO DE COMPARE:", typeof bcrypt.compare);
+        console.log("COMPARE IMPLEMENTACIÓN:", bcrypt.compare.toString());
+        console.log("Largo hash recibido:", cliente.password.length);
+        console.log("Hash recibido:", cliente.password);
+
         // Comparar contraseña
         const coincide = await bcrypt.compare(password, cliente.password);
 
-console.log("Resultado de compare:", coincide);
+        console.log("Resultado de compare:", coincide);
         if (!coincide) {
             return res.status(401).json({ message: "Correo o contraseña incorrectos." });
         }
