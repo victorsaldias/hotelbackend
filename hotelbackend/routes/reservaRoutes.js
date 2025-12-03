@@ -7,6 +7,7 @@ import {
     traerHistorialReservas,
     modificarReservaController,
     modificarHabitacionReservaController,
+    cambiarEstadoReservaController
 
 } from '../controllers/reservaController.js';
 
@@ -32,5 +33,8 @@ router.put('/:idReserva', modificarReservaController);
 
 //Modificar habitacion de una reserva
 router.put('/habitacion/:idReserva', modificarHabitacionReservaController);
+
+router.put("/cambiar-estado/:idReserva", cambiarEstadoReservaController);
+
 
 export default router;

@@ -57,22 +57,24 @@ async function cargarReservas() {
     }
 }
 
+const estadosReserva = {
+    1: "Pendiente",
+    2: "Confirmada",
+    3: "Cancelada"
+};
 
-
-function renderTablaReservas(reservas) {
+function renderTablaReservas(lista) {
 
     const tbody = document.getElementById("listaReservas");
     tbody.innerHTML = "";
 
-    reservas.forEach(r => {
+    lista.forEach(r => {
+        const entrada = r.fechaInicio.split("T")[0];
+        const salida = r.fechaFin.split("T")[0];
+        const estado = estadosReserva[r.idEstadoReserva] || "Desconocido";
 
-        const numeroHab = r.numeroHabitacion ?? "-";
-        const estado = r.idEstadoReserva == 1 ? "Pendiente" :
-                       r.idEstadoReserva == 2 ? "Confirmada" :
-                       r.idEstadoReserva == 3 ? "Cancelada" : "-";
 
-        const entrada = r.fechaInicio ? r.fechaInicio.split("T")[0] : "-";
-        const salida = r.fechaFin ? r.fechaFin.split("T")[0] : "-";
+        const numeroHab = r.numeroHabitacion ?? r.habitacion ?? r.idHabitacion;
 
         const tr = document.createElement("tr");
 
@@ -85,14 +87,21 @@ function renderTablaReservas(reservas) {
             <td>${salida}</td>
             <td>$${r.total}</td>
             <td>${estado}</td>
+
+            <td style="text-align:center;">
+                <button class="btn-confirmar" onclick="cambiarEstado(${r.idReserva}, 2)">
+                    ✔ Confirmar
+                </button>
+
+                <button class="btn-cancelar" onclick="cambiarEstado(${r.idReserva}, 3)">
+                    ✖ Cancelar
+                </button>
+            </td>
         `;
 
         tbody.appendChild(tr);
     });
 }
-
-
-
 function filtrarReservas() {
 
     const texto = document.getElementById("buscarReserva").value.toLowerCase().trim();
@@ -343,3 +352,27 @@ function filtrarClientesSelect() {
         select.appendChild(option);
     }
 }
+async function cambiarEstado(idReserva, nuevoEstado) {
+    try {
+        const res = await fetch(`http://localhost:3000/api/reservas/cambiar-estado/${idReserva}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ idEstadoReserva: nuevoEstado })
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+            return Swal.fire("Error", data.error, "error");
+        }
+
+        Swal.fire("Listo", data.msg, "success");
+
+        cargarReservas(); // Recargar tabla
+
+    } catch (err) {
+        console.error(err);
+        Swal.fire("Error", "No se pudo cambiar el estado", "error");
+    }
+}
+

@@ -199,3 +199,15 @@ export async function modificarHabitacionDeReserva(idReserva, nuevaHabitacion) {
 
     await asignarHabitacion(idReserva, nuevaHabitacion);
 }
+
+export async function cambiarEstadoReserva(idReserva, idEstadoReserva) {
+    const pool = await getConnection();
+    await pool.request()
+        .input("idReserva", idReserva)
+        .input("estado", idEstadoReserva)
+        .query(`
+            UPDATE reserva
+            SET idEstadoReserva = @estado
+            WHERE idReserva = @idReserva
+        `);
+}

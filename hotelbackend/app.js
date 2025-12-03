@@ -79,6 +79,21 @@ app.get("/api/test", async (req, res) => {
     }
 });
 
+app.get("/api/test-mail", async (req, res) => {
+    try {
+        await transporter.sendMail({
+            from: `"Hotel Arellano" <${process.env.EMAIL_USER}>`,
+            to: "TUCORREO@gmail.com",
+            subject: "TEST HOTEL",
+            text: "El correo funciona!"
+        });
+        res.send("CORREO ENVIADO OK");
+    } catch (err) {
+        console.log(err);
+        res.send(err.message);
+    }
+});
+
 app.use("/", router);
 app.use("/api/habitaciones", habitacionRoutes);
 app.use("/api/clientes", clienteRoutes);

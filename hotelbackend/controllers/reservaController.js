@@ -6,7 +6,8 @@ import {
     verHistorialReserva,
     modificarReserva,
     modificarHabitacionDeReserva,
-    guardarAcompaniante              
+    guardarAcompaniante,
+    cambiarEstadoReserva           
 } from "../model/reservaModel.js";
 
 /* ============================================================
@@ -129,4 +130,17 @@ export async function modificarHabitacionReservaController(req, res) {
     }
 }
 
+export const cambiarEstadoReservaController = async (req, res) => {
+    try {
+        const { idReserva } = req.params;
+        const { idEstadoReserva } = req.body;
 
+        const result = await cambiarEstadoReserva(idReserva, idEstadoReserva);
+
+        return res.json({ msg: "Estado actualizado correctamente" });
+
+    } catch (error) {
+        console.error("Error cambiando estado:", error);
+        res.status(500).json({ error: "Error interno del servidor" });
+    }
+};
