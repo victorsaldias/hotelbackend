@@ -6,7 +6,8 @@ import {
     cancelarReservaController,
     traerHistorialReservas,
     modificarReservaController,
-    modificarHabitacionReservaController
+    modificarHabitacionReservaController,
+
 } from '../controllers/reservaController.js';
 
 const router = express.Router();    
@@ -31,6 +32,5 @@ router.put('/:idReserva', modificarReservaController);
 
 //Modificar habitacion de una reserva
 router.put('/habitacion/:idReserva', modificarHabitacionReservaController);
-
 
 export default router;
