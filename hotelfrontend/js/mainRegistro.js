@@ -21,7 +21,7 @@ async function cargarRegiones() {
         region.innerHTML = `<option value="">Seleccionar región...</option>`;
 
         regiones.forEach(r => {
-            region.innerHTML += `<option value="${r.idRegion}">${r.nombreRegion}</option>`;
+            region.innerHTML += `<option value="${r.idRegion}">${r.nombre}</option>`;
         });
     } catch (e) {
         alert("Error al cargar regiones.");

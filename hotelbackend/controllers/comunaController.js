@@ -1,4 +1,7 @@
-import { obtenerComunasPorProvincia } from "../model/comunaModel.js";
+import { obtenerComunasPorProvincia,
+    obtenerTodasLasComunasBD,
+    obtenerComunaPorIdDB
+ } from "../model/comunaModel.js";
 
 export async function listarComunasPorProvincia(req, res) {
     try {
@@ -9,3 +12,30 @@ export async function listarComunasPorProvincia(req, res) {
         res.status(500).json({ message: error.message });
     }
 }
+
+// Obtener TODAS las comunas
+export const obtenerTodasLasComunas = async (req, res) => {
+  try {
+    const comunas = await obtenerTodasLasComunasBD() // método abajo
+    res.status(200).json(comunas);
+  } catch (error) {
+    res.status(500).json({ message: "Error al obtener comunas" });
+  }
+};
+
+export const obtenerComunaPorId = async (req, res) => {
+    try {
+        const { idComuna } = req.params;
+
+        const comuna = await obtenerComunaPorIdDB(idComuna);
+
+        if (!comuna)
+            return res.status(404).json({ message: "Comuna no encontrada" });
+
+        res.json(comuna);
+
+    } catch (error) {
+        console.error("ERROR obtener comuna:", error);
+        res.status(500).json({ message: "Error interno" });
+    }
+};

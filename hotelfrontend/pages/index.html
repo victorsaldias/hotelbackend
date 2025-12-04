@@ -86,7 +86,19 @@
                                     <li class="active"><a href="./index.html">Inicio</a></li>
                                     <li><a href="./rooms.html">Habitaciones</a></li>
                                     <li><a href="./about.html">Sobre Nosotros</a></li>
-                                    <li id="misReservasLink" style="display:none;">
+
+                                    <!-- Avatar de usuario -->
+                                    <li class="nav-item user-menu">
+                                        <div id="userAvatar" class="user-avatar">
+                                            <i class="fa fa-user"></i>
+                                        </div>
+
+                                        <div id="userDropdown" class="user-dropdown hidden">
+                                            <a href="mi-perfil.html">Mi Perfil</a>
+                                            <a href="mis-reservas.html">Mis Reservas</a>
+                                            <a id="btnLogout">Cerrar Sesión</a>
+                                        </div>
+                                    </li>
 
                                 </ul>
                             </nav>
@@ -101,156 +113,157 @@
     </header>
 
     <section class="hero spad set-bg" data-setbg="../img/hero.jpg">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
 
-                <div class="hero__text">
-                    <h5>BIENVENIDO A HOTEL ARELLANO</h5>
-                    <h2>Vive unas vacaciones inolvidables.</h2>
-                </div>
+                    <div class="hero__text">
+                        <h5>BIENVENIDO A HOTEL ARELLANO</h5>
+                        <h2>Vive unas vacaciones inolvidables.</h2>
+                    </div>
 
-                <form action="#" class="filter__form">
-                    <div class="filter__form__item filter__form__item--search">
-                        <p>Sucursal</p>
+                    <form action="#" class="filter__form">
+                        <div class="filter__form__item filter__form__item--search">
+                            <p>Sucursal</p>
 
-                        <div class="filter__form__input" style="position: relative;">
+                            <div class="filter__form__input" style="position: relative;">
 
-                            <select id="sucursalSelect" class="form-control"
-                                style="width:100%; height:48px; border:none; padding-left:15px; 
-                                       background:#fff; color:#000; appearance:none; 
-                                       -webkit-appearance:none; -moz-appearance:none;">
-                                <option value="">Cargando sucursales...</option>
-                            </select>
+                                <select id="sucursalSelect" class="form-control"
+                                    style="width:100%; height:48px; border:none; padding-left:15px; 
+                                           background:#fff; color:#000; appearance:none; 
+                                           -webkit-appearance:none; -moz-appearance:none;">
+                                    <option value="">Cargando sucursales...</option>
+                                </select>
 
-                            <span class="icon_search"
-                                style="position:absolute; right:15px; top:50%; 
-                                       transform:translateY(-50%); pointer-events:none;">
-                            </span>
+                                <span class="icon_search"
+                                    style="position:absolute; right:15px; top:50%; 
+                                           transform:translateY(-50%); pointer-events:none;">
+                                </span>
 
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="filter__form__item">
-                        <p>Fecha de Entrada</p>
-                        <div class="filter__form__datepicker">
-                            <span class="icon_calendar"></span>
-                            <input type="text" class="datepicker_pop check__in">
-                            <i class="arrow_carrot-down"></i>
+                        <div class="filter__form__item">
+                            <p>Fecha de Entrada</p>
+                            <div class="filter__form__datepicker">
+                                <span class="icon_calendar"></span>
+                                <input type="text" class="datepicker_pop check__in">
+                                <i class="arrow_carrot-down"></i>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="filter__form__item">
-                        <p>Fecha de Salida</p>
-                        <div class="filter__form__datepicker">
-                            <span class="icon_calendar"></span>
-                            <input type="text" class="datepicker_pop check__out">
-                            <i class="arrow_carrot-down"></i>
+                        <div class="filter__form__item">
+                            <p>Fecha de Salida</p>
+                            <div class="filter__form__datepicker">
+                                <span class="icon_calendar"></span>
+                                <input type="text" class="datepicker_pop check__out">
+                                <i class="arrow_carrot-down"></i>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="filter__form__item filter__form__item--select">
-                        <p>Huéspedes</p>
-                    <div class="filter__form__select">
-                        <span class="icon_group"></span>
-                            <select id="huespedesSelect">
-                                <option value="1">1 Huésped</option>
-                                <option value="2">2 Huéspedes</option>
-                                <option value="3">3 Huéspedes</option>
-                                <option value="4">4 Huéspedes</option>
-                                <option value="5">5 Huéspedes</option>
-                            </select>
-                    </div>
-                <div id="pasarelaAcompanantes" style="margin-top:20px;">
-    <div class="stepper-container" id="stepsPills"></div>
-    <div id="stepsContent"></div>
-</div>
-</div>
-                    <button type="submit">Buscar Habitacion</button>
+                        <div class="filter__form__item filter__form__item--select">
+                            <p>Huéspedes</p>
+                            <div class="filter__form__select">
+                                <span class="icon_group"></span>
+                                <select id="huespedesSelect">
+                                    <option value="1">1 Huésped</option>
+                                    <option value="2">2 Huéspedes</option>
+                                    <option value="3">3 Huéspedes</option>
+                                    <option value="4">4 Huéspedes</option>
+                                    <option value="5">5 Huéspedes</option>
+                                </select>
+                            </div>
 
-                </form>
+                            <div id="pasarelaAcompanantes" style="margin-top:20px;">
+                                <div class="stepper-container" id="stepsPills"></div>
+                                <div id="stepsContent"></div>
+                            </div>
+                        </div>
 
-            </div>
-        </div>
-    </div>
-</section>
+                        <button type="submit">Buscar Habitacion</button>
 
+                    </form>
 
-   <section class="services spad">
-    <div class="container">
-        <div class="row">
-
-            <div class="col-lg-4 col-md-4 col-sm-6">
-                <div class="services__item">
-                    <img src="../img/services/services-1.png" alt="">
-                    <h4>Wi-Fi Gratis</h4>
-                    <p>Conexión de alta velocidad disponible en todas las habitaciones y áreas comunes del hotel.</p>
-                </div>
-            </div>
-
-            <div class="col-lg-4 col-md-4 col-sm-6">
-                <div class="services__item">
-                    <img src="../img/services/services-2.png" alt="">
-                    <h4>Piscina Premium</h4>
-                    <p>Piscina climatizada con zona de reposo, toallas incluidas y áreas para familias.</p>
-                </div>
-            </div>
-
-            <div class="col-lg-4 col-md-4 col-sm-6">
-                <div class="services__item">
-                    <img src="../img/services/services-3.png" alt="">
-                    <h4>Cafetera en la Habitación</h4>
-                    <p>Todas las habitaciones incluyen cafetera eléctrica con cápsulas de cortesía.</p>
-                </div>
-            </div>
-
-            <div class="col-lg-4 col-md-4 col-sm-6">
-                <div class="services__item">
-                    <img src="../img/services/services-4.png" alt="">
-                    <h4>Bar & Vinos</h4>
-                    <p>Bar disponible hasta las 23:00 hrs con carta de vinos seleccionados y coctelería clásica.</p>
-                </div>
-            </div>
-
-            <div class="col-lg-4 col-md-4 col-sm-6">
-                <div class="services__item">
-                    <img src="../img/services/services-5.png" alt="">
-                    <h4>Televisión HD</h4>
-                    <p>TV de alta definición con cable premium y acceso a aplicaciones de streaming.</p>
-                </div>
-            </div>
-
-            <div class="col-lg-4 col-md-4 col-sm-6">
-                <div class="services__item">
-                    <img src="../img/services/services-6.png" alt="">
-                    <h4>Restaurante</h4>
-                    <p>Restaurante con menú variado, desayunos incluidos y opciones vegetarianas/veganas.</p>
-                </div>
-            </div>
-
-        </div>
-    </div>
-</section>
-
-   <section class="home-room spad">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="section-title">
-                    <h5>NUESTRAS HABITACIONES</h5>
-                    <h2>Explora Nuestro Hotel</h2>
                 </div>
             </div>
         </div>
-    </div>
+    </section>
 
-    <div class="container-fluid">
-    <div id="habitacionesHome" class="row"></div>
-</div>
-    </div>
-</section>
 
-<footer class="footer set-bg" data-setbg="../img/footer-bg.jpg">
+    <section class="services spad">
+        <div class="container">
+            <div class="row">
+
+                <div class="col-lg-4 col-md-4 col-sm-6">
+                    <div class="services__item">
+                        <img src="../img/services/services-1.png" alt="">
+                        <h4>Wi-Fi Gratis</h4>
+                        <p>Conexión de alta velocidad disponible en todas las habitaciones y áreas comunes del hotel.</p>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-md-4 col-sm-6">
+                    <div class="services__item">
+                        <img src="../img/services/services-2.png" alt="">
+                        <h4>Piscina Premium</h4>
+                        <p>Piscina climatizada con zona de reposo, toallas incluidas y áreas para familias.</p>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-md-4 col-sm-6">
+                    <div class="services__item">
+                        <img src="../img/services/services-3.png" alt="">
+                        <h4>Cafetera en la Habitación</h4>
+                        <p>Todas las habitaciones incluyen cafetera eléctrica con cápsulas de cortesía.</p>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-md-4 col-sm-6">
+                    <div class="services__item">
+                        <img src="../img/services/services-4.png" alt="">
+                        <h4>Bar & Vinos</h4>
+                        <p>Bar disponible hasta las 23:00 hrs con carta de vinos seleccionados y coctelería clásica.</p>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-md-4 col-sm-6">
+                    <div class="services__item">
+                        <img src="../img/services/services-5.png" alt="">
+                        <h4>Televisión HD</h4>
+                        <p>TV de alta definición con cable premium y acceso a aplicaciones de streaming.</p>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-md-4 col-sm-6">
+                    <div class="services__item">
+                        <img src="../img/services/services-6.png" alt="">
+                        <h4>Restaurante</h4>
+                        <p>Restaurante con menú variado, desayunos incluidos y opciones vegetarianas/veganas.</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section class="home-room spad">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="section-title">
+                        <h5>NUESTRAS HABITACIONES</h5>
+                        <h2>Explora Nuestro Hotel</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container-fluid">
+            <div id="habitacionesHome" class="row"></div>
+        </div>
+    </section>
+
+    <footer class="footer set-bg" data-setbg="../img/footer-bg.jpg">
         <div class="container">
             <p style="color:white; text-align:center; margin-top:20px;">
                 © 2025 Gestion Hotelera Digital — Todos los derechos reservados.

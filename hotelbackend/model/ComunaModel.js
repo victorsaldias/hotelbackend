@@ -19,3 +19,28 @@ export async function obtenerComunasPorProvincia(idProvincia) {
 
     return result.recordset;
 }
+
+export async function obtenerTodasLasComunasBD() {
+  const pool = await getConnection();
+  const result = await pool.request().query("SELECT * FROM comuna");
+  return result.recordset;
+}
+
+export async function obtenerComunaPorIdDB(idComuna) {
+    const pool = await getConnection();
+
+    const result = await pool.request()
+        .input("idComuna", idComuna)
+        .query(`
+            SELECT 
+                c.idComuna, c.nombreComuna,
+                p.idProvincia,
+                r.idRegion
+            FROM Comuna c
+            INNER JOIN Provincia p ON c.idProvincia = p.idProvincia
+            INNER JOIN Region r ON p.idRegion = r.idRegion
+            WHERE c.idComuna = @idComuna
+        `);
+
+    return result.recordset[0];
+}

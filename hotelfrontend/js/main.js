@@ -26,6 +26,7 @@ function convertirFecha(texto) {
 
     return new Date(año, meses[mesTexto], dia);
 }
+
 /* --------------------------
       Preloader
 -------------------------- */
@@ -273,7 +274,6 @@ if (filterForm) {
         
         e.preventDefault();
         
-
         const idSucursal = document.getElementById("sucursalSelect").value;
         const fechaInicioTexto = document.querySelector(".check__in").value;
         const fechaFinTexto = document.querySelector(".check__out").value;
@@ -297,12 +297,14 @@ if (filterForm) {
         // === FORMATO CORRECTO PARA BACKEND ===
         const fechaInicio = formatearFechaConHora(fechaInicioDate, "14:00:00");
         const fechaFin = formatearFechaConHora(fechaFinDate, "12:00:00");
-console.log("FECHAS QUE SE ENVIAN →", {
-    fechaInicio,
-    fechaFin,
-    tipoInicio: typeof fechaInicio,
-    tipoFin: typeof fechaFin
-});
+
+        console.log("FECHAS QUE SE ENVIAN →", {
+            fechaInicio,
+            fechaFin,
+            tipoInicio: typeof fechaInicio,
+            tipoFin: typeof fechaFin
+        });
+
         try {
             const response = await fetch("http://localhost:3000/api/habitaciones/buscar", {
                 method: "POST",
@@ -326,16 +328,21 @@ console.log("FECHAS QUE SE ENVIAN →", {
         }
     });
 }
+
+
+/* --------------------------
+      HOME: mostrar tipos de habitación
+-------------------------- */
 document.addEventListener("DOMContentLoaded", async () => {
     const container = document.getElementById("habitacionesHome");
     if (!container) return;
+
     try {
         const res = await fetch("http://localhost:3000/api/habitaciones/tipos-habitacion");
         const tipos = await res.json();
 
         container.innerHTML = ""; // limpiar
 
-        // Mapa de imágenes por ID (1 → 4)
         const imagenes = {
             1: "../img/home-room/hr-1.jpg",
             2: "../img/home-room/hr-2.jpg",
@@ -344,29 +351,27 @@ document.addEventListener("DOMContentLoaded", async () => {
         };
 
         tipos.forEach(tipo => {
-
-            // Elegir imagen según idTipoHabitacion
             const imagen = imagenes[tipo.idTipoHabitacion] || "../img/home-room/hr-1.jpg";
-container.innerHTML += `
-    <div class="col-lg-3 col-md-6 col-sm-6 p-0">
-        <div class="home__room__item set-bg" data-setbg="${imagen}">
-            <div class="home__room__title">
-                <h4>${tipo.nombre}</h4>
-                <h2><sup>$</sup>${tipo.precio}<span>/día</span></h2>
-            </div>
+            container.innerHTML += `
+                <div class="col-lg-3 col-md-6 col-sm-6 p-0">
+                    <div class="home__room__item set-bg" data-setbg="${imagen}">
+                        <div class="home__room__title">
+                            <h4>${tipo.nombre}</h4>
+                            <h2><sup>$</sup>${tipo.precio}<span>/día</span></h2>
+                        </div>
 
-            <div class="home__room__footer-right">
-                <button class="btn btn-warning ver-detalles-btn"
-                        data-info='${JSON.stringify(tipo)}'>
-                    Ver Detalles
-                </button>
-            </div>
-        </div>
-    </div>
-`;
+                        <div class="home__room__footer-right">
+                            <button class="btn btn-warning ver-detalles-btn"
+                                    data-info='${JSON.stringify(tipo)}'>
+                                Ver Detalles
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
         });
 
-        // Aplicar background dinámico
+        // Aplicar background dinámico a los nuevos elementos
         document.querySelectorAll(".set-bg").forEach(el => {
             const bg = el.getAttribute("data-setbg");
             el.style.backgroundImage = `url(${bg})`;
@@ -387,12 +392,64 @@ container.innerHTML += `
     }
 });
 
+
+/* --------------------------
+      Mostrar link "Mis Reservas" si corresponde
+-------------------------- */
 document.addEventListener("DOMContentLoaded", () => {
     const clienteId = localStorage.getItem("clienteId");
     const link = document.getElementById("misReservasLink");
 
     if (clienteId && link) {
-        link.style.display = "block";  // mostrar
+        link.style.display = "block";
     }
 });
+
+
+/* --------------------------
+      Avatar de usuario (dropdown)
+-------------------------- */
+document.addEventListener("DOMContentLoaded", () => {
+    const userMenuLi  = document.querySelector(".user-menu");
+    const userAvatar  = document.getElementById("userAvatar");
+    const userDropdown = document.getElementById("userDropdown");
+    const btnLogout   = document.getElementById("btnLogout");
+
+    // Si no existen en este HTML, no hacemos nada
+    if (!userMenuLi || !userAvatar || !userDropdown || !btnLogout) return;
+
+    // Aseguramos que parta oculto
+    userDropdown.classList.add("hidden");
+
+    // Abrir / cerrar dropdown al click en el avatar
+    userAvatar.addEventListener("click", (e) => {
+        e.stopPropagation(); // para que no se cierre inmediatamente
+        userDropdown.classList.toggle("hidden");
+    });
+
+    // Cerrar si se hace click fuera
+    document.addEventListener("click", (e) => {
+        if (!userMenuLi.contains(e.target)) {
+            userDropdown.classList.add("hidden");
+        }
+    });
+
+    // Cerrar sesión desde el dropdown
+    btnLogout.addEventListener("click", (e) => {
+        e.preventDefault();
+
+        // Si ya tienes esta función global, la reutilizamos
+        if (typeof logoutCliente === "function") {
+            logoutCliente();
+        } else {
+            // fallback por si acaso
+            localStorage.removeItem("usuarioCliente");
+            localStorage.clear(); 
+    sessionStorage.clear(); 
+            window.location.reload();
+        }
+    });
+});
+
+
 })(jQuery);

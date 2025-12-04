@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="Perfil de Cliente - Hotel Arellano">
+    <meta name="keywords" content="Hotel, Perfil, Cliente, Reservas">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Mi Perfil | Hotel Arellano</title>
+
+    <link rel="stylesheet" href="../css/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="../css/font-awesome.min.css" type="text/css">
+    <link rel="stylesheet" href="../css/elegant-icons.css" type="text/css">
+    <link rel="stylesheet" href="../css/nice-select.css" type="text/css">
+    <link rel="stylesheet" href="../css/jquery-ui.min.css" type="text/css">
+    <link rel="stylesheet" href="../css/owl.carousel.min.css" type="text/css">
+    <link rel="stylesheet" href="../css/slicknav.min.css" type="text/css">
+    <link rel="stylesheet" href="../css/style.css" type="text/css">
+
+    <style>
+        .profile-wrapper {
+            padding: 60px 0;
+        }
+        .profile-card {
+            background: #111;
+            border-radius: 12px;
+            padding: 30px;
+            color: #fff;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .profile-card h3 {
+            margin-bottom: 5px;
+        }
+        .profile-card small {
+            color: #aaa;
+        }
+        .form-label {
+            color: #ddd;
+        }
+        .form-control {
+            background: #1b1b1b;
+            border: 1px solid #333;
+            color: #fff;
+        }
+        .form-control:focus {
+            background: #1f1f1f;
+            border-color: #e6c068;
+            box-shadow: none;
+        }
+        .btn-save {
+            background: #e6c068;
+            border: none;
+            color: #000;
+            font-weight: 600;
+        }
+        .btn-save:hover {
+            background: #f1d487;
+            color: #000;
+        }
+        .profile-meta {
+            font-size: 14px;
+            color: #bbb;
+        }
+        .profile-avatar-circle {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: #e6c068;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #000;
+            font-size: 30px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- LOADER -->
+    <div id="preloder">
+        <div class="loader"></div>
+    </div>
+
+    <!-- OFFCANVAS MENU -->
+    <div class="offcanvas-menu-overlay"></div>
+    <div class="offcanvas-menu-wrapper">
+        <div class="offcanvas__logo">
+            <a href="./index.html"><img src="../img/logo.png" alt=""></a>
+        </div>
+        <div id="mobile-menu-wrap"></div>
+
+        <div class="offcanvas__widget">
+            <ul>
+                <li><span class="icon_phone"></span> (123) 456-78-910</li>
+            </ul>
+        </div>
+
+        <div class="offcanvas__auth">
+            <ul>
+                <li><a href="login.html" id="mobileLoginBtn">Login</a></li>
+                <li><a href="registro.html" id="mobileRegisterBtn">Registrarse</a></li>
+                <li><a href="#" id="mobileLogoutBtn" style="display:none;">Cerrar Sesión</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- HEADER (igual que index) -->
+    <header class="header">
+        <div class="header__top">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-7">
+                        <ul class="header__top__widget">
+                            <li><span class="icon_phone"></span> (123) 456-78-910</li>
+                        </ul>
+                    </div>
+                    <div class="col-lg-5">
+                        <div class="header__top__right">
+                            <div class="header__top__auth">
+                                <ul>
+                                    <li><a href="login.html" id="loginBtn">Login</a></li>
+                                    <li><a href="registro.html" id="registerBtn">Registrarse</a></li>
+                                    <li><a href="#" id="logoutBtn" onclick="logoutCliente()" style="display:none;">Cerrar Sesión</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="header__nav__option">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-2">
+                        <div class="header__logo">
+                            <a href="./index.html"><img src="../img/logo.png" alt=""></a>
+                        </div>
+                    </div>
+                    <div class="col-lg-10">
+                        <div class="header__nav">
+                            <nav class="header__menu">
+                                <ul class="menu__class">
+                                    <li><a href="./index.html">Inicio</a></li>
+                                    <li><a href="./rooms.html">Habitaciones</a></li>
+                                    <li><a href="./about.html">Sobre Nosotros</a></li>
+                                    <li><a href="./mis-reservas.html">Mis Reservas</a></li>
+
+                                    <!-- Avatar usuario -->
+                                    <li class="nav-item user-menu">
+                                        <div id="userAvatar" class="user-avatar">
+                                            <i class="fa fa-user"></i>
+                                        </div>
+
+                                        <div id="userDropdown" class="user-dropdown hidden">
+                                            <a href="mi-perfil.html">Mi Perfil</a>
+                                            <a href="mis-reservas.html">Mis Reservas</a>
+                                            <a id="btnLogout">Cerrar Sesión</a>
+                                        </div>
+                                    </li>
+
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+                <div class="canvas__open">
+                    <span class="fa fa-bars"></span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- CONTENIDO PERFIL -->
+    <section class="profile-wrapper">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-7">
+                    <div class="profile-card">
+
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="profile-avatar-circle" id="profileAvatarCircle">
+                                <span id="profileAvatarInitial">C</span>
+                            </div>
+                            <div class="ms-3">
+                                <h3 id="profileNombreCompleto">Mi Perfil</h3>
+                                <small class="profile-meta">
+                                    Cliente desde <span id="profileClienteDesde">-</span>
+                                </small>
+                            </div>
+                        </div>
+
+                        <hr style="border-color:#333;">
+
+                        <form id="perfilForm">
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="rut" class="form-label">RUT</label>
+                                    <input type="text" id="rut" class="form-control" >
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label for="correo" class="form-label">Correo electrónico</label>
+                                    <input type="email" id="correo" class="form-control">
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="nombre" class="form-label">Nombre</label>
+                                    <input type="text" id="nombre" class="form-control">
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label for="apellido" class="form-label">Apellido</label>
+                                    <input type="text" id="apellido" class="form-control">
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="telefono" class="form-label">Teléfono</label>
+                                    <input type="text" id="telefono" class="form-control">
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label for="direccion" class="form-label">Dirección</label>
+                                    <input type="text" id="direccion" class="form-control">
+                                </div>
+                            </div>
+<div class="row">
+    <div class="col-md-6 mb-3">
+        <label for="region" class="form-label">Región</label>
+        <select id="region" class="form-control" data-nice="false"></select>
+    </div>
+
+    <div class="col-md-6 mb-3">
+        <label for="provincia" class="form-label">Provincia</label>
+        <select id="provincia" class="form-control" data-nice="false"></select>
+    </div>
+</div>
+                            <div class="row">
+    <div class="col-md-6 mb-3">
+        <label for="comuna" class="form-label">Comuna</label>
+        <select id="comuna" class="form-control" data-nice="false"></select>
+    </div>
+</div>
+
+    <button type="button" id="btnEditar" class="btn btn-warning" style="font-weight:600;">
+        Editar
+    </button>
+
+    <button type="submit" id="btnGuardar" class="btn btn-save" disabled style="opacity:0.5;">
+        Guardar cambios
+    </button>
+
+</div>
+
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer set-bg" data-setbg="../img/footer-bg.jpg">
+        <div class="container">
+            <p style="color:white; text-align:center; margin-top:20px;">
+                © 2025 Gestion Hotelera Digital — Todos los derechos reservados.
+            </p>
+        </div>
+    </footer>
+
+    <!-- JS -->
+    <script src="../js/jquery-3.3.1.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/jquery.nice-select.min.js"></script>
+    <script src="../js/jquery-ui.min.js"></script>
+    <script src="../js/jquery.slicknav.js"></script>
+    <script src="../js/owl.carousel.min.js"></script>
+    <script src="../js/main.js"></script>
+    <script src="../js/authStatus.js"></script>
+    <script src="../js/authGuardCliente.js"></script>
+    <script src="../js/protegerReservas.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="../js/mi-perfil.js"></script>
+
+</body>
+</html>

@@ -3533,3 +3533,48 @@ ol {
 .btn-toggle-vista:hover {
     background: #ffcb4d;
 }
+.user-menu { position: relative; }
+.user-avatar {
+    width: 38px;
+    height: 38px;
+    background: #e6c068;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #000;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.user-avatar:hover { background: #f1d487; }
+.user-dropdown {
+    position: absolute;
+    right: 0;
+    margin-top: 10px;
+    width: 180px;
+    background: #111;
+    border-radius: 8px;
+    border: 1px solid #222;
+    overflow: hidden;
+    z-index: 9999;
+}
+.user-dropdown a {
+    display: block;
+    padding: 10px 14px;
+    color: #f1f1f1;
+    text-decoration: none;
+    font-size: 14px;
+    border-bottom: 1px solid #222;
+}
+.user-dropdown a:last-child { border-bottom: none; }
+.user-dropdown a:hover { background: #222; color: #e6c068; }
+.hidden { display: none !important; }
+
+
+.form-control[disabled] {
+    background-color: #1b1b1b !important; /* mismo fondo que los inputs normales */
+    color: #fff !important;               /* texto blanco igual que los demás */
+    border: 1px solid #333 !important;    /* mismo borde */
+    opacity: 1 !important;                /* SIN opacidad apagada */
+    cursor: not-allowed;                  /* cursor de bloqueado */
+}

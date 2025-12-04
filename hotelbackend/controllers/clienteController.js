@@ -4,7 +4,9 @@ import {
   insertarCliente,
   obtenerClientePorRut,
   actualizarCliente,
-  obtenerTodosClientesDB
+  obtenerTodosClientesDB,
+  actualizarClientePorIdDB,
+  obtenerClientePorId
 } from "../model/clienteModel.js";
 
 function limpiarRut(rut) {
@@ -135,8 +137,6 @@ export const obtenerCliente = async (req, res) => {
   }
 };
 
-
-
 export const modificarCliente = async (req, res) => {
   try {
       const rut = req.params.rut;
@@ -165,8 +165,6 @@ export const modificarCliente = async (req, res) => {
   }
 };
 
-
-
 export const obtenerTodosLosClientes = async (req, res) => {
   try {
       const clientes = await obtenerTodosClientesDB();
@@ -175,6 +173,56 @@ export const obtenerTodosLosClientes = async (req, res) => {
   } catch (error) {
       return res.status(500).json({
         message: "Error al obtener clientes",
+        error: error.message
+      });
+  }
+};
+
+export const obtenerClientePorIdController = async (req, res) => {
+  try {
+      const { idCliente } = req.params;
+      const cliente = await obtenerClientePorId(idCliente);
+
+      if (!cliente) {
+          return res.status(404).json({ message: "Cliente no encontrado" });
+      }
+
+      return res.status(200).json(cliente);
+
+  } catch (error) {
+      console.error("ERROR obtenerClientePorId:", error);   // 👈 AGREGA ESTO
+      return res.status(500).json({
+        message: "Error al obtener cliente por ID",
+        error: error.message
+      });
+  }
+};
+
+
+export const modificarClientePorId = async (req, res) => {
+  try {
+      const { idCliente } = req.params;
+      const datosActualizados = req.body;
+
+      // Si llega password nueva, la encriptamos
+      if (datosActualizados.password) {
+          datosActualizados.password = await bcrypt.hash(datosActualizados.password, 10);
+      }
+
+      const clienteActualizado = await actualizarClientePorIdDB(idCliente, datosActualizados);
+
+      if (!clienteActualizado) {
+          return res.status(404).json({ message: "Cliente no encontrado" });
+      }
+
+      return res.status(200).json({
+        message: "Cliente actualizado exitosamente",
+        cliente: clienteActualizado
+      });
+
+  } catch (error) {
+      return res.status(500).json({
+        message: "Error al actualizar cliente por ID",
         error: error.message
       });
   }
