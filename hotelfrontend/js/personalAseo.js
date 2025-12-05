@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:3000/api/limpieza/habitaciones";
+const API_URL = "https://hotelbackend-hzc4.onrender.com/api/limpieza/habitaciones";
 
 function obtenerEmpleadoActual() {
     const empleadoId = localStorage.getItem('empleadoId');
@@ -141,7 +141,7 @@ async function iniciarLimpieza(idHabitacion, numeroHabitacion) {
     });
 
     try {
-        const res = await fetch(`http://localhost:3000/api/limpieza/iniciar`, {
+        const res = await fetch(`https://hotelbackend-hzc4.onrender.com/api/limpieza/iniciar`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -208,7 +208,7 @@ async function terminarLimpieza(idHabitacion, numeroHabitacion) {
     });
 
     try {
-        const res = await fetch(`http://localhost:3000/api/limpieza/terminar`, {
+        const res = await fetch(`https://hotelbackend-hzc4.onrender.com/api/limpieza/terminar`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -271,7 +271,7 @@ function cerrarSesion() {
             localStorage.removeItem('empleadoRol');
             localStorage.removeItem('empleadoIdSucursal'); 
             
-            window.location.href = "login-aseo.html";
+            window.location.href = "./pages/login-aseo.html";
         }
     });
 }

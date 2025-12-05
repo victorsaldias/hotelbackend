@@ -219,7 +219,7 @@ btn.addEventListener("click", async () => {
     /* ------------------ PRESENCIAL ------------------ */
     async function enviarReservaPresencial() {
         try {
-            const response = await fetch("http://localhost:3000/api/reservas/completa", {
+            const response = await fetch("https://hotelbackend-hzc4.onrender.com/api/reservas/completa", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -245,7 +245,7 @@ btn.addEventListener("click", async () => {
                 icon: "success",
                 title: "Reserva realizada",
                 text: "Tu reserva quedó registrada."
-            }).then(() => window.location.href = "index.html");
+            }).then(() => window.location.href = "./pages/index.html");
 
         } catch (e) {
             Swal.fire("Error del servidor");
@@ -269,7 +269,7 @@ btn.addEventListener("click", async () => {
         // Guardar reserva completa
         localStorage.setItem("reservaCompleta", JSON.stringify(reserva));
 
-        const response = await fetch("http://localhost:3000/api/webpay/init", {
+        const response = await fetch("https://hotelbackend-hzc4.onrender.com/api/webpay/init", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({})

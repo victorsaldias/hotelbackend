@@ -38,7 +38,8 @@ app.use(cors({
             "http://localhost:5500",
             "http://127.0.0.1:5500",
             "http://localhost:3000",
-            "http://192.168.0.16:5500"
+            "http://192.168.0.16:5500",
+            "https://hotelbackend-hzc4.onrender.com"
         ];
 
         if (!origin || allowedOrigins.includes(origin)) {

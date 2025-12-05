@@ -4,13 +4,13 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     if (!clienteId) {
         Swal.fire("Debes iniciar sesión");
-        return window.location.href = "login.html";
+        return window.location.href = "./pages/login.html";
     }
 
     const container = document.getElementById("reservasContainer");
 
     try {
-        const res = await fetch(`http://localhost:3000/api/reservas/cliente/${clienteId}`);
+        const res = await fetch(`https://hotelbackend-hzc4.onrender.com/api/reservas/cliente/${clienteId}`);
        console.log("RESPONSE STATUS:", res.status);
 const data = await res.json();
 console.log("DATA RECIBIDA:", data);

@@ -49,7 +49,7 @@ async function procesarPago(token) {
     }
 
     // 🔥 ENVIAR PAGO + RESERVA AL BACKEND
-    const response = await fetch("http://localhost:3000/api/webpay/confirmar", {
+    const response = await fetch("https://hotelbackend-hzc4.onrender.com/api/webpay/confirmar", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ token, reserva })
@@ -69,6 +69,6 @@ async function procesarPago(token) {
         text: "Tu reserva se ha guardado correctamente"
     }).then(() => {
         localStorage.removeItem("reservaCompleta");
-        window.location.href = "index.html";
+        window.location.href = "./pages/index.html";
     });
 }

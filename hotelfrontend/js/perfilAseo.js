@@ -1,5 +1,5 @@
-const LOGIN_URL = "../login-aseo.html";
-const API = "http://localhost:3000/api/empleados-admin";
+const LOGIN_URL = "./pages/login-aseo.html";
+const API = "https://hotelbackend-hzc4.onrender.com/api/empleados-admin";
 
 //Obtener empleado actual
 function obtenerEmpleadoActual() {

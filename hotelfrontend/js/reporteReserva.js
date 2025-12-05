@@ -1,4 +1,4 @@
-const API = "http://localhost:3000/api/reservas";
+const API = "https://hotelbackend-hzc4.onrender.com/api/reservas";
 
 async function cargarReservas() {
     try {

@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 async function cargarRegiones() {
     try {
-        const res = await fetch("http://localhost:3000/api/regiones");
+        const res = await fetch("https://hotelbackend-hzc4.onrender.com/api/regiones");
         const regiones = await res.json();
 
         const region = document.getElementById("regRegion");
@@ -32,7 +32,7 @@ async function cargarProvincias(idRegion) {
     if (!idRegion) return;
 
     try {
-        const res = await fetch(`http://localhost:3000/api/provincias/${idRegion}`);
+        const res = await fetch(`https://hotelbackend-hzc4.onrender.com/api/provincias/${idRegion}`);
         const provincias = await res.json();
 
         const provincia = document.getElementById("regProvincia");
@@ -55,7 +55,7 @@ async function cargarComunas(idProvincia) {
     if (!idProvincia) return;
 
     try {
-        const res = await fetch(`http://localhost:3000/api/comunas/${idProvincia}`);
+        const res = await fetch(`https://hotelbackend-hzc4.onrender.com/api/comunas/${idProvincia}`);
         const comunas = await res.json();
 
         const comuna = document.getElementById("regComuna");
@@ -93,7 +93,7 @@ async function registrarCliente(e) {
     };
 
      try {
-        const res = await fetch("http://localhost:3000/api/clientes/web", {
+        const res = await fetch("https://hotelbackend-hzc4.onrender.com/api/clientes/web", {
             method: "POST",
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify(data)
@@ -116,7 +116,7 @@ async function registrarCliente(e) {
             text: "El cliente fue registrado correctamente.",
             confirmButtonText: "Ir al login"
         }).then(() => {
-            window.location.href = "login.html";
+            window.location.href = "./pages/login.html";
         });
 
     } catch (error) {

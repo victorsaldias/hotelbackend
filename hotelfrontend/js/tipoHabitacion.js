@@ -48,7 +48,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     //   Cargar CARACTERÍSTICAS
     // ===============================
     try {
-        const res = await fetch(`http://localhost:3000/api/habitaciones/tipo/${tipo.idTipoHabitacion}/caracteristicas`);
+        const res = await fetch(`https://hotelbackend-hzc4.onrender.com/api/habitaciones/tipo/${tipo.idTipoHabitacion}/caracteristicas`);
         const caracteristicas = await res.json();
 
         const cont = document.getElementById("tipo-caracteristicas");
@@ -70,7 +70,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     //   Cargar SERVICIOS
     // ===============================
     try {
-        const res = await fetch(`http://localhost:3000/api/habitaciones/tipo/${tipo.idTipoHabitacion}/servicios`);
+        const res = await fetch(`https://hotelbackend-hzc4.onrender.com/api/habitaciones/tipo/${tipo.idTipoHabitacion}/servicios`);
         const servicios = await res.json();
 
         const cont = document.getElementById("tipo-servicios");
