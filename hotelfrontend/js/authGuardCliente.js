@@ -4,7 +4,7 @@
     const clienteLogueado = localStorage.getItem("userLogged") === "true";
 
     if (!clienteLogueado) {
-        window.location.href = "/hotelfrontend/pages/login.html";
+        window.location.href = "../pages/login.html";
         return;
     }
 
