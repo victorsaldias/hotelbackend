@@ -14,8 +14,6 @@ function limpiarRut(rut) {
   return rut.replace(/\./g, "").replace(/-/g, "");
 }
 
-import bcrypt from "bcrypt";
-import { obtenerClientePorId, actualizarPassword } from "../model/clienteModel.js";
 
 export async function cambiarPasswordController(req, res) {
     try {
