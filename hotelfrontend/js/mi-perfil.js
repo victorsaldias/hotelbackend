@@ -308,3 +308,63 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 });
+
+// ================================
+// CAMBIO DE CONTRASEÑA
+// ================================
+const modalPw = document.getElementById("modalPassword");
+const btnCambiarPw = document.getElementById("btnCambiarPassword");
+const btnCerrarPw = document.getElementById("btnCerrarModal");
+const btnConfirmarPw = document.getElementById("btnConfirmarCambio");
+
+// Abrir modal
+btnCambiarPw.addEventListener("click", () => {
+    modalPw.style.display = "flex";
+});
+
+// Cerrar modal
+btnCerrarPw.addEventListener("click", () => {
+    modalPw.style.display = "none";
+});
+
+// Confirmar cambio
+btnConfirmarPw.addEventListener("click", async () => {
+    const actual = document.getElementById("pwActual").value.trim();
+    const nueva = document.getElementById("pwNueva").value.trim();
+    const nueva2 = document.getElementById("pwNueva2").value.trim();
+
+    if (!actual || !nueva || !nueva2) {
+        return Swal.fire("Campos vacíos", "Completa todos los campos", "warning");
+    }
+
+    if (nueva !== nueva2) {
+        return Swal.fire("Error", "Las nuevas contraseñas no coinciden", "error");
+    }
+
+    try {
+        const resp = await fetch(
+            `https://hotelbackend-hzc4.onrender.com/api/clientes/cambiar-password/${idCliente}`,
+            {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    passwordActual: actual,
+                    passwordNueva: nueva
+                })
+            }
+        );
+
+        const data = await resp.json();
+
+        if (!resp.ok) {
+            throw new Error(data.message || "No se pudo cambiar la contraseña");
+        }
+
+        Swal.fire("Listo", "Tu contraseña fue cambiada correctamente", "success");
+
+        modalPw.style.display = "none";
+
+    } catch (err) {
+        Swal.fire("Error", err.message, "error");
+    }
+});

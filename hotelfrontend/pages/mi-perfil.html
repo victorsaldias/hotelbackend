@@ -259,6 +259,31 @@
     </button>
 
 </div>
+<hr>
+<button type="button" id="btnCambiarPassword" class="btn btn-danger mt-3">
+    Cambiar Contraseña
+</button>
+
+<!-- MODAL CAMBIO CONTRASEÑA -->
+<div id="modalPassword" class="modal" 
+     style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; 
+            background:rgba(0,0,0,0.8); justify-content:center; align-items:center;">
+    <div style="background:#111; padding:25px; border-radius:10px; width:350px; color:white;">
+        <h4>Cambiar Contraseña</h4>
+
+        <label>Contraseña actual</label>
+        <input type="password" id="pwActual" class="form-control mb-2">
+
+        <label>Nueva contraseña</label>
+        <input type="password" id="pwNueva" class="form-control mb-2">
+
+        <label>Repetir nueva contraseña</label>
+        <input type="password" id="pwNueva2" class="form-control mb-3">
+
+        <button class="btn btn-warning" id="btnConfirmarCambio">Confirmar</button>
+        <button class="btn btn-secondary" id="btnCerrarModal">Cancelar</button>
+    </div>
+</div>
 
                         </form>
 

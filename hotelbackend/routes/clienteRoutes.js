@@ -6,7 +6,8 @@ import {
     modificarCliente,
     obtenerTodosLosClientes,
     obtenerClientePorIdController,
-    modificarClientePorId
+    modificarClientePorId,
+    cambiarPasswordController
 } from "../controllers/clienteController.js";
 
 const router = express.Router();
@@ -16,7 +17,7 @@ router.get("/id/:idCliente", obtenerClientePorIdController);
 router.put("/id/:idCliente", modificarClientePorId);
 
 router.get("/", obtenerTodosLosClientes);
-
+router.put("/cambiar-password/:idCliente", cambiarPasswordController);
 router.post("/web", crearClienteWeb);
 router.post("/recepcion", crearClienteRecepcionista);
 
