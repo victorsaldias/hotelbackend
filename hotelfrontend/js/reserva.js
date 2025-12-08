@@ -19,10 +19,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     ============================================================ */
     const fechaInicio = localStorage.getItem("fechaInicioReserva");
     const fechaFin = localStorage.getItem("fechaFinReserva");
+    const fechaBonitaInicio = new Date(fechaInicio).toLocaleDateString("es-CL");
+const fechaBonitaFin = new Date(fechaFin).toLocaleDateString("es-CL");
     const cantidadHuespedes = parseInt(localStorage.getItem("cantidadHuespedesReserva"));
 
-    document.getElementById("previewFechaInicio").textContent = fechaInicio;
-    document.getElementById("previewFechaFin").textContent = fechaFin;
+    document.getElementById("previewFechaInicio").textContent = fechaBonitaInicio;
+    document.getElementById("previewFechaFin").textContent = fechaBonitaFin;
     document.getElementById("previewHuespedes").textContent = cantidadHuespedes;
 
 
@@ -31,22 +33,15 @@ document.addEventListener("DOMContentLoaded", async () => {
     ============================================================ */
 
 // Convertir fechas desde el texto bonito (06 Dic 2025 → Date real)
-const fechaI = convertirFecha(fechaInicio);
-const fechaF = convertirFecha(fechaFin);
+const fechaInicioSQL = fechaInicio;
+const fechaFinSQL   = fechaFin;
 
-function unirFechaHora(date, hora) {
-    const [h, m, s] = hora.split(":");
-    date.setHours(h, m, s);
-    return date; // ← devolvemos Date, NO string
-}
-
-// Crear fechas tipo SQL con horas correctas
-const fechaInicioSQL = unirFechaHora(new Date(fechaI), "14:00:00");
-const fechaFinSQL   = unirFechaHora(new Date(fechaF), "12:00:00");
+// Creamos Date a partir del string SQL
+const fechaI = new Date(fechaInicioSQL);
+const fechaF = new Date(fechaFinSQL);
 
 // Calcular días reales
-const dias = Math.ceil((fechaFinSQL - fechaInicioSQL) / (1000 * 60 * 60 * 24));
-
+const dias = Math.ceil((fechaF - fechaI) / (1000 * 60 * 60 * 24));
     /* ============================================================
        4) PASARELA ACOMPAÑANTES
     ============================================================ */
@@ -202,10 +197,7 @@ btn.addEventListener("click", async () => {
         return;
     }
 
-    const fechaInicioSQL = formatearFechaSQL(fechaI) + " 14:00:00";
-    const fechaFinSQL = formatearFechaSQL(fechaF) + " 12:00:00";
-
-    const dias = Math.ceil((fechaF - fechaI) / (1000 * 60 * 60 * 24));
+    // YA NO recalculamos las fechas
     const total = room.precio * dias;
 
     if (metodo.value === "Presencial") {
@@ -216,7 +208,6 @@ btn.addEventListener("click", async () => {
         return iniciarWebPay();
     }
 
-    /* ------------------ PRESENCIAL ------------------ */
     async function enviarReservaPresencial() {
         try {
             const response = await fetch("https://hotelbackend-hzc4.onrender.com/api/reservas/completa", {
@@ -252,7 +243,6 @@ btn.addEventListener("click", async () => {
         }
     }
 
-    /* ------------------ WEBPAY ------------------ */
     async function iniciarWebPay() {
 
         const reserva = {
@@ -266,7 +256,6 @@ btn.addEventListener("click", async () => {
             metodoPago: "WebPay"
         };
 
-        // Guardar reserva completa
         localStorage.setItem("reservaCompleta", JSON.stringify(reserva));
 
         const response = await fetch("https://hotelbackend-hzc4.onrender.com/api/webpay/init", {
@@ -282,10 +271,8 @@ btn.addEventListener("click", async () => {
             return;
         }
 
-        // Guardar token
         localStorage.setItem("tokenTransbank", data.token);
 
-        // Redirigir
         window.location.href = `webpay-pago.html?token=${data.token}`;
     }
 

@@ -290,8 +290,8 @@ if (filterForm) {
         }
 
         // === GUARDAR PARA LA RESERVA ===
-        localStorage.setItem("fechaInicioReserva", fechaInicioTexto);
-        localStorage.setItem("fechaFinReserva", fechaFinTexto);
+       localStorage.setItem("fechaInicioReserva", fechaInicio);
+        localStorage.setItem("fechaFinReserva", fechaFin);
         localStorage.setItem("cantidadHuespedesReserva", cantidadHuespedes);
 
         // === FORMATO CORRECTO PARA BACKEND ===

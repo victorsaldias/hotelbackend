@@ -132,21 +132,32 @@ export async function obtenerTodasLasHabitacionesController(req, res) {
     }
 }
 
-export async function asignarHabitacionController(req, res) {
-    try {
-        await asignarHabitacion(req.body.idReserva, req.body.idHabitacion);
-        res.json({ message: "Habitación asignada" });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
+export async function asignarHabitacion(idReserva, idHabitacion) {
+    const pool = await getConnection();
+    await pool.request()
+        .input("idReserva", idReserva)
+        .input("idHabitacion", idHabitacion)
+        .query(`
+            INSERT INTO reservaHabitacion (idReserva, idHabitacion)
+            VALUES (@idReserva, @idHabitacion)
+        `);
 }
 
-export async function obtenerPrecioHabitacionController(req, res) {
-    try {
-        res.json(await obtenerPrecioHabitacion(req.params.idHabitacion));
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
+
+export async function obtenerPrecioHabitacion(idHabitacion) {
+    const conn = await getConnection();
+
+    const result = await conn.request()
+        .input("idHabitacion", idHabitacion)
+        .query(`
+            SELECT precio 
+            FROM habitacion 
+            WHERE idHabitacion = @idHabitacion
+        `);
+
+    if (result.recordset.length === 0) return 0;
+
+    return result.recordset[0].precio;
 }
 
 
