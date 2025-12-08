@@ -1,43 +1,90 @@
-document.addEventListener("DOMContentLoaded", async () => {
+document.addEventListener("DOMContentLoaded", () => {
+    cargarMisReservas();
+});
 
-    const clienteId = localStorage.getItem("clienteId");
+async function cargarMisReservas() {
 
-    if (!clienteId) {
-        Swal.fire("Debes iniciar sesión");
-        return window.location.href = "../pages/login.html";
+    const usuario = JSON.parse(localStorage.getItem("usuarioCliente"));
+
+    if (!usuario || !usuario.idCliente) {
+        window.location.href = "login.html";
+        return;
     }
 
-    const container = document.getElementById("reservasContainer");
+    const idCliente = usuario.idCliente;
 
     try {
-        const res = await fetch(`https://hotelbackend-hzc4.onrender.com/api/reservas/cliente/${clienteId}`);
-       console.log("RESPONSE STATUS:", res.status);
-const data = await res.json();
-console.log("DATA RECIBIDA:", data);
-        if (!data || data.length === 0) {
-            container.innerHTML = "<p>No tienes reservas.</p>";
-            return;
-        }
+        const resp = await fetch(`http://localhost:3000/api/reservas/cliente/${idCliente}`);
 
-        container.innerHTML = "";
+        if (!resp.ok) throw new Error("No se pudieron cargar las reservas");
 
-        data.forEach(r => {
-            container.innerHTML += `
-                <div class="col-12 col-md-6">
-                    <div class="card p-3">
-                        <h5>Reserva #${r.idReserva}</h5>
-                        <p><strong>Habitación:</strong> ${r.idHabitacion}</p>
-                        <p><strong>Entrada:</strong> ${new Date(r.fechaInicio).toLocaleString()}</p>
-                        <p><strong>Salida:</strong> ${new Date(r.fechaFin).toLocaleString()}</p>
-                        <p><strong>Huéspedes:</strong> ${r.cantidadHuespedes}</p>
-                        <p><strong>Total:</strong> $${r.total}</p>
-                        <p><strong>Estado:</strong> ${r.estadoReserva}</p>
-                    </div>
-                </div>
-            `;
-        });
+        const reservas = await resp.json();
+        renderizarReservas(reservas);
 
-    } catch (e) {
-        container.innerHTML = "<p>Error al cargar tus reservas.</p>";
+    } catch (error) {
+        console.error("Error:", error);
     }
-});
+}
+
+function estadoBadge(estado) {
+    switch (estado) {
+        case "Pendiente": return `<span class="badge badge-warning">Pendiente</span>`;
+        case "Confirmada": return `<span class="badge badge-success">Confirmada</span>`;
+        case "Cancelada": return `<span class="badge badge-danger">Cancelada</span>`;
+        default: return estado;
+    }
+}
+
+function renderizarReservas(lista) {
+    const tbody = document.getElementById("tablaMisReservas");
+    tbody.innerHTML = "";
+
+    if (!lista.length) {
+        tbody.innerHTML = `
+            <tr><td colspan="8">No tienes reservas registradas.</td></tr>
+        `;
+        return;
+    }
+
+    lista.forEach(r => {
+
+        const entrada = new Date(r.fechaInicio).toLocaleDateString("es-CL");
+        const salida  = new Date(r.fechaFin).toLocaleDateString("es-CL");
+
+        tbody.innerHTML += `
+            <tr>
+                <td>${r.idReserva}</td>
+                <td>${entrada}</td>
+                <td>${salida}</td>
+                <td>${r.numeroHabitacion || "—"}</td>
+                <td>${r.tipoHabitacion || "—"}</td>
+                <td>${estadoBadge(r.estadoReserva)}</td>
+                <td>$${r.total}</td>
+                
+                <td>
+                    ${r.estadoReserva === "Cancelada"
+                        ? `<span class="text-muted">—</span>`
+                        : `<button class="btn btn-sm btn-danger" onclick="cancelarReserva(${r.idReserva})">Cancelar</button>`
+                    }
+                </td>
+            </tr>
+        `;
+    });
+}
+
+async function cancelarReserva(idReserva) {
+    const confirmacion = confirm("¿Seguro que deseas cancelar esta reserva?");
+    if (!confirmacion) return;
+
+    await fetch(`http://localhost:3000/api/reservas/cancelar/${idReserva}`, {
+        method: "POST"
+    });
+
+    cargarMisReservas();
+}
+
+// Logout
+function logout() {
+    localStorage.removeItem("usuarioCliente");
+    window.location.href = "../pages/login.html";
+}

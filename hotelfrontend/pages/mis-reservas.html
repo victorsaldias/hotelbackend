@@ -1,23 +1,99 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
-    <title>Mis Reservas - Hotel Arellano</title>
+    <meta name="description" content="Mis Reservas">
+    <meta name="keywords" content="Hotel, Reservas, Cliente">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis Reservas | Hotel Arellano</title>
 
-    <link rel="stylesheet" href="../css/bootstrap.min.css">
-    <link rel="stylesheet" href="../css/font-awesome.min.css">
+    <!-- CSS TEMPLATE HIROTO -->
+    <link rel="stylesheet" href="../css/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="../css/font-awesome.min.css" type="text/css">
+    <link rel="stylesheet" href="../css/elegant-icons.css" type="text/css">
+    <link rel="stylesheet" href="../css/nice-select.css" type="text/css">
+    <link rel="stylesheet" href="../css/jquery-ui.min.css" type="text/css">
+    <link rel="stylesheet" href="../css/owl.carousel.min.css" type="text/css">
+    <link rel="stylesheet" href="../css/slicknav.min.css" type="text/css">
+    <link rel="stylesheet" href="../css/style.css" type="text/css">
+
 </head>
 
-<body class="p-4">
+<body>
 
-    <h2 class="mb-4">Mis Reservas</h2>
+    <!-- ================= HEADER - IGUAL AL RESTO ================= -->
+    <header class="header-section">
+        <div class="container-fluid">
+            <div class="inner-header">
+                <div class="logo">
+                    <a href="../index.html"><img src="../img/logo.png" alt=""></a>
+                </div>
+                <nav class="main-menu mobile-menu">
+                    <ul>
+                        <li><a href="../index.html">Inicio</a></li>
+                        <li><a href="../pages/habitaciones.html">Habitaciones</a></li>
+                        <li class="active"><a href="mis-reservas.html">Mis Reservas</a></li>
+                        <li><a href="perfil.html">Mi Perfil</a></li>
+                        <li><a href="#" onclick="logout()">Cerrar Sesión</a></li>
+                    </ul>
+                </nav>
+                <div id="mobile-menu-wrap"></div>
+            </div>
+        </div>
+    </header>
 
-    <div id="reservasContainer" class="row g-3">
-        <p>Cargando reservas...</p>
+    <!-- ================ BREADCRUMB ================ -->
+    <div class="breadcrumb-section">
+        <div class="container">
+            <div class="breadcrumb-text">
+                <h2>Mis Reservas</h2>
+                <p>Historial de reservas realizadas</p>
+            </div>
+        </div>
     </div>
 
+    <!-- ================ CONTENIDO PRINCIPAL ================ -->
+    <section class="room-section spad">
+        <div class="container">
+
+            <div class="section-title">
+                <h2>Todas tus reservas</h2>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover text-center">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>ID</th>
+                            <th>Entrada</th>
+                            <th>Salida</th>
+                            <th>Habitación</th>
+                            <th>Tipo</th>
+                            <th>Estado</th>
+                            <th>Total</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="tablaMisReservas">
+                        <!-- JS RELLENA -->
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ================= FOOTER ================= -->
+    <footer class="footer-section">
+        <div class="container text-center">
+            <p>© 2025 Hotel Arellano</p>
+        </div>
+    </footer>
+
+    <!-- JS -->
     <script src="../js/mis-reservas.js"></script>
-    <script src="/hotelfrontend/js/authStatus.js"></script>
-    <script src="/hotelfrontend/js/authGuardCliente.js"></script>
+
 </body>
 </html>
