@@ -321,7 +321,7 @@ if (filterForm) {
 
             const data = await response.json();
             localStorage.setItem("habitacionesBusqueda", JSON.stringify(data.habitaciones));
-            window.location.href = "rooms.html";
+            window.location.href = "../pages/rooms.html";
 
         } catch (err) {
             Swal.fire("Error de conexión");
@@ -382,7 +382,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             btn.addEventListener("click", () => {
                 const tipo = JSON.parse(btn.dataset.info);
                 localStorage.setItem("tipoHabitacionSeleccionada", JSON.stringify(tipo));
-                window.location.href = "tipo-habitacion.html";
+                window.location.href = "../pages/tipo-habitacion.html";
             });
         });
 
