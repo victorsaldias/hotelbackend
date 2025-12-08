@@ -289,14 +289,14 @@ if (filterForm) {
             return Swal.fire("La fecha de salida debe ser mayor a la de entrada");
         }
 
-        // === GUARDAR PARA LA RESERVA ===
-       localStorage.setItem("fechaInicioReserva", fechaInicio);
-        localStorage.setItem("fechaFinReserva", fechaFin);
-        localStorage.setItem("cantidadHuespedesReserva", cantidadHuespedes);
-
         // === FORMATO CORRECTO PARA BACKEND ===
         const fechaInicio = formatearFechaConHora(fechaInicioDate, "14:00:00");
         const fechaFin = formatearFechaConHora(fechaFinDate, "12:00:00");
+        
+ // === GUARDAR PARA LA RESERVA ===
+       localStorage.setItem("fechaInicioReserva", fechaInicio);
+        localStorage.setItem("fechaFinReserva", fechaFin);
+        localStorage.setItem("cantidadHuespedesReserva", cantidadHuespedes);
 
         console.log("FECHAS QUE SE ENVIAN →", {
             fechaInicio,
