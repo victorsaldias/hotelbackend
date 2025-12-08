@@ -90,6 +90,7 @@ async function loginPorCorreo(e) {
 
         setTimeout(() => {
             console.log("LOGIN CLIENTE → REDIRECT EJECUTADO");
+            console.log(">>> EJECUTANDO loginCliente!!! <<<");
             // TOKEN
             localStorage.setItem("token", response.token);
 
@@ -100,7 +101,7 @@ async function loginPorCorreo(e) {
             localStorage.setItem("userLogged", "true");
 
             // Evitar volver atrás
-            window.location.replace("/hotelfrontend/index.html");
+            window.location.replace("../index.html");
         }, 1200);
 
     } catch (err) {
