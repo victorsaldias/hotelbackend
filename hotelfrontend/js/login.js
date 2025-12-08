@@ -89,6 +89,7 @@ async function loginPorCorreo(e) {
         });
 
         setTimeout(() => {
+            console.log("LOGIN CLIENTE → REDIRECT EJECUTADO");
             // TOKEN
             localStorage.setItem("token", response.token);
 
