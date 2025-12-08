@@ -84,7 +84,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const info = JSON.parse(btn.dataset.info);
 
             // guardamos también la habitación seleccionada
-            localStorage.setItem("./pages/habitacionSeleccionada", JSON.stringify(info));
+            localStorage.setItem("habitacionSeleccionada", JSON.stringify(info));
 
             // redirigir a la página de reserva
             window.location.href = "reserva.html";
