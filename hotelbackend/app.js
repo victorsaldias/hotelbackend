@@ -31,26 +31,36 @@ import webpayRoutes from "./routes/webpayRoutes.js";
 console.log("Cargando rutas...");
 
 const app = express();
+const allowedOrigins = [
+    "http://localhost:5500",
+    "http://127.0.0.1:5500",
+    "http://localhost:3000",
+    "https://hotelbackend-hzc4.onrender.com"
+];
 
-app.use(cors({
-    origin: function (origin, callback) {
-        const allowedOrigins = [
-            "http://localhost:5500",
-            "http://127.0.0.1:5500",
-            "http://localhost:3000",
-            "http://192.168.0.16:5500",
-            "https://hotelbackend-hzc4.onrender.com"
-        ];
+app.use((req, res, next) => {
+    const origin = req.headers.origin;
 
-        if (!origin || allowedOrigins.includes(origin)) {
-            return callback(null, true);
-        }
+    res.header("Access-Control-Allow-Credentials", "true");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+    res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
 
-        return callback(new Error("CORS bloqueado por seguridad: " + origin));
-    },
-    credentials: true
-}));
+    // permitir cualquier dominio vercel
+    if (origin && origin.endsWith(".vercel.app")) {
+        res.header("Access-Control-Allow-Origin", origin);
+    }
+    // permitir dominios locales
+    else if (allowedOrigins.includes(origin)) {
+        res.header("Access-Control-Allow-Origin", origin);
+    }
 
+    // preflight
+    if (req.method === "OPTIONS") {
+        return res.status(200).end();
+    }
+
+    next();
+});
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
