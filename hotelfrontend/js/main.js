@@ -382,7 +382,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             btn.addEventListener("click", () => {
                 const tipo = JSON.parse(btn.dataset.info);
                 localStorage.setItem("tipoHabitacionSeleccionada", JSON.stringify(tipo));
-                window.location.href = "/hotelfrontend/pages/tipo-habitacion.html";
+                window.location.href = "tipo-habitacion.html";
             });
         });
 
