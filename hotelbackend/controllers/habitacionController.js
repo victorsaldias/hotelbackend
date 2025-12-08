@@ -132,17 +132,6 @@ export async function obtenerTodasLasHabitacionesController(req, res) {
     }
 }
 
-export async function asignarHabitacion(idReserva, idHabitacion) {
-    const pool = await getConnection();
-    await pool.request()
-        .input("idReserva", idReserva)
-        .input("idHabitacion", idHabitacion)
-        .query(`
-            INSERT INTO reservaHabitacion (idReserva, idHabitacion)
-            VALUES (@idReserva, @idHabitacion)
-        `);
-}
-
 
 export async function obtenerPrecioHabitacion(idHabitacion) {
     const conn = await getConnection();
