@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const loginForm = document.getElementById("loginForm");
     if (loginForm) {
         loginForm.addEventListener("submit", loginPorCorreo);
+        
     }
 
     // Login por RUT (cliente web)
@@ -99,6 +100,12 @@ async function loginPorCorreo(e) {
             localStorage.setItem("clienteApellido", response.apellido ?? "");
             localStorage.setItem("clienteId", response.idCliente ?? "");
             localStorage.setItem("userLogged", "true");
+            localStorage.setItem("usuarioCliente", JSON.stringify({
+                idCliente: response.idCliente,
+                nombre: response.nombre,
+                apellido: response.apellido,
+                correo: response.correo ?? "",
+            }));
 
             // Evitar volver atrás
             window.location.replace("../index.html");
