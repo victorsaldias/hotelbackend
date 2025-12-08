@@ -321,7 +321,7 @@ if (filterForm) {
 
             const data = await response.json();
             localStorage.setItem("habitacionesBusqueda", JSON.stringify(data.habitaciones));
-            window.location.href = "/hotelfrontend/pages/rooms.html";
+            window.location.href = "rooms.html";
 
         } catch (err) {
             Swal.fire("Error de conexión");
