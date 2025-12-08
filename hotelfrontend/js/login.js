@@ -99,7 +99,7 @@ async function loginPorCorreo(e) {
             localStorage.setItem("userLogged", "true");
 
             // Evitar volver atrás
-            window.location.replace("./index.html");
+            window.location.replace("/hotelfrontend/index.html");
         }, 1200);
 
     } catch (err) {
@@ -175,7 +175,7 @@ async function loginCliente(e) {
         });
 
         setTimeout(() => {
-            window.location.href = "hotelfrontend/index.html";
+            window.location.href = "/hotelfrontend/index.html";
         }, 1500);
 
     } catch (err) {
