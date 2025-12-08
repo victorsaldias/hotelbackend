@@ -7,8 +7,6 @@ import {
     crearHabitacionController,
     actualizarEstadoHabitacionController,
     obtenerTodasLasHabitacionesController,
-    asignarHabitacionController,
-    obtenerPrecioHabitacionController,
     obtenerTiposHabitacionController,
     obtenerCaracteristicasController,
     obtenerCaracteristicaPorIdController,
@@ -32,10 +30,7 @@ router.get("/numero/:numero", obtenerHabitacionNumeroController);
 router.post("/crear", crearHabitacionController);
 router.put("/estado/:numero", actualizarEstadoHabitacionController);
 router.get("/todas", obtenerTodasLasHabitacionesController);
-router.post("/asignar", asignarHabitacionController);
-router.get("/precio/:idHabitacion", obtenerPrecioHabitacionController);
 router.get("/tipos-habitacion", obtenerTiposHabitacionController);
-router.put('/asignar/:numero', asignarHabitacionController);
 router.get("/caracteristicas-habitacion", obtenerCaracteristicasController);
 router.get("/caracteristicas/:idCaracteristica", obtenerCaracteristicaPorIdController);
 router.put("/caracteristicas/:idCaracteristica", actualizarCaracteristicaController);

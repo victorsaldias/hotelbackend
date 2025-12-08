@@ -4,8 +4,6 @@ import {
     obtenerHabitacionPorNumero,
     crearHabitacion,
     obtenerTodasLasHabitaciones,
-    obtenerPrecioHabitacion,
-    asignarHabitacion,
     listarConFiltros,
     obtenerCaracteristicasPorTipo,
     obtenerServiciosPorTipo,
@@ -130,23 +128,6 @@ export async function obtenerTodasLasHabitacionesController(req, res) {
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
-}
-
-
-export async function obtenerPrecioHabitacion(idHabitacion) {
-    const conn = await getConnection();
-
-    const result = await conn.request()
-        .input("idHabitacion", idHabitacion)
-        .query(`
-            SELECT precio 
-            FROM habitacion 
-            WHERE idHabitacion = @idHabitacion
-        `);
-
-    if (result.recordset.length === 0) return 0;
-
-    return result.recordset[0].precio;
 }
 
 
