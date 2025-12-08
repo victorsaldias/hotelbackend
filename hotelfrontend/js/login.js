@@ -175,7 +175,7 @@ async function loginCliente(e) {
         });
 
         setTimeout(() => {
-            window.location.href = "../index.html";
+            window.location.href = "hotelfrontend/index.html";
         }, 1500);
 
     } catch (err) {
