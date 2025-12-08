@@ -1,4 +1,4 @@
-const API = "https://hotelbackend-hzc4.onrender.com/api/reservas";
+const API = "https://hotelbackend-5tdjgei3o.onrender.com/api/reservas";
 
 async function cargarReservas() {
     try {

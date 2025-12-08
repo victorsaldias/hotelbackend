@@ -231,7 +231,7 @@ async function cargarSucursales() {
     if (!select) return;
 
     try {
-        const response = await fetch("https://hotelbackend-hzc4.onrender.com/api/sucursales");
+        const response = await fetch("https://hotelbackend-5tdjgei3o.onrender.com/api/sucursales");
         const data = await response.json();
 
         select.innerHTML = `<option value="">Seleccione una sucursal</option>`;
@@ -306,7 +306,7 @@ if (filterForm) {
         });
 
         try {
-            const response = await fetch("https://hotelbackend-hzc4.onrender.com/api/habitaciones/buscar", {
+            const response = await fetch("https://hotelbackend-5tdjgei3o.onrender.com/api/habitaciones/buscar", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -338,7 +338,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (!container) return;
 
     try {
-        const res = await fetch("https://hotelbackend-hzc4.onrender.com/api/habitaciones/tipos-habitacion");
+        const res = await fetch("https://hotelbackend-5tdjgei3o.onrender.com/api/habitaciones/tipos-habitacion");
         const tipos = await res.json();
 
         container.innerHTML = ""; // limpiar

@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let usuario = JSON.parse(localStorage.getItem("usuarioCliente"));
 
     if (!usuario || !usuario.idCliente || isNaN(usuario.idCliente)) {
-        window.location.href = "login.html";
+        window.location.href = "../pages/login.html";
         return;
     }
 
@@ -84,7 +84,7 @@ provinciaSelect.addEventListener("change", () => {
 
     async function cargarPerfil() {
         try {
-            const resp = await fetch(`https://hotelbackend-hzc4.onrender.com/api/clientes/id/${idCliente}`);
+            const resp = await fetch(`https://hotelbackend-5tdjgei3o.onrender.com/api/clientes/id/${idCliente}`);
             const cliente = await resp.json();
             console.log("regionSelect:", regionSelect);
 console.log("provinciaSelect:", provinciaSelect);
@@ -149,7 +149,7 @@ await cargarComunas(cliente.idProvincia, cliente.idComuna);
         };
 
         try {
-            const resp = await fetch(`https://hotelbackend-hzc4.onrender.com/api/clientes/id/${idCliente}`, {
+            const resp = await fetch(`https://hotelbackend-5tdjgei3o.onrender.com/api/clientes/id/${idCliente}`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(payload)
@@ -181,7 +181,7 @@ await cargarComunas(cliente.idProvincia, cliente.idComuna);
     });
 
 async function cargarRegiones(idRegionActual) {
-    const resp = await fetch("https://hotelbackend-hzc4.onrender.com/api/regiones");
+    const resp = await fetch("https://hotelbackend-5tdjgei3o.onrender.com/api/regiones");
     let regiones = await resp.json();
 
     regiones.sort((a,b)=>a.nombre.localeCompare(b.nombre,'es',{sensitivity:'base'}));
@@ -200,7 +200,7 @@ async function cargarRegiones(idRegionActual) {
 }
 
 async function cargarProvincias(idRegion, idProvinciaActual) {
-    const resp = await fetch(`https://hotelbackend-hzc4.onrender.com/api/provincias/${idRegion}`);
+    const resp = await fetch(`https://hotelbackend-5tdjgei3o.onrender.com/api/provincias/${idRegion}`);
     let provincias = await resp.json();
 
     provincias.sort((a,b)=>a.nombre.localeCompare(b.nombre,'es',{sensitivity:'base'}));
@@ -219,7 +219,7 @@ async function cargarProvincias(idRegion, idProvinciaActual) {
 }
 
 async function cargarProvincias(idRegion, idProvinciaActual) {
-    const resp = await fetch(`https://hotelbackend-hzc4.onrender.com/api/provincias/${idRegion}`);
+    const resp = await fetch(`https://hotelbackend-5tdjgei3o.onrender.com/api/provincias/${idRegion}`);
     let provincias = await resp.json();
 
     provincias.sort((a,b)=>a.nombre.localeCompare(b.nombre,'es',{sensitivity:'base'}));
@@ -238,7 +238,8 @@ async function cargarProvincias(idRegion, idProvinciaActual) {
 }
 
 async function cargarComunas(idProvincia, idComunaActual) {
-    const resp = await fetch(`https://hotelbackend-hzc4.onrender.com/api/comunas/${idProvincia}`);
+    const resp = await fetch(`https://hotelbackend-5tdjgei3o.onrender.com/api/comunas/${idProvincia}`);
+    //hzc4
     let comunas = await resp.json();
 
     comunas.sort((a,b)=>a.nombre.localeCompare(b.nombre,'es',{sensitivity:'base'}));

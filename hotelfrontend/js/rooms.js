@@ -74,7 +74,7 @@ document.addEventListener("DOMContentLoaded", () => {
         btn.addEventListener("click", () => {
             const info = JSON.parse(btn.dataset.info);
             localStorage.setItem("habitacionSeleccionada", JSON.stringify(info));
-            window.location.href = "../pages/room-details.html";
+            window.location.href = "../room-details.html";
         });
     });
 
@@ -87,7 +87,7 @@ document.addEventListener("DOMContentLoaded", () => {
             localStorage.setItem("../pages/habitacionSeleccionada", JSON.stringify(info));
 
             // redirigir a la página de reserva
-            window.location.href = "../pages/reserva.html";
+            window.location.href = "../reserva.html";
         });
     });
 

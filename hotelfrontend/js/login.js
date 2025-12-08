@@ -60,7 +60,7 @@ async function loginPorCorreo(e) {
     }
 
     try {
-        const res = await fetch("https://hotelbackend-hzc4.onrender.com/api/auth/login", {
+        const res = await fetch("https://hotelbackend-5tdjgei3o.onrender.com/api/auth/login", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             credentials: "include",
@@ -128,7 +128,7 @@ async function loginCliente(e) {
     }
 
     try {
-        const resp = await fetch("https://hotelbackend-hzc4.onrender.com/api/auth/login-cliente", {
+        const resp = await fetch("https://hotelbackend-5tdjgei3o.onrender.com/api/auth/login-cliente", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ rut, password })

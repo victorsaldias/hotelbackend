@@ -4,7 +4,7 @@ $("#loginForm").on("submit", async function (e) {
     const correo = $("#correo").val();
     const password = $("#password").val();
 
-    const res = await fetch("https://hotelbackend-hzc4.onrender.com/api/clientes/login", {
+    const res = await fetch("https://hotelbackend-5tdjgei3o.onrender.com/api/clientes/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ correo, password })
@@ -18,5 +18,5 @@ $("#loginForm").on("submit", async function (e) {
     }
 
     alert("Login exitoso");
-    window.location.href = "./pages/index.html";
+    window.location.href = "../index.html";
 });

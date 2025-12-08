@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:3000/api/empleados-admin";
+const API_URL = "https://hotelbackend-hzc4.onrender.com/api/empleados-admin";
 let empleadoEditando = null;
 
 function getEstadoTexto(id) {

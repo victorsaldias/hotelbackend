@@ -1,4 +1,4 @@
-const API = "https://hotelbackend-hzc4.onrender.com/api/empleados";
+const API = "https://hotelbackend-5tdjgei3o.onrender.com/api/empleados";
 
 // Obtener datos guardados en localStorage
 const empleadoLocal = JSON.parse(localStorage.getItem("empleado"));

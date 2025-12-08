@@ -78,7 +78,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 // =============================
 async function cargarServicios(idHabitacion) {
     try {
-        const response = await fetch(`https://hotelbackend-hzc4.onrender.com/api/habitaciones/servicios/${idHabitacion}`);
+        const response = await fetch(`https://hotelbackend-5tdjgei3o.onrender.com/api/habitaciones/servicios/${idHabitacion}`);
         const servicios = await response.json();
 
         const contenedor = document.getElementById("room-details-right");

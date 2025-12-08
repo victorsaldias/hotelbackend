@@ -36,7 +36,7 @@ async function cargarReservas() {
             return;
         }
 
-        const url = `https://hotelbackend-hzc4.onrender.com/api/reservas?idSucursal=${idSucursal}`;
+        const url = `https://hotelbackend-5tdjgei3o.onrender.com/api/reservas?idSucursal=${idSucursal}`;
         console.log('🔍 URL de la petición:', url);
         
         const res = await fetch(url);
@@ -120,7 +120,7 @@ function filtrarReservas() {
 
 async function cargarClientes() {
     try {
-        const res = await fetch("https://hotelbackend-hzc4.onrender.com/api/clientes");
+        const res = await fetch("https://hotelbackend-5tdjgei3o.onrender.com/api/clientes");
         listaClientes = await res.json();
 
         const select = document.getElementById("reservaCliente");
@@ -159,7 +159,7 @@ async function cargarHabitaciones() {
             return;
         }
 
-        const res = await fetch(`https://hotelbackend-hzc4.onrender.com/api/habitaciones/disponibles?idSucursal=${idSucursal}`);
+        const res = await fetch(`https://hotelbackend-5tdjgei3o.onrender.com/api/habitaciones/disponibles?idSucursal=${idSucursal}`);
         listaHabitaciones = await res.json();
 
         const select = document.getElementById("reservaHabitacion");
@@ -211,7 +211,7 @@ async function registrarReserva() {
     };
 
     try {
-        const res = await fetch("https://hotelbackend-hzc4.onrender.com/api/reservas/completa", {
+        const res = await fetch("https://hotelbackend-5tdjgei3o.onrender.com/api/reservas/completa", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data)
@@ -354,7 +354,7 @@ function filtrarClientesSelect() {
 }
 async function cambiarEstado(idReserva, nuevoEstado) {
     try {
-        const res = await fetch(`https://hotelbackend-hzc4.onrender.com/api/reservas/cambiar-estado/${idReserva}`, {
+        const res = await fetch(`https://hotelbackend-5tdjgei3o.onrender.com/api/reservas/cambiar-estado/${idReserva}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ idEstadoReserva: nuevoEstado })

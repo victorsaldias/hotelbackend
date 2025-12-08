@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (!token) {
         Swal.fire("Error", "Token inválido", "error")
-            .then(() => window.location.href = "index.html");
+            .then(() => window.location.href = "../index.html");
         return;
     }
 
@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document.getElementById("btnCancelar").addEventListener("click", () => {
         Swal.fire("Pago cancelado", "", "warning")
-            .then(() => window.location.href = "index.html");
+            .then(() => window.location.href = "../index.html");
     });
 });
 
@@ -49,7 +49,7 @@ async function procesarPago(token) {
     }
 
     // 🔥 ENVIAR PAGO + RESERVA AL BACKEND
-    const response = await fetch("https://hotelbackend-hzc4.onrender.com/api/webpay/confirmar", {
+    const response = await fetch("https://hotelbackend-5tdjgei3o.onrender.com/api/webpay/confirmar", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ token, reserva })
@@ -69,6 +69,6 @@ async function procesarPago(token) {
         text: "Tu reserva se ha guardado correctamente"
     }).then(() => {
         localStorage.removeItem("reservaCompleta");
-        window.location.href = "../pages/index.html";
+        window.location.href = "../index.html";
     });
 }

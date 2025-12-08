@@ -1,4 +1,4 @@
-const API = "https://hotelbackend-hzc4.onrender.com/api";
+const API = "https://hotelbackend-5tdjgei3o.onrender.com/api";
 
 const params = new URLSearchParams(window.location.search);
 const idHabitacionURL = params.get("id");
@@ -244,7 +244,7 @@ document.getElementById("btnGuardarHabitacion").addEventListener("click", async 
     if (!resp.ok) return Swal.fire("Error", "No se pudo actualizar la habitación", "error");
 
     Swal.fire("Listo", "Habitación actualizada", "success")
-        .then(() => location.href = "./pages/dashboard-admin.html");
+        .then(() => location.href = "../pages/dashboard-admin.html");
 });
 
 window.addEventListener("DOMContentLoaded", async () => {
