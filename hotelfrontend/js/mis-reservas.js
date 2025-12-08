@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     if (!clienteId) {
         Swal.fire("Debes iniciar sesión");
-        return window.location.href = "./pages/login.html";
+        return window.location.href = "../pages/login.html";
     }
 
     const container = document.getElementById("reservasContainer");

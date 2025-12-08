@@ -1,4 +1,4 @@
-const LOGIN_URL = "./pages/login-aseo.html";
+const LOGIN_URL = "../pages/login-aseo.html";
 const API = "https://hotelbackend-hzc4.onrender.com/api/perfil";
 
 function obtenerEmpleadoActual() {

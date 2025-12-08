@@ -69,6 +69,6 @@ async function procesarPago(token) {
         text: "Tu reserva se ha guardado correctamente"
     }).then(() => {
         localStorage.removeItem("reservaCompleta");
-        window.location.href = "./pages/index.html";
+        window.location.href = "../pages/index.html";
     });
 }

@@ -67,7 +67,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     // --- Botón Reservar Ahora ---
     document.getElementById("btnReservar").addEventListener("click", () => {
-        window.location.href = `reserva.html?room=${room.idHabitacion}`;
+        window.location.href = `../pages/reserva.html?room=${room.idHabitacion}`;
     });
 
 });

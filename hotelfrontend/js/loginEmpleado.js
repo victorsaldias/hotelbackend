@@ -57,11 +57,11 @@ document.getElementById("loginEmpleadoForm").addEventListener("submit", async (e
         const rolId = data.empleado.idRol;
 
         if (rolId === 1) {
-            window.location.href = "./pages/dashboard-admin.html";
+            window.location.href = "../pages/dashboard-admin.html";
         } else if (rolId === 2) {
-            window.location.href = "./pages/recepcionista.html";
+            window.location.href = "../pages/recepcionista.html";
         } else if (rolId === 3) {
-            window.location.href = "./pages/personal-aseo.html";
+            window.location.href = "../pages/personal-aseo.html";
         } else {
             Swal.fire({
                 icon: "error",

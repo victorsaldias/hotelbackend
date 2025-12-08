@@ -271,7 +271,7 @@ function cerrarSesion() {
             localStorage.removeItem('empleadoRol');
             localStorage.removeItem('empleadoIdSucursal'); 
             
-            window.location.href = "./pages/login-aseo.html";
+            window.location.href = "../pages/login-aseo.html";
         }
     });
 }
