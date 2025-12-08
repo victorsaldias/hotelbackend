@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let usuario = JSON.parse(localStorage.getItem("usuarioCliente"));
 
     if (!usuario || !usuario.idCliente || isNaN(usuario.idCliente)) {
-        window.location.href = "../pages/login.html";
+        window.location.href = "/hotelfrontend/pages/login.html";
         return;
     }
 

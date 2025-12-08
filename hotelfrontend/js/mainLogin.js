@@ -18,5 +18,5 @@ $("#loginForm").on("submit", async function (e) {
     }
 
     alert("Login exitoso");
-    window.location.href = "../index.html";
+    window.location.href = "/hotelfrontend/index.html";
 });

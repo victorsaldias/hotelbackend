@@ -245,7 +245,7 @@ btn.addEventListener("click", async () => {
                 icon: "success",
                 title: "Reserva realizada",
                 text: "Tu reserva quedó registrada."
-            }).then(() => window.location.href = "../index.html");
+            }).then(() => window.location.href = "/hotelfrontend/index.html");
 
         } catch (e) {
             Swal.fire("Error del servidor");
@@ -286,7 +286,7 @@ btn.addEventListener("click", async () => {
         localStorage.setItem("tokenTransbank", data.token);
 
         // Redirigir
-        window.location.href = `../pages/webpay-pago.html?token=${data.token}`;
+        window.location.href = `/hotelfrontend/pages/webpay-pago.html?token=${data.token}`;
     }
 
 });

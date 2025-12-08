@@ -116,7 +116,7 @@ async function registrarCliente(e) {
             text: "El cliente fue registrado correctamente.",
             confirmButtonText: "Ir al login"
         }).then(() => {
-            window.location.href = "../pages/login.html";
+            window.location.href = "/hotelfrontend/pages/login.html";
         });
 
     } catch (error) {
