@@ -286,7 +286,7 @@ btn.addEventListener("click", async () => {
         localStorage.setItem("tokenTransbank", data.token);
 
         // Redirigir
-        window.location.href = `/hotelfrontend/pages/webpay-pago.html?token=${data.token}`;
+        window.location.href = `webpay-pago.html?token=${data.token}`;
     }
 
 });
