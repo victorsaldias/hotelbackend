@@ -24,7 +24,7 @@ async function registrarCliente() {
     }
 
     try {
-        const res = await fetch("https://hotelbackend-5tdjgei3o.onrender.com/api/clientes/recepcion", {
+        const res = await fetch("https://hotelbackend-hzc4.onrender.com/api/clientes/recepcion", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data)

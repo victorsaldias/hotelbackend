@@ -49,7 +49,7 @@ async function procesarPago(token) {
     }
 
     // 🔥 ENVIAR PAGO + RESERVA AL BACKEND
-    const response = await fetch("https://hotelbackend-5tdjgei3o.onrender.com/api/webpay/confirmar", {
+    const response = await fetch("https://hotelbackend-hzc4.onrender.com/api/webpay/confirmar", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ token, reserva })

@@ -1,5 +1,5 @@
 const LOGIN_URL = "../pages/login-aseo.html";
-const API = "https://hotelbackend-5tdjgei3o.onrender.com/api/perfil";
+const API = "https://hotelbackend-hzc4.onrender.com/api/perfil";
 
 function obtenerEmpleadoActual() {
     const id = localStorage.getItem("empleadoId");

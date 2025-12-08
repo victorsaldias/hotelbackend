@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const container = document.getElementById("reservasContainer");
 
     try {
-        const res = await fetch(`https://hotelbackend-5tdjgei3o.onrender.com/api/reservas/cliente/${clienteId}`);
+        const res = await fetch(`https://hotelbackend-hzc4.onrender.com/api/reservas/cliente/${clienteId}`);
        console.log("RESPONSE STATUS:", res.status);
 const data = await res.json();
 console.log("DATA RECIBIDA:", data);

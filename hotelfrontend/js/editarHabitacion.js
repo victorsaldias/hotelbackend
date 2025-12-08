@@ -1,4 +1,4 @@
-const API = "https://hotelbackend-5tdjgei3o.onrender.com/api";
+const API = "https://hotelbackend-hzc4.onrender.com/api";
 
 const params = new URLSearchParams(window.location.search);
 const idHabitacionURL = params.get("id");

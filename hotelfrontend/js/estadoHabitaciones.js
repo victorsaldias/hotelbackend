@@ -2,7 +2,7 @@ let chartEstadoHabitaciones = null;
 
 async function cargarReporteEstadoHabitaciones() {
     try {
-        const resp = await fetch(`https://hotelbackend-5tdjgei3o.onrender.com/api/reportes/estado-habitaciones`);
+        const resp = await fetch(`https://hotelbackend-hzc4.onrender.com/api/reportes/estado-habitaciones`);
         const data = await resp.json();
 
         const tbody = document.getElementById("tablaEstadoHabitaciones");

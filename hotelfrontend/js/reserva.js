@@ -219,7 +219,7 @@ btn.addEventListener("click", async () => {
     /* ------------------ PRESENCIAL ------------------ */
     async function enviarReservaPresencial() {
         try {
-            const response = await fetch("https://hotelbackend-5tdjgei3o.onrender.com/api/reservas/completa", {
+            const response = await fetch("https://hotelbackend-hzc4.onrender.com/api/reservas/completa", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -269,7 +269,7 @@ btn.addEventListener("click", async () => {
         // Guardar reserva completa
         localStorage.setItem("reservaCompleta", JSON.stringify(reserva));
 
-        const response = await fetch("https://hotelbackend-5tdjgei3o.onrender.com/api/webpay/init", {
+        const response = await fetch("https://hotelbackend-hzc4.onrender.com/api/webpay/init", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({})

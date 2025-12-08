@@ -1,4 +1,4 @@
-const API_URL = "https://hotelbackend-5tdjgei3o.onrender.com/api/limpieza/habitaciones";
+const API_URL = "https://hotelbackend-hzc4.onrender.com/api/limpieza/habitaciones";
 
 function obtenerEmpleadoActual() {
     const empleadoId = localStorage.getItem('empleadoId');
@@ -141,7 +141,7 @@ async function iniciarLimpieza(idHabitacion, numeroHabitacion) {
     });
 
     try {
-        const res = await fetch(`https://hotelbackend-5tdjgei3o.onrender.com/api/limpieza/iniciar`, {
+        const res = await fetch(`https://hotelbackend-hzc4.onrender.com/api/limpieza/iniciar`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -208,7 +208,7 @@ async function terminarLimpieza(idHabitacion, numeroHabitacion) {
     });
 
     try {
-        const res = await fetch(`https://hotelbackend-5tdjgei3o.onrender.com/api/limpieza/terminar`, {
+        const res = await fetch(`https://hotelbackend-hzc4.onrender.com/api/limpieza/terminar`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
