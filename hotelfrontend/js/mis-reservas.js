@@ -14,7 +14,7 @@ async function cargarMisReservas() {
     const idCliente = usuario.idCliente;
 
     try {
-        const resp = await fetch(`http://localhost:3000/api/reservas/cliente/${idCliente}`);
+        const resp = await fetch(`https://hotelbackend-hzc4.onrender.com/api/reservas/cliente/${idCliente}`);
 
         if (!resp.ok) throw new Error("No se pudieron cargar las reservas");
 
@@ -76,7 +76,7 @@ async function cancelarReserva(idReserva) {
     const confirmacion = confirm("¿Seguro que deseas cancelar esta reserva?");
     if (!confirmacion) return;
 
-    await fetch(`http://localhost:3000/api/reservas/cancelar/${idReserva}`, {
+    await fetch(`https://hotelbackend-hzc4.onrender.com/api/reservas/cancelar/${idReserva}`, {
         method: "POST"
     });
 

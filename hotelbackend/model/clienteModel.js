@@ -43,7 +43,7 @@ export async function obtenerClientePorId(idCliente) {
             SELECT 
                 c.idCliente,
                 c.rut,
-                c.password,            -- 👈 NECESARIO para validar cambios de contraseña
+                c.password,          
                 c.nombre,
                 c.apellido,
                 c.telefono,
