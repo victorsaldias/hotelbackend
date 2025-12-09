@@ -66,10 +66,18 @@ document.addEventListener("DOMContentLoaded", async function () {
     }, 200);
 
     // --- Botón Reservar Ahora ---
-    document.getElementById("btnReservar").addEventListener("click", () => {
-        window.location.href = `/hotelfrontend/pages/reserva.html?room=${room.idHabitacion}`;
-    });
+     // CLICK → Reservar Ahora → ir directo a reserva.html
+    document.querySelectorAll("btnReservar").forEach(btn => {
+        btn.addEventListener("click", () => {
+            const info = JSON.parse(btn.dataset.info);
 
+            // guardamos también la habitación seleccionada
+            localStorage.setItem("habitacionSeleccionada", JSON.stringify(info));
+
+            // redirigir a la página de reserva
+            window.location.href = "../pages/reserva.html";
+        });
+    });
 });
 
 
