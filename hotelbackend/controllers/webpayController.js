@@ -29,7 +29,7 @@ export const confirmarPago = async (req, res) => {
         await registrarPagoWebPay(idReserva, total);
 
         // 3) Cambiar estado a PAGADA (AJUSTA EL ID REAL)
-        await cambiarEstadoReserva(idReserva, 3);
+        await cambiarEstadoReserva(idReserva, 1); // 1 = Pendiente
 
         return res.json({
             ok: true,
