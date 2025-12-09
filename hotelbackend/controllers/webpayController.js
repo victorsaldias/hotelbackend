@@ -17,6 +17,7 @@ export const iniciarTransaccion = async (req, res) => {
 export const confirmarPago = async (req, res) => {
     try {
         const { token, reserva } = req.body;
+        
 
         if (!token || !reserva) {
             return res.status(400).json({ error: "Datos incompletos" });
@@ -25,20 +26,19 @@ export const confirmarPago = async (req, res) => {
         // 1) Crear reserva con el MISMO método del pago presencial
         const { idReserva, total } = await crearReservaService(reserva);
 
-        // 2) Registrar pago
-        await registrarPagoWebPay(idReserva, total);
+await registrarPagoWebPay(idReserva, total);
 
-        // 3) Cambiar estado a PAGADA (AJUSTA EL ID REAL)
-        await cambiarEstadoReserva(idReserva, 1); // 1 = Pendiente
+// Estado pendiente
+await cambiarEstadoReserva(idReserva, 1);
 
-        return res.json({
-            ok: true,
-            mensaje: "Pago confirmado",
-            idReserva
-        });
-
+return res.json({
+    ok: true,
+    mensaje: "Pago confirmado",
+    idReserva
+});
     } catch (err) {
         console.error("Error en confirmarPago:", err);
         return res.status(500).json({ error: err.message });
     }
+    
 };

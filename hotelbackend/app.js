@@ -105,6 +105,7 @@ app.get("/api/test-mail", async (req, res) => {
     }
 });
 
+
 app.use("/", router);
 app.use("/api/habitaciones", habitacionRoutes);
 app.use("/api/clientes", clienteRoutes);
