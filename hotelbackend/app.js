@@ -26,6 +26,7 @@ import { getConnection } from "./config/dbConfig.js";
 import empleadoPerfilRoutes from "./routes/empleadoPerfilRoutes.js";
 import reportesRoutes from "./routes/reportesRoutes.js";
 import webpayRoutes from "./routes/webpayRoutes.js";
+import metricasRoutes from "./routes/metricasRoutes.js";
 
 console.log("Cargando rutas...");
 
@@ -120,6 +121,7 @@ app.use("/api/limpieza", limpiezaRoutes);
 app.use("/api/empleados", empleadoPerfilRoutes);
 app.use("/api/reportes",reportesRoutes)
 app.use("/api/webpay", webpayRoutes);
+app.use("/api/metricas", metricasRoutes);
 
 console.log("Rutas cargadas:");
 app._router.stack.forEach(r => {
