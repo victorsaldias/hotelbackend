@@ -205,12 +205,15 @@ btn.addEventListener("click", async () => {
     const total = room.precio * dias;
 
     if (metodo.value === "Presencial") {
-        return enviarReservaPresencial();
-    } 
-    
-    if (metodo.value === "WebPay") {
-        return iniciarWebPay();
-    }
+    await enviarReservaPresencial();
+    return;
+}
+
+if (metodo.value === "WebPay") {
+    await iniciarWebPay();
+    return;
+}
+
 
     async function enviarReservaPresencial() {
         try {
@@ -237,22 +240,26 @@ btn.addEventListener("click", async () => {
             }
 
             Swal.fire({
-                icon: "success",
-                title: "Reserva realizada",
-                text: "Tu reserva quedó registrada."
-           }).then(() => window.location.href = "../index.html");
-
+    icon: "success",
+    title: "Reserva realizada",
+    text: "Tu reserva quedó registrada.",
+    timer: 2000,
+    showConfirmButton: false
+}).then(() => {
+    window.location.href = "../index.html";
+});
 
         } catch (e) {
-            Swal.fire("Error del servidor");
-        }
+    console.error("ERROR RESERVA:", e);
+    Swal.fire("Error del servidor", e.message || "", "error");
     }
+}
 
     async function iniciarWebPay() {
 
         const reserva = {
             idCliente: clienteId,
-            idHabitacion: room.idHabitacion,
+            habitaciones: [room.idHabitacion],
             fechaInicio: fechaInicioSQL,
             fechaFin: fechaFinSQL,
             cantidadHuespedes,
@@ -271,10 +278,11 @@ btn.addEventListener("click", async () => {
 
         const data = await response.json();
 
-        if (!response.ok) {
-            Swal.fire("Error", data.error);
-            return;
-        }
+       if (!response.ok) {
+    console.error("ERROR API:", data);
+    Swal.fire("Error", data.error || data.message || "No se pudo crear la reserva");
+    return;
+}
 
         localStorage.setItem("tokenTransbank", data.token);
 
