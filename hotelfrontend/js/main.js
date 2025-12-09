@@ -235,9 +235,9 @@ async function cargarSucursales() {
         const data = await response.json();
 
         select.innerHTML = `<option value="">Seleccione una sucursal</option>`;
-        data.forEach(s => {
-            select.innerHTML += `<option value="${s.idSucursal}">${s.nombre} - ${s.direccion}</option>`;
-        });
+data.sucursales.forEach(s => {
+    select.innerHTML += `<option value="${s.idSucursal}">${s.nombre} - ${s.direccion}</option>`;
+});
 
     } catch (error) {
         Swal.fire("Error", "No se pudieron cargar las sucursales", "error");
