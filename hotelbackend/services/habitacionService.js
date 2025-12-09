@@ -41,7 +41,7 @@ async function obtenerPorId(idHabitacion) {
     const h = await HabitacionModel.obtenerHabitacionPorId(idHabitacion);
     if (!h) return null;
 
-    const sucursal = await sucursalService.obtenerPorId(h.idSucursal);
+    const sucursal = await sucursalService.obtener(h.idSucursal);
 
     return { ...h, sucursal };
 }
