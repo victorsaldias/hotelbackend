@@ -5,7 +5,6 @@ import {
     cambiarPasswordService,
     actualizarClientePorIdService,
     actualizarClientePorRutService,
-    crearClienteWebService,
     obtenerClientePorIdService,
     obtenerClientePorRutService,
     obtenerTodosClientesService

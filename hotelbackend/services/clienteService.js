@@ -10,7 +10,7 @@ import {
     actualizarPassword
 } from "../model/clienteModel.js";
 
-import { hashPassword, comparePassword } from "./passwordServices.js";
+import { hashPassword, comparePassword } from "./passwordService.js";
 import { enviarCorreo, templateBienvenidaCliente } from "./emailServices.js";
 import { limpiarRut } from "../utils/rutUtils.js";
 

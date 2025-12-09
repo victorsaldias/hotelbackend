@@ -3,12 +3,9 @@
 /**
  * Módulo de arranque del servidor
  */
-
+console.log("WWW CARGADO DESDE:", import.meta.url);
 import app from '../app.js';
 import http from 'http';
-import dotenv from 'dotenv';
-dotenv.config();
-
 /**
  * Obtener puerto del .env o usar 3000
  */

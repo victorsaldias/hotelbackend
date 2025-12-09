@@ -2,7 +2,6 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import session from "express-session";
-
 dotenv.config();
 
 console.log("📦 VARIABLES CARGADAS:");

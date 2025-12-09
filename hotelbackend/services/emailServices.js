@@ -38,26 +38,3 @@ export function templateBienvenidaCliente(nombre, passwordPlano) {
     <p>Tu contraseña temporal es: <b>${passwordPlano}</b></p>
   `;
 }
-
-// ================================
-  //  ENVIAR CORREO DE CONFIRMACIÓN
-  // ================================
-  const cliente = await obtenerClientePorId(idCliente);
-  const habitacion = await obtenerHabitacionPorId(idHabitacion);
-
-  if (cliente && cliente.correo) {
-    const html = templateConfirmacionReserva({
-      nombreCompleto: `${cliente.nombre} ${cliente.apellido}`,
-      fechaInicio,
-      fechaFin,
-      total,
-      numeroHabitacion: habitacion?.numero || null,
-      nombreSucursal: habitacion?.nombreSucursal || null
-    });
-
-    await enviarCorreo({
-      to: cliente.correo,
-      subject: "Confirmación de tu reserva - Hotel Arellano",
-      html
-    });
-  }
