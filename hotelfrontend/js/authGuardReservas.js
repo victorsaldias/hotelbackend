@@ -3,7 +3,7 @@
 
     if (!token) {
         // No está logueado → llevar al login
-        window.location.href = "login.html";
+        window.location.href = "./pages/login.html";
     }
 })();
 
@@ -12,6 +12,6 @@
     const token = localStorage.getItem("token");
 
     if (!token) {
-        window.location.href = "login.html";
+        window.location.href = "../pages/login.html";
     }
 })();

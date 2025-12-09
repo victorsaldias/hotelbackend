@@ -1,3 +1,5 @@
+let idCliente = null;
+
 document.addEventListener("DOMContentLoaded", () => {
 
     $('select[data-nice!="false"]').niceSelect();
@@ -7,11 +9,13 @@ document.addEventListener("DOMContentLoaded", () => {
     let usuario = JSON.parse(localStorage.getItem("usuarioCliente"));
 
     if (!usuario || !usuario.idCliente || isNaN(usuario.idCliente)) {
-        window.location.href = "login.html";
+        window.location.href = "/hotelfrontend/pages/login.html";
         return;
     }
 
     const idCliente = usuario.idCliente;
+
+
 
     // ============================
     // CAMPOS DEL FORM
@@ -84,7 +88,7 @@ provinciaSelect.addEventListener("change", () => {
 
     async function cargarPerfil() {
         try {
-            const resp = await fetch(`http://localhost:3000/api/clientes/id/${idCliente}`);
+            const resp = await fetch(`https://hotelbackend-hzc4.onrender.com/api/clientes/id/${idCliente}`);
             const cliente = await resp.json();
             console.log("regionSelect:", regionSelect);
 console.log("provinciaSelect:", provinciaSelect);
@@ -149,7 +153,7 @@ await cargarComunas(cliente.idProvincia, cliente.idComuna);
         };
 
         try {
-            const resp = await fetch(`http://localhost:3000/api/clientes/id/${idCliente}`, {
+            const resp = await fetch(`https://hotelbackend-hzc4.onrender.com/api/clientes/id/${idCliente}`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(payload)
@@ -181,7 +185,7 @@ await cargarComunas(cliente.idProvincia, cliente.idComuna);
     });
 
 async function cargarRegiones(idRegionActual) {
-    const resp = await fetch("http://localhost:3000/api/regiones");
+    const resp = await fetch("https://hotelbackend-hzc4.onrender.com/api/regiones");
     let regiones = await resp.json();
 
     regiones.sort((a,b)=>a.nombre.localeCompare(b.nombre,'es',{sensitivity:'base'}));
@@ -200,7 +204,7 @@ async function cargarRegiones(idRegionActual) {
 }
 
 async function cargarProvincias(idRegion, idProvinciaActual) {
-    const resp = await fetch(`http://localhost:3000/api/provincias/${idRegion}`);
+    const resp = await fetch(`https://hotelbackend-hzc4.onrender.com/api/provincias/${idRegion}`);
     let provincias = await resp.json();
 
     provincias.sort((a,b)=>a.nombre.localeCompare(b.nombre,'es',{sensitivity:'base'}));
@@ -219,7 +223,7 @@ async function cargarProvincias(idRegion, idProvinciaActual) {
 }
 
 async function cargarProvincias(idRegion, idProvinciaActual) {
-    const resp = await fetch(`http://localhost:3000/api/provincias/${idRegion}`);
+    const resp = await fetch(`https://hotelbackend-hzc4.onrender.com/api/provincias/${idRegion}`);
     let provincias = await resp.json();
 
     provincias.sort((a,b)=>a.nombre.localeCompare(b.nombre,'es',{sensitivity:'base'}));
@@ -238,7 +242,8 @@ async function cargarProvincias(idRegion, idProvinciaActual) {
 }
 
 async function cargarComunas(idProvincia, idComunaActual) {
-    const resp = await fetch(`http://localhost:3000/api/comunas/${idProvincia}`);
+    const resp = await fetch(`https://hotelbackend-hzc4.onrender.com/api/comunas/${idProvincia}`);
+    //hzc4
     let comunas = await resp.json();
 
     comunas.sort((a,b)=>a.nombre.localeCompare(b.nombre,'es',{sensitivity:'base'}));
@@ -305,5 +310,65 @@ document.addEventListener("DOMContentLoaded", () => {
         } catch (e) {
             console.warn("No había nice-select activo todavía", e);
         }
+    }
+});
+
+// ================================
+// CAMBIO DE CONTRASEÑA
+// ================================
+const modalPw = document.getElementById("modalPassword");
+const btnCambiarPw = document.getElementById("btnCambiarPassword");
+const btnCerrarPw = document.getElementById("btnCerrarModal");
+const btnConfirmarPw = document.getElementById("btnConfirmarCambio");
+
+// Abrir modal
+btnCambiarPw.addEventListener("click", () => {
+    modalPw.style.display = "flex";
+});
+
+// Cerrar modal
+btnCerrarPw.addEventListener("click", () => {
+    modalPw.style.display = "none";
+});
+
+// Confirmar cambio
+btnConfirmarPw.addEventListener("click", async () => {
+    const actual = document.getElementById("pwActual").value.trim();
+    const nueva = document.getElementById("pwNueva").value.trim();
+    const nueva2 = document.getElementById("pwNueva2").value.trim();
+
+    if (!actual || !nueva || !nueva2) {
+        return Swal.fire("Campos vacíos", "Completa todos los campos", "warning");
+    }
+
+    if (nueva !== nueva2) {
+        return Swal.fire("Error", "Las nuevas contraseñas no coinciden", "error");
+    }
+
+    try {
+        const resp = await fetch(
+            `https://hotelbackend-hzc4.onrender.com/api/clientes/cambiar-password/${idCliente}`,
+            {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    passwordActual: actual,
+                    passwordNueva: nueva
+                })
+            }
+        );
+
+        const data = await resp.json();
+
+        if (!resp.ok) {
+            throw new Error(data.message || "No se pudo cambiar la contraseña");
+        }
+
+        Swal.fire("Listo", "Tu contraseña fue cambiada correctamente", "success");
+
+        modalPw.style.display = "none";
+
+    } catch (err) {
+        Swal.fire("Error", err.message, "error");
     }
 });

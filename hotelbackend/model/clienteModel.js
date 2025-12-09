@@ -43,6 +43,7 @@ export async function obtenerClientePorId(idCliente) {
             SELECT 
                 c.idCliente,
                 c.rut,
+                c.password,            -- 👈 NECESARIO para validar cambios de contraseña
                 c.nombre,
                 c.apellido,
                 c.telefono,
@@ -63,6 +64,7 @@ export async function obtenerClientePorId(idCliente) {
 
     return result.recordset[0];
 }
+
 
 // ACTUALIZAR CLIENTE POR ID
 export async function actualizarClientePorIdDB(idCliente, data) {
@@ -158,6 +160,17 @@ export async function obtenerTodosClientesDB() {
   return result.recordset;
 }
 
+export async function actualizarPassword(idCliente, passwordHash) {
+    const pool = await getConnection();
+    await pool.request()
+        .input("idCliente", idCliente)
+        .input("password", passwordHash)
+        .query(`
+            UPDATE cliente 
+            SET password = @password
+            WHERE idCliente = @idCliente
+        `);
+}
 // OBTENER CLIENTE POR RUT
 export async function obtenerClientePorRut(rut) {
     const pool = await getConnection();

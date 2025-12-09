@@ -20,7 +20,7 @@ document.getElementById("loginEmpleadoForm").addEventListener("submit", async (e
     }
 
     try {
-        const response = await fetch("http://localhost:3000/api/empleados/login", {
+        const response = await fetch("https://hotelbackend-hzc4.onrender.com/api/empleados/login", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ correo, password })
@@ -57,11 +57,11 @@ document.getElementById("loginEmpleadoForm").addEventListener("submit", async (e
         const rolId = data.empleado.idRol;
 
         if (rolId === 1) {
-            window.location.href = "dashboard-admin.html";
+            window.location.href = "../pages/dashboard-admin.html";
         } else if (rolId === 2) {
-            window.location.href = "recepcionista.html";
+            window.location.href = "../pages/recepcionista.html";
         } else if (rolId === 3) {
-            window.location.href = "personal-aseo.html";
+            window.location.href = "../pages/personal-aseo.html";
         } else {
             Swal.fire({
                 icon: "error",

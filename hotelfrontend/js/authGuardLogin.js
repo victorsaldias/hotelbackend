@@ -3,6 +3,6 @@
 
     if (token) {
         // Ya está logueado → no puede ver login
-        window.location.href = "login.html";
+        window.location.href = "../pages/login.html";
     }
 })();

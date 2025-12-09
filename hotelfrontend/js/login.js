@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const loginForm = document.getElementById("loginForm");
     if (loginForm) {
         loginForm.addEventListener("submit", loginPorCorreo);
+        
     }
 
     // Login por RUT (cliente web)
@@ -60,7 +61,7 @@ async function loginPorCorreo(e) {
     }
 
     try {
-        const res = await fetch("http://localhost:3000/api/auth/login", {
+        const res = await fetch("https://hotelbackend-hzc4.onrender.com/api/auth/login", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             credentials: "include",
@@ -89,6 +90,8 @@ async function loginPorCorreo(e) {
         });
 
         setTimeout(() => {
+            console.log("LOGIN CLIENTE → REDIRECT EJECUTADO");
+            console.log(">>> EJECUTANDO loginCliente!!! <<<");
             // TOKEN
             localStorage.setItem("token", response.token);
 
@@ -97,9 +100,15 @@ async function loginPorCorreo(e) {
             localStorage.setItem("clienteApellido", response.apellido ?? "");
             localStorage.setItem("clienteId", response.idCliente ?? "");
             localStorage.setItem("userLogged", "true");
+            localStorage.setItem("usuarioCliente", JSON.stringify({
+                idCliente: response.idCliente,
+                nombre: response.nombre,
+                apellido: response.apellido,
+                correo: response.correo ?? "",
+            }));
 
             // Evitar volver atrás
-            window.location.replace("./index.html");
+            window.location.replace("../index.html");
         }, 1200);
 
     } catch (err) {
@@ -128,7 +137,7 @@ async function loginCliente(e) {
     }
 
     try {
-        const resp = await fetch("http://localhost:3000/api/auth/login-cliente", {
+        const resp = await fetch("https://hotelbackend-hzc4.onrender.com/api/auth/login-cliente", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ rut, password })
@@ -175,7 +184,7 @@ async function loginCliente(e) {
         });
 
         setTimeout(() => {
-            window.location.href = "./index.html";
+            window.location.href = "index.html";
         }, 1500);
 
     } catch (err) {

@@ -31,16 +31,52 @@ export async function obtenerHabitacionPorNumero(numero) {
         .query(`SELECT * FROM habitacion WHERE numero = @numero`);
     return r.recordset[0];
 }
-export async function asignarHabitacion(idReserva, idHabitacion) {
-    const pool = await getConnection();
-    await pool.request()
+export async function asignarHabitacion(idReserva, idHabitacion, fechaInicio, fechaFin) {
+    const conn = await getConnection();
+
+    // 1) Validar conflicto con otras reservas
+    const conflicto = await conn.request()
+        .input("idHabitacion", idHabitacion)
+        .input("inicio", fechaInicio)
+        .input("fin", fechaFin)
+        .query(`
+            SELECT 1
+            FROM reserva r
+            INNER JOIN reservaHabitacion rh ON rh.idReserva = r.idReserva
+            WHERE rh.idHabitacion = @idHabitacion
+            AND r.fechaInicio <= @fin
+            AND r.fechaFin >= @inicio;
+        `);
+
+    if (conflicto.recordset.length > 0) {
+        throw new Error("La habitación ya está asignada en ese rango de fechas.");
+    }
+
+    // 2) Validar que esta reserva NO tenga otra habitación
+    const yaAsignada = await conn.request()
+        .input("idReserva", idReserva)
+        .query(`
+            SELECT idHabitacion
+            FROM reservaHabitacion
+            WHERE idReserva = @idReserva
+        `);
+
+    if (yaAsignada.recordset.length > 0) {
+        throw new Error("Esta reserva ya tiene una habitación asignada.");
+    }
+
+    // 3) Insertar asignación correcta
+    await conn.request()
         .input("idReserva", idReserva)
         .input("idHabitacion", idHabitacion)
         .query(`
             INSERT INTO reservaHabitacion (idReserva, idHabitacion)
             VALUES (@idReserva, @idHabitacion)
         `);
+
+    return true;
 }
+
 
 export async function obtenerHabitacionPorId(id) {
     const pool = await getConnection();

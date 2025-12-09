@@ -6,12 +6,39 @@ import {
   actualizarCliente,
   obtenerTodosClientesDB,
   actualizarClientePorIdDB,
-  obtenerClientePorId
+  obtenerClientePorId,
+  actualizarPassword
 } from "../model/clienteModel.js";
 
 function limpiarRut(rut) {
   return rut.replace(/\./g, "").replace(/-/g, "");
 }
+
+
+export async function cambiarPasswordController(req, res) {
+    try {
+        const { idCliente } = req.params;
+        const { passwordActual, passwordNueva } = req.body;
+
+        const cliente = await obtenerClientePorId(idCliente);
+        if (!cliente) return res.status(404).json({ message: "Cliente no encontrado" });
+
+        const coincide = await bcrypt.compare(passwordActual, cliente.password);
+        if (!coincide) {
+            return res.status(400).json({ message: "Contraseña actual incorrecta" });
+        }
+
+        const hash = await bcrypt.hash(passwordNueva, 10);
+        await actualizarPassword(idCliente, hash);
+
+        res.json({ message: "Contraseña actualizada correctamente" });
+
+    } catch (err) {
+        console.error("Error al cambiar contraseña:", err);
+        res.status(500).json({ message: "Error interno del servidor" });
+    }
+}
+
 
 export const crearClienteWeb = async (req, res) => {
   try {

@@ -8,7 +8,7 @@ function cambiarPeriodo(meses) {
 
 async function cargarReporteIngresosHabitacion() {
     try {
-        const resp = await fetch(`http://localhost:3000/api/reportes/ingresos-habitacion?meses=${periodoMeses}`);
+        const resp = await fetch(`https://hotelbackend-hzc4.onrender.com/api/reportes/ingresos-habitacion?meses=${periodoMeses}`);
         const data = await resp.json();
 
         const tbody = document.getElementById("tablaIngresosHabitacion");

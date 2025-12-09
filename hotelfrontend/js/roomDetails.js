@@ -67,7 +67,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     // --- Botón Reservar Ahora ---
     document.getElementById("btnReservar").addEventListener("click", () => {
-        window.location.href = `reserva.html?room=${room.idHabitacion}`;
+        window.location.href = `/hotelfrontend/pages/reserva.html?room=${room.idHabitacion}`;
     });
 
 });
@@ -78,7 +78,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 // =============================
 async function cargarServicios(idHabitacion) {
     try {
-        const response = await fetch(`http://localhost:3000/api/habitaciones/servicios/${idHabitacion}`);
+        const response = await fetch(`https://hotelbackend-hzc4.onrender.com/api/habitaciones/servicios/${idHabitacion}`);
         const servicios = await response.json();
 
         const contenedor = document.getElementById("room-details-right");

@@ -3,6 +3,6 @@
 
     // Si NO hay sesión → redirigir a login
     if (!token) {
-        window.location.href = "login.html";
+        window.location.href = "../pages/login.html";
     }
 })();

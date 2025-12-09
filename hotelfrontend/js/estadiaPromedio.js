@@ -7,7 +7,7 @@ function cambiarPeriodo(meses) {
 
 async function cargarReporteEstadiaPromedio() {
     try {
-        const resp = await fetch(`http://localhost:3000/api/reportes/estadia-promedio?meses=${periodoMeses}`);
+        const resp = await fetch(`https://hotelbackend-hzc4.onrender.com/api/reportes/estadia-promedio?meses=${periodoMeses}`);
         const data = await resp.json();
 
         document.getElementById("lblEstadiaPromedio").textContent =

@@ -4,8 +4,6 @@ import {
     obtenerHabitacionPorNumero,
     crearHabitacion,
     obtenerTodasLasHabitaciones,
-    obtenerPrecioHabitacion,
-    asignarHabitacion,
     listarConFiltros,
     obtenerCaracteristicasPorTipo,
     obtenerServiciosPorTipo,
@@ -127,23 +125,6 @@ export async function actualizarEstadoHabitacionController(req, res) {
 export async function obtenerTodasLasHabitacionesController(req, res) {
     try {
         res.json(await obtenerTodasLasHabitaciones());
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-}
-
-export async function asignarHabitacionController(req, res) {
-    try {
-        await asignarHabitacion(req.body.idReserva, req.body.idHabitacion);
-        res.json({ message: "Habitación asignada" });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-}
-
-export async function obtenerPrecioHabitacionController(req, res) {
-    try {
-        res.json(await obtenerPrecioHabitacion(req.params.idHabitacion));
     } catch (err) {
         res.status(500).json({ error: err.message });
     }

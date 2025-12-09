@@ -68,10 +68,10 @@ document.addEventListener("DOMContentLoaded", () => {
     localStorage.removeItem("token"); // por si acaso
 
     // Previene volver atrás a páginas protegidas
-    history.replaceState(null, null, "index.html");
+    history.replaceState(null, null, "../index.html");
 
     // Redirige limpio
-    window.location.href = "index.html";
+    window.location.href = "../index.html";
 
     // Limpia cache de navegación hacia atrás
     setTimeout(() => {
@@ -86,7 +86,7 @@ document.addEventListener("DOMContentLoaded", () => {
         localStorage.removeItem("empleado");
         localStorage.removeItem("token");
 
-        window.location.href = "login-aseo.html";
+        window.location.href = "../pages/login-aseo.html";
     };
 
 });

@@ -11,11 +11,11 @@
         const rol = data.idRol;
 
         if (rol === 1) {
-            window.location.href = "dashboard-admin.html";
+            window.location.href = "../pages/dashboard-admin.html";
         } else if (rol === 2) {
-            window.location.href = "recepcionista.html";
+            window.location.href = "../pages/recepcionista.html";
         } else if (rol === 3) {
-            window.location.href = "personal-aseo.html";
+            window.location.href = "../pages/personal-aseo.html";
         } else {
             console.warn("Rol desconocido:", rol);
         }

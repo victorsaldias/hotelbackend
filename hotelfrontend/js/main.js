@@ -231,7 +231,7 @@ async function cargarSucursales() {
     if (!select) return;
 
     try {
-        const response = await fetch("http://localhost:3000/api/sucursales");
+        const response = await fetch("https://hotelbackend-hzc4.onrender.com/api/sucursales");
         const data = await response.json();
 
         select.innerHTML = `<option value="">Seleccione una sucursal</option>`;
@@ -289,14 +289,14 @@ if (filterForm) {
             return Swal.fire("La fecha de salida debe ser mayor a la de entrada");
         }
 
-        // === GUARDAR PARA LA RESERVA ===
-        localStorage.setItem("fechaInicioReserva", fechaInicioTexto);
-        localStorage.setItem("fechaFinReserva", fechaFinTexto);
-        localStorage.setItem("cantidadHuespedesReserva", cantidadHuespedes);
-
         // === FORMATO CORRECTO PARA BACKEND ===
         const fechaInicio = formatearFechaConHora(fechaInicioDate, "14:00:00");
         const fechaFin = formatearFechaConHora(fechaFinDate, "12:00:00");
+        
+ // === GUARDAR PARA LA RESERVA ===
+       localStorage.setItem("fechaInicioReserva", fechaInicio);
+        localStorage.setItem("fechaFinReserva", fechaFin);
+        localStorage.setItem("cantidadHuespedesReserva", cantidadHuespedes);
 
         console.log("FECHAS QUE SE ENVIAN →", {
             fechaInicio,
@@ -306,7 +306,7 @@ if (filterForm) {
         });
 
         try {
-            const response = await fetch("http://localhost:3000/api/habitaciones/buscar", {
+            const response = await fetch("https://hotelbackend-hzc4.onrender.com/api/habitaciones/buscar", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -321,7 +321,7 @@ if (filterForm) {
 
             const data = await response.json();
             localStorage.setItem("habitacionesBusqueda", JSON.stringify(data.habitaciones));
-            window.location.href = "rooms.html";
+            window.location.href = "../pages/rooms.html";
 
         } catch (err) {
             Swal.fire("Error de conexión");
@@ -338,7 +338,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (!container) return;
 
     try {
-        const res = await fetch("http://localhost:3000/api/habitaciones/tipos-habitacion");
+        const res = await fetch("https://hotelbackend-hzc4.onrender.com/api/habitaciones/tipos-habitacion");
         const tipos = await res.json();
 
         container.innerHTML = ""; // limpiar
@@ -382,7 +382,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             btn.addEventListener("click", () => {
                 const tipo = JSON.parse(btn.dataset.info);
                 localStorage.setItem("tipoHabitacionSeleccionada", JSON.stringify(tipo));
-                window.location.href = "tipo-habitacion.html";
+                window.location.href = "../pages/tipo-habitacion.html";
             });
         });
 

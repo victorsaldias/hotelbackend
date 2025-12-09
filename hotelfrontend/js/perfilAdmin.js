@@ -1,9 +1,9 @@
-const API = "http://localhost:3000/api/empleados";
+const API = "https://hotelbackend-hzc4.onrender.com/api/empleados";
 
 // Obtener datos guardados en localStorage
 const empleadoLocal = JSON.parse(localStorage.getItem("empleado"));
 if (!empleadoLocal) {
-    window.location.href = "../perfil.html";
+    window.location.href = "../pages/perfil.html";
 }
 
 // Elementos del DOM

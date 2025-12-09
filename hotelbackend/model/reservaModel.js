@@ -4,12 +4,42 @@ import { getConnection } from "../config/dbConfig.js";
 export async function ingresarReservaCompleta(data) {
     const { fechaInicio, fechaFin, idCliente, idHabitacion, cantidadHuespedes } = data;
 
-    const precio = await obtenerPrecioHabitacion(idHabitacion);
-    const dias = Math.ceil((new Date(fechaFin) - new Date(fechaInicio)) / (1000 * 60 * 60 * 24));
-    const total = dias * precio;
-
     const conn = await getConnection();
 
+    // ============================================================
+    // 1) VALIDAR SOLAPAMIENTO (versión segura y universal)
+    // ============================================================
+    const conflicto = await conn.request()
+        .input("idHabitacion", idHabitacion)
+        .input("inicio", fechaInicio)
+        .input("fin", fechaFin)
+        .query(`
+            SELECT 1
+            FROM reserva r
+            WHERE r.idReserva IN (
+                SELECT idReserva
+                FROM reservaHabitacion
+                WHERE idHabitacion = @idHabitacion
+            )
+            AND r.fechaInicio < @fin
+            AND r.fechaFin > @inicio;
+        `);
+
+    if (conflicto.recordset.length > 0) {
+        return { error: "La habitación ya está reservada en ese rango de fechas." };
+    }
+
+    // ============================================================
+    // 2) CALCULAR PRECIO TOTAL
+    // ============================================================
+    const precio = await obtenerPrecioHabitacion(idHabitacion);
+    const dias = Math.ceil((new Date(fechaFin) - new Date(fechaInicio)) 
+                            / (1000 * 60 * 60 * 24));
+    const total = dias * precio;
+
+    // ============================================================
+    // 3) INSERTAR RESERVA
+    // ============================================================
     const result = await conn.request()
         .input("fechaInicio", fechaInicio)
         .input("fechaFin", fechaFin)
@@ -26,6 +56,9 @@ export async function ingresarReservaCompleta(data) {
 
     const idReserva = result.recordset[0].idReserva;
 
+    // ============================================================
+    // 4) ASIGNAR HABITACIÓN
+    // ============================================================
     await asignarHabitacion(idReserva, idHabitacion);
 
     return { idReserva, total };

@@ -88,7 +88,7 @@
     <div class="offcanvas-menu-overlay"></div>
     <div class="offcanvas-menu-wrapper">
         <div class="offcanvas__logo">
-            <a href="./index.html"><img src="../img/logo.png" alt=""></a>
+            <a href="../index.html"><img src="../img/logo.png" alt=""></a>
         </div>
         <div id="mobile-menu-wrap"></div>
 
@@ -100,8 +100,8 @@
 
         <div class="offcanvas__auth">
             <ul>
-                <li><a href="login.html" id="mobileLoginBtn">Login</a></li>
-                <li><a href="registro.html" id="mobileRegisterBtn">Registrarse</a></li>
+                <li><a href="../pages/login.html" id="mobileLoginBtn">Login</a></li>
+                <li><a href="../pages/registro.html" id="mobileRegisterBtn">Registrarse</a></li>
                 <li><a href="#" id="mobileLogoutBtn" style="display:none;">Cerrar Sesión</a></li>
             </ul>
         </div>
@@ -121,8 +121,8 @@
                         <div class="header__top__right">
                             <div class="header__top__auth">
                                 <ul>
-                                    <li><a href="login.html" id="loginBtn">Login</a></li>
-                                    <li><a href="registro.html" id="registerBtn">Registrarse</a></li>
+                                    <li><a href="../pages/login.html" id="loginBtn">Login</a></li>
+                                    <li><a href="../pages/registro.html" id="registerBtn">Registrarse</a></li>
                                     <li><a href="#" id="logoutBtn" onclick="logoutCliente()" style="display:none;">Cerrar Sesión</a></li>
                                 </ul>
                             </div>
@@ -137,17 +137,17 @@
                 <div class="row">
                     <div class="col-lg-2">
                         <div class="header__logo">
-                            <a href="./index.html"><img src="../img/logo.png" alt=""></a>
+                            <a href="../index.html"><img src="../img/logo.png" alt=""></a>
                         </div>
                     </div>
                     <div class="col-lg-10">
                         <div class="header__nav">
                             <nav class="header__menu">
                                 <ul class="menu__class">
-                                    <li><a href="./index.html">Inicio</a></li>
-                                    <li><a href="./rooms.html">Habitaciones</a></li>
-                                    <li><a href="./about.html">Sobre Nosotros</a></li>
-                                    <li><a href="./mis-reservas.html">Mis Reservas</a></li>
+                                    <li><a href="../index.html">Inicio</a></li>
+                                    <li><a href="../pages/rooms.html">Habitaciones</a></li>
+                                    <li><a href="../pages/about.html">Sobre Nosotros</a></li>
+                                    <li><a href="../pages/mis-reservas.html">Mis Reservas</a></li>
 
                                     <!-- Avatar usuario -->
                                     <li class="nav-item user-menu">
@@ -156,8 +156,8 @@
                                         </div>
 
                                         <div id="userDropdown" class="user-dropdown hidden">
-                                            <a href="mi-perfil.html">Mi Perfil</a>
-                                            <a href="mis-reservas.html">Mis Reservas</a>
+                                            <a href="../pages/mi-perfil.html">Mi Perfil</a>
+                                            <a href="../pages/mis-reservas.html">Mis Reservas</a>
                                             <a id="btnLogout">Cerrar Sesión</a>
                                         </div>
                                     </li>
@@ -257,7 +257,33 @@
     <button type="submit" id="btnGuardar" class="btn btn-save" disabled style="opacity:0.5;">
         Guardar cambios
     </button>
+    
+    <button type="button" id="btnCambiarPassword" class="btn btn-danger mt-3">
+        Cambiar Contraseña
+    </button>
+</div>
+<hr>
 
+
+<!-- MODAL CAMBIO CONTRASEÑA -->
+<div id="modalPassword" class="modal" 
+     style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; 
+            background:rgba(0,0,0,0.8); justify-content:center; align-items:center;">
+    <div style="background:#111; padding:25px; border-radius:10px; width:350px; color:white;">
+        <h4>Cambiar Contraseña</h4>
+
+        <label>Contraseña actual</label>
+        <input type="password" id="pwActual" class="form-control mb-2">
+
+        <label>Nueva contraseña</label>
+        <input type="password" id="pwNueva" class="form-control mb-2">
+
+        <label>Repetir nueva contraseña</label>
+        <input type="password" id="pwNueva2" class="form-control mb-3">
+
+        <button class="btn btn-warning" id="btnConfirmarCambio">Confirmar</button>
+        <button class="btn btn-secondary" id="btnCerrarModal">Cancelar</button>
+    </div>
 </div>
 
                         </form>
