@@ -1,5 +1,5 @@
-let idCliente = null;
-
+let usuario = JSON.parse(localStorage.getItem("usuarioCliente"));
+const idCliente = usuario?.idCliente;  // 👈 hazlo global
 document.addEventListener("DOMContentLoaded", () => {
 
     $('select[data-nice!="false"]').niceSelect();
@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
-    const idCliente = usuario.idCliente;
+   
 
 
 
@@ -141,7 +141,12 @@ await cargarComunas(cliente.idProvincia, cliente.idComuna);
 
     form.addEventListener("submit", async (e) => {
         e.preventDefault();
+        
+const comunaValue = comunaSelect.value;
 
+if (!comunaValue || comunaValue === "null") {
+    return Swal.fire("Error", "Debes seleccionar una comuna válida", "error");
+}
         const payload = {
             rut: rutInput.value.trim(),
             nombre: nombreInput.value.trim(),
