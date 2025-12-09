@@ -25,7 +25,7 @@
         <div class="loader"></div>
     </div>
 
-    <!-- OFFCANVAS -->
+   
     <div class="offcanvas-menu-overlay"></div>
     <div class="offcanvas-menu-wrapper">
 
@@ -41,17 +41,22 @@
             </ul>
         </div>
 
-       <div class="offcanvas__auth">
-           <ul>
+        <div class="offcanvas__auth">
+            <ul>
                 <li><a href="../pages/login.html" id="mobileLoginBtn">Login</a></li>
                 <li><a href="../pages/registro.html" id="mobileRegisterBtn">Registrarse</a></li>
+
                 <li><a href="#" id="mobileLogoutBtn" style="display:none;">Cerrar Sesión</a></li>
+
+                <li id="mobileUserMenu" style="display:none;">
+                    <a href="../pages/mi-perfil.html">Mi Perfil</a>
+                    <a href="../pages/mis-reservas.html">Mis Reservas</a>
+                    <a href="#" onclick="logoutCliente()">Cerrar Sesión</a>
+                </li>
             </ul>
         </div>
-
     </div>
 
-    <!-- HEADER -->
     <header class="header">
 
         <div class="header__top">
@@ -70,7 +75,7 @@
                                 <ul>
                                     <li><a href="../pages/login.html" id="loginBtn">Login</a></li>
                                     <li><a href="../pages/registro.html" id="registerBtn">Registrarse</a></li>
-                                    <li><a href="#" id="logoutBtn" onclick="logoutCliente()" style="display:none">Cerrar Sesión</a></li>
+                                    <li><a href="#" id="logoutBtn" onclick="logoutCliente()" style="display:none;">Cerrar Sesión</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -93,28 +98,41 @@
 
                     <div class="col-lg-10">
                         <div class="header__nav">
+
                             <nav class="header__menu">
                                 <ul class="menu__class">
                                     <li><a href="../index.html">Inicio</a></li>
                                     <li class="active"><a href="../pages/rooms.html">Habitaciones</a></li>
                                     <li><a href="../pages/about.html">Sobre Nosotros</a></li>
+
+                                    <li class="nav-item user-menu">
+                                        <div id="userAvatar" class="user-avatar" style="display:none;">
+                                            <i class="fa fa-user"></i>
+                                        </div>
+
+                                        <div id="userDropdown" class="user-dropdown hidden">
+                                            <a href="../pages/mi-perfil.html">Mi Perfil</a>
+                                            <a href="../pages/mis-reservas.html">Mis Reservas</a>
+                                            <a href="#" id="btnLogout">Cerrar Sesión</a>
+                                        </div>
+                                    </li>
                                 </ul>
                             </nav>
+
                         </div>
                     </div>
 
-                </div>
+                    <div class="canvas__open">
+                        <span class="fa fa-bars"></span>
+                    </div>
 
-                <div class="canvas__open">
-                    <span class="fa fa-bars"></span>
                 </div>
-
             </div>
         </div>
 
     </header>
 
-    <!-- BREADCRUMB -->
+   
     <div class="breadcrumb-option set-bg" data-setbg="../img/breadcrumb-bg.jpg">
         <div class="container text-center">
             <div class="breadcrumb__text">
@@ -127,18 +145,16 @@
         </div>
     </div>
 
-    <!-- ROOMS SECTION (DINÁMICO) -->
+   
     <section class="rooms spad">
         <div class="container">
             <div class="row" id="roomsContainer">
-                <!-- Aquí se insertan las habitaciones dinámicas -->
+               
             </div>
         </div>
-        
     </section>
-    
 
-    <!-- FOOTER -->
+  
     <footer class="footer set-bg" data-setbg="../img/footer-bg.jpg">
         <div class="container">
             <p style="color:white; text-align:center; margin-top:20px;">
@@ -147,7 +163,7 @@
         </div>
     </footer>
 
-    <!-- JS -->
+
     <script src="../js/jquery-3.3.1.min.js"></script>
     <script src="../js/bootstrap.min.js"></script>
     <script src="../js/jquery.nice-select.min.js"></script>
@@ -156,12 +172,8 @@
     <script src="../js/owl.carousel.min.js"></script>
     <script src="../js/main.js"></script>
     <script src="../js/authStatus.js"></script>
-    <script src="..js/authGuardCliente.js"></script>
-    
-
-    <!-- JS DINÁMICO -->
+    <script src="../js/authGuardCliente.js"></script>
     <script src="../js/rooms.js"></script>
-    <script src="../js/authGuardReservas.js"></script>
-    <script src="../js/authStatus.js"></script>
+
 </body>
 </html>
