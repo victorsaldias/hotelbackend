@@ -245,9 +245,10 @@ if (metodo.value === "WebPay") {
     text: "Tu reserva quedó registrada.",
     timer: 2000,
     showConfirmButton: false
-}).then(() => {
+}).setTimeout(() => {
     window.location.href = "../index.html";
-});
+}, 1200);
+
 
         } catch (e) {
     console.error("ERROR RESERVA:", e);

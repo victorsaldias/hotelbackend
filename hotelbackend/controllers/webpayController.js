@@ -1,24 +1,18 @@
-import { crearReservaWebPay, registrarPagoWebPay } from "../model/webpayModel.js";
+import { crearReservaService } from "../services/reservaService.js";
+import { registrarPagoWebPay } from "../model/webpayModel.js";
+import { cambiarEstadoReserva } from "../model/reservaModel.js";
 
-// ===============================
-// INICIAR TRANSACCIÓN (SIMULADA)
-// ===============================
 export const iniciarTransaccion = async (req, res) => {
     try {
-        // crear token simple para simular
         const token = "TKN-" + Date.now();
 
-        return res.json({
-            ok: true,
-            token
-        });
+        return res.json({ ok: true, token });
 
     } catch (err) {
-        console.error("Error al iniciar transacción:", err);
+        console.error(err);
         res.status(500).json({ error: "Error al iniciar la transacción" });
     }
 };
-
 
 export const confirmarPago = async (req, res) => {
     try {
@@ -28,20 +22,23 @@ export const confirmarPago = async (req, res) => {
             return res.status(400).json({ error: "Datos incompletos" });
         }
 
-        // 1) Crear la reserva
-        const idReserva = await crearReservaWebPay(reserva);
+        // 1) Crear reserva con el MISMO método del pago presencial
+        const { idReserva, total } = await crearReservaService(reserva);
 
         // 2) Registrar pago
-        await registrarPagoWebPay(idReserva, reserva.total);
+        await registrarPagoWebPay(idReserva, total);
+
+        // 3) Cambiar estado a PAGADA (AJUSTA EL ID REAL)
+        await cambiarEstadoReserva(idReserva, 3);
 
         return res.json({
             ok: true,
-            mensaje: "Pago confirmado y reserva creada",
+            mensaje: "Pago confirmado",
             idReserva
         });
 
     } catch (err) {
         console.error("Error en confirmarPago:", err);
-        return res.status(500).json({ error: "Error al procesar pago" });
+        return res.status(500).json({ error: err.message });
     }
 };

@@ -12,7 +12,7 @@ export const crearReservaWebPay = async (reserva) => {
         .input("fechaFin", reserva.fechaFin)
         .input("total", reserva.total)
         .input("idCliente", reserva.idCliente)
-        .input("idEstadoReserva", 3) // PAGADA
+        .input("idEstadoReserva", 1) // PAGADA
         .query(`
             INSERT INTO reserva (fechaInicio, fechaFin, total, idCliente, idEstadoReserva)
             OUTPUT INSERTED.idReserva
