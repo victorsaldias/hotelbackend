@@ -26,7 +26,6 @@ const fechaBonitaFin = new Date(fechaFin).toLocaleDateString("es-CL");
     document.getElementById("previewFechaInicio").textContent = fechaBonitaInicio;
     document.getElementById("previewFechaFin").textContent = fechaBonitaFin;
     document.getElementById("previewHuespedes").textContent = cantidadHuespedes;
-    document.getElementById("previewTotal").textContent = total;
 
 
     /* ============================================================
@@ -43,6 +42,10 @@ const fechaF = new Date(fechaFinSQL);
 
 // Calcular días reales
 const dias = Math.ceil((fechaF - fechaI) / (1000 * 60 * 60 * 24));
+// Calcular total y mostrar
+const total = room.precio * dias;
+document.getElementById("previewTotal").textContent = total.toLocaleString("es-CL");
+
     /* ============================================================
        4) PASARELA ACOMPAÑANTES
     ============================================================ */
