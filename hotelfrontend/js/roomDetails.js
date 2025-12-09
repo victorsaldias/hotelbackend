@@ -67,7 +67,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     // --- Botón Reservar Ahora ---
      // CLICK → Reservar Ahora → ir directo a reserva.html
-    document.querySelectorAll("btnReservar").forEach(btn => {
+    document.querySelectorAll("#btnReservar").forEach(btn => {
         btn.addEventListener("click", () => {
             const info = JSON.parse(btn.dataset.info);
 
