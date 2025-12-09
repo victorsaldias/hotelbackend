@@ -1,43 +1,89 @@
 document.addEventListener("DOMContentLoaded", async () => {
 
     const clienteId = localStorage.getItem("clienteId");
+    const container = document.getElementById("reservasContainer");
+
+    let reservas = []; 
 
     if (!clienteId) {
         Swal.fire("Debes iniciar sesión");
         return window.location.href = "login.html";
     }
 
-    const container = document.getElementById("reservasContainer");
+    console.log("Cargando reservas del cliente...");
 
     try {
         const res = await fetch(`http://localhost:3000/api/reservas/cliente/${clienteId}`);
-       console.log("RESPONSE STATUS:", res.status);
-const data = await res.json();
-console.log("DATA RECIBIDA:", data);
-        if (!data || data.length === 0) {
-            container.innerHTML = "<p>No tienes reservas.</p>";
+        reservas = await res.json();
+
+        renderReservas(reservas);
+
+    } catch (e) {
+        container.innerHTML = "<p class='text-danger'>Error al cargar tus reservas.</p>";
+    }
+
+   
+    function renderReservas(lista) {
+
+        if (!lista || lista.length === 0) {
+            container.innerHTML = "<p class='text-center'>No tienes reservas.</p>";
             return;
         }
 
         container.innerHTML = "";
 
-        data.forEach(r => {
+        lista.forEach(r => {
+
+            const estadoClase =
+                r.estadoReserva === "Confirmada" ? "estado-confirmada" :
+                r.estadoReserva === "Cancelada" ? "estado-cancelada" :
+                "estado-pendiente";
+
             container.innerHTML += `
-                <div class="col-12 col-md-6">
-                    <div class="card p-3">
+                <div class="col-12 col-md-6 col-xl-4">
+                    <div class="reserva-card">
                         <h5>Reserva #${r.idReserva}</h5>
-                        <p><strong>Habitación:</strong> ${r.idHabitacion}</p>
-                        <p><strong>Entrada:</strong> ${new Date(r.fechaInicio).toLocaleString()}</p>
-                        <p><strong>Salida:</strong> ${new Date(r.fechaFin).toLocaleString()}</p>
+
+                        <p><strong>Habitación:</strong> ${r.numeroHabitacion || "N/A"}</p>
+                        <p><strong>Entrada:</strong> ${formatear(r.fechaInicio)}</p>
+                        <p><strong>Salida:</strong> ${formatear(r.fechaFin)}</p>
                         <p><strong>Huéspedes:</strong> ${r.cantidadHuespedes}</p>
                         <p><strong>Total:</strong> $${r.total}</p>
-                        <p><strong>Estado:</strong> ${r.estadoReserva}</p>
+
+                        <span class="estado ${estadoClase}">
+                            ${r.estadoReserva}
+                        </span>
                     </div>
                 </div>
             `;
         });
-
-    } catch (e) {
-        container.innerHTML = "<p>Error al cargar tus reservas.</p>";
     }
+
+    function formatear(fecha) {
+        return new Date(fecha).toLocaleString("es-CL", {
+            dateStyle: "medium",
+            timeStyle: "short"
+        });
+    }
+
+    
+    document.getElementById("btnFiltrar").addEventListener("click", () => {
+        const desde = document.getElementById("filterDesde").value;
+        const hasta = document.getElementById("filterHasta").value;
+
+        let filtradas = reservas;
+
+        if (desde) {
+            filtradas = filtradas.filter(r => new Date(r.fechaInicio) >= new Date(desde));
+        }
+
+        if (hasta) {
+            const finHasta = new Date(hasta);
+            finHasta.setHours(23, 59, 59);
+            filtradas = filtradas.filter(r => new Date(r.fechaFin) <= finHasta);
+        }
+
+        renderReservas(filtradas);
+    });
+
 });

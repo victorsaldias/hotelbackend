@@ -25,7 +25,6 @@
         .btn-toggle-vista:hover {
             background: #ffc54d;
         }
-       
     </style>
 </head>
 
@@ -53,6 +52,7 @@
 
         <section class="report-section">
 
+            <!-- Estructura estándar como en los otros reportes -->
             <div class="period-buttons">
 
                 <div class="left-buttons">
@@ -62,9 +62,19 @@
                 </div>
 
                 <div class="right-buttons">
-                    <button class="btn-exportar" onclick="exportarPDF('ocupacion_sucursal.pdf', 'tablaExportar')">
+                    <button class="btn-exportar"
+                        onclick="
+                            exportarPDF(
+                                'ocupacion_sucursal.pdf',
+                                'tablaExportar',
+                                'Reporte: Ocupación por Sucursal',
+                                'Hotel Arellano',
+                                localStorage.getItem('empleadoNombre') + ' ' + localStorage.getItem('empleadoApellido')
+                            )
+                        ">
                         Exportar PDF
                     </button>
+
                     <button id="btnToggleVista" class="btn-toggle-vista">Mostrar Tabla</button>
                 </div>
 
@@ -90,6 +100,7 @@
 
     </main>
 </div>
+
 <script src="../js/menuMovil.js"></script>
 <script src="../js/admin.js"></script>
 <script src="../js/reportes.js"></script>

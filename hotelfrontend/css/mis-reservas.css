@@ -1,0 +1,108 @@
+/* Visibilidad y posición del botón móvil */
+.canvas__open {
+    display: none;
+}
+
+@media (max-width: 991px) {
+    .canvas__open {
+        display: block;
+        position: absolute;
+        top: 25px;
+        right: 20px;
+        z-index: 9999;
+        cursor: pointer;
+    }
+}
+
+/* Footer centrado */
+.footer-text {
+    color: white;
+    text-align: center;
+    margin-top: 20px;
+}
+
+/* Tarjetas de reservas */
+.reserva-card {
+    border-radius: 8px;
+    background: #ffffff;
+    box-shadow: 0px 4px 12px rgba(0,0,0,0.1);
+    padding: 20px;
+}
+
+.reserva-card h5 {
+    font-weight: 600;
+}
+
+.reserva-card p {
+    margin-bottom: 4px;
+}
+/* CONTENEDOR DE TARJETAS */
+.reserva-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0px 4px 14px rgba(0,0,0,0.12);
+    transition: 0.3s ease;
+    border-left: 5px solid #dfa974; /* color dorado Hiroto */
+}
+
+.reserva-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0px 6px 20px rgba(0,0,0,0.15);
+}
+
+/* TÍTULO */
+.reserva-card h5 {
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+/* Texto */
+.reserva-card p {
+    margin: 3px 0;
+    color: #555;
+}
+
+/* ESTADOS */
+.estado {
+    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: 8px;
+    display: inline-block;
+    margin-top: 10px;
+}
+
+.estado-confirmada {
+    background: #d4f8e8;
+    color: #0f8a5f;
+}
+
+.estado-pendiente {
+    background: #fff3cd;
+    color: #a67c00;
+}
+
+.estado-cancelada {
+    background: #f8d7da;
+    color: #842029;
+}
+
+/* BOTÓN responsable con estilo Hiroto */
+.btn-hiroto {
+    background: #dfa974;
+    border: none;
+    padding: 10px 14px;
+    border-radius: 6px;
+    color: white;
+    font-weight: 600;
+    margin-top: 10px;
+    transition: 0.2s;
+}
+
+.btn-hiroto:hover {
+    background: #c88b5e;
+}
+.breadcrumb__text h2 {
+    color: #fff !important;
+}

@@ -17,6 +17,7 @@
             justify-content: flex-end;
             margin-bottom: 15px;
         }
+
         .btn-toggle-vista {
             background: #ffae00;
             color: #000;
@@ -27,9 +28,19 @@
             cursor: pointer;
             transition: 0.2s;
         }
+
         .btn-toggle-vista:hover {
             background: #ffc54d;
         }
+
+        .period-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            align-items: center;
+        }
+
+        
     </style>
 </head>
 
@@ -58,11 +69,28 @@
 
         <section class="report-section">
 
-            <div class="toggle-wrapper">
-                <button class="btn-exportar" onclick="exportarPDF('habitaciones_frecuentes.pdf', 'tablaExportar')">
-            Exportar PDF
-        </button>
-                <button id="btnToggleVista" class="btn-toggle-vista">Mostrar Tabla</button>
+            <!-- Mismas posiciones que el HTML que enviaste -->
+            <div class="period-buttons">
+                <div class="left-buttons"></div>
+
+                <div class="right-buttons">
+                    <button class="btn-exportar"
+                         onclick="
+                            exportarPDF(
+                             'estado_habitaciones.pdf',
+                              'tablaExportar',
+                                'Reporte: Estado de Habitaciones',
+                                 'Hotel Arellano',
+                                 localStorage.getItem('empleadoNombre') + ' ' + localStorage.getItem('empleadoApellido')
+                                  )
+                                  ">
+                 Exportar PDF
+                    </button>
+
+                    </button>
+
+                    <button id="btnToggleVista" class="btn-toggle-vista">Mostrar Tabla</button>
+                </div>
             </div>
 
             <div class="chart-container">
@@ -92,6 +120,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
-
 </body>
 </html>
+
+
+

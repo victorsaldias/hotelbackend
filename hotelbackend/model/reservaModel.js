@@ -2,7 +2,7 @@ import { obtenerPrecioHabitacion, asignarHabitacion } from "./habitacionModel.js
 import { getConnection } from "../config/dbConfig.js";
 
 export async function ingresarReservaCompleta(data) {
-    const { fechaInicio, fechaFin, idCliente, idHabitacion } = data;
+    const { fechaInicio, fechaFin, idCliente, idHabitacion, cantidadHuespedes } = data;
 
     const precio = await obtenerPrecioHabitacion(idHabitacion);
     const dias = Math.ceil((new Date(fechaFin) - new Date(fechaInicio)) / (1000 * 60 * 60 * 24));
@@ -16,9 +16,10 @@ export async function ingresarReservaCompleta(data) {
         .input("total", total)
         .input("idCliente", idCliente)
         .input("idEstadoReserva", 1)
+        .input("cantidadHuespedes", cantidadHuespedes)
         .query(`
-            INSERT INTO reserva (fechaInicio, fechaFin, total, idCliente, idEstadoReserva)
-            VALUES (@fechaInicio, @fechaFin, @total, @idCliente, @idEstadoReserva);
+            INSERT INTO reserva (fechaInicio, fechaFin, total, idCliente, idEstadoReserva, cantidadHuespedes)
+            VALUES (@fechaInicio, @fechaFin, @total, @idCliente, @idEstadoReserva, @cantidadHuespedes);
 
             SELECT SCOPE_IDENTITY() AS idReserva;
         `);
@@ -29,13 +30,14 @@ export async function ingresarReservaCompleta(data) {
 
     return { idReserva, total };
 }
+
 export async function guardarAcompaniante(idReserva, a) {
     const conn = await getConnection();
 
     const tipoNormalizado =
         a.tipoPersona.toLowerCase() === "adulto"
             ? "adulto"
-            : "niño"; // OBLIGATORIO con tilde y minúscula
+            : "niño"; 
 
     return await conn.request()
         .input("nombre", a.nombre)
@@ -138,7 +140,6 @@ export async function verHistorialReserva(idCliente) {
                 r.total,
                 r.cantidadHuespedes,
                 er.nombre AS estadoReserva,
-                
                 h.numero AS numeroHabitacion,
                 th.nombre AS tipoHabitacion
 
@@ -154,6 +155,8 @@ export async function verHistorialReserva(idCliente) {
 
     return result.recordset;
 }
+
+
 
 export async function modificarReserva(idReserva, fechaInicio, fechaFin) {
     const conn = await getConnection();
