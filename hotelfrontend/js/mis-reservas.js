@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
     cargarMisReservas();
 });
-
+const API_URL = "https://hotelbackend-hzc4.onrender.com";
 async function cargarMisReservas() {
 
     const usuario = JSON.parse(localStorage.getItem("usuarioCliente"));
@@ -19,7 +19,7 @@ async function cargarMisReservas() {
     console.log("Cargando reservas del cliente...");
 
     try {
-        const res = await fetch(`http://localhost:3000/api/reservas/cliente/${clienteId}`);
+        const res = await fetch(`${API_URL}/api/reservas/cliente/${clienteId}`);
 
         if (!res.ok) {
             throw new Error("No se pudieron cargar las reservas");
@@ -33,7 +33,7 @@ async function cargarMisReservas() {
         container.innerHTML = "<p class='text-danger'>Error al cargar tus reservas.</p>";
     }
 
-    // FILTRO
+  
     document.getElementById("btnFiltrar").addEventListener("click", () => {
         const desde = document.getElementById("filterDesde").value;
         const hasta = document.getElementById("filterHasta").value;
@@ -53,7 +53,6 @@ async function cargarMisReservas() {
         renderReservas(filtradas);
     });
 }
-
 function renderReservas(lista) {
     const container = document.getElementById("reservasContainer");
     container.innerHTML = "";

@@ -7,29 +7,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mis Reservas - Hotel Arellano</title>
 
-    <link rel="stylesheet" href="../css/bootstrap.min.css" type="text/css">
-    <link rel="stylesheet" href="../css/font-awesome.min.css" type="text/css">
-    <link rel="stylesheet" href="../css/elegant-icons.css" type="text/css">
-    <link rel="stylesheet" href="../css/nice-select.css" type="text/css">
-    <link rel="stylesheet" href="../css/jquery-ui.min.css" type="text/css">
-    <link rel="stylesheet" href="../css/owl.carousel.min.css" type="text/css">
-    <link rel="stylesheet" href="../css/slicknav.min.css" type="text/css">
-    <link rel="stylesheet" href="../css/style.css" type="text/css">
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/font-awesome.min.css">
+    <link rel="stylesheet" href="../css/elegant-icons.css">
+    <link rel="stylesheet" href="../css/nice-select.css">
+    <link rel="stylesheet" href="../css/jquery-ui.min.css">
+    <link rel="stylesheet" href="../css/owl.carousel.min.css">
+    <link rel="stylesheet" href="../css/slicknav.min.css">
+    <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/mis-reservas.css">
 </head>
 
 <body>
 
-   
     <div id="preloder">
         <div class="loader"></div>
     </div>
 
-   
+  
     <div class="offcanvas-menu-overlay"></div>
     <div class="offcanvas-menu-wrapper">
         <div class="offcanvas__logo">
-            <a href="./index.html"><img src="../img/logo.png" alt=""></a>
+            <a href="../index.html"><img src="../img/logo.png" alt=""></a>
         </div>
 
         <div id="mobile-menu-wrap"></div>
@@ -43,10 +42,9 @@
         </div>
     </div>
 
- 
     <header class="header">
 
-       
+     
         <div class="header__top">
             <div class="container">
                 <div class="row">
@@ -78,22 +76,19 @@
             <div class="container">
                 <div class="row">
 
-               
                     <div class="col-lg-2">
                         <div class="header__logo">
-                            <a href="./index.html"><img src="../img/logo.png" alt=""></a>
+                            <a href="../index.html"><img src="../img/logo.png" alt=""></a>
                         </div>
                     </div>
 
-                    
                     <div class="col-lg-10">
                         <div class="header__nav">
-
                             <nav class="header__menu">
                                 <ul class="menu__class">
-                                    <li><a href="./index.html">Inicio</a></li>
-                                    <li><a href="./rooms.html">Habitaciones</a></li>
-                                    <li><a href="./about.html">Sobre Nosotros</a></li>
+                                    <li><a href="../index.html">Inicio</a></li>
+                                    <li><a href="rooms.html">Habitaciones</a></li>
+                                    <li><a href="about.html">Sobre Nosotros</a></li>
 
                                     <li class="nav-item user-menu active">
                                         <div id="userAvatar" class="user-avatar">
@@ -108,11 +103,9 @@
                                     </li>
                                 </ul>
                             </nav>
-
                         </div>
                     </div>
 
-                    
                     <div class="canvas__open">
                         <span class="fa fa-bars"></span>
                     </div>
@@ -123,7 +116,7 @@
 
     </header>
 
-    
+
     <section class="breadcrumb-option set-bg" data-setbg="../img/hero.jpg">
         <div class="container text-center">
             <div class="breadcrumb__text">
@@ -133,40 +126,37 @@
     </section>
 
     
-   <section class="spad">
-    <div class="container">
+    <section class="spad">
+        <div class="container">
 
-        
-        <div class="reserva-filtros mb-4">
-            <div class="row g-3 align-items-end">
+            <div class="reserva-filtros mb-4">
+                <div class="row g-3 align-items-end">
 
-                <div class="col-md-4">
-                    <label>Fecha Desde</label>
-                    <input type="date" id="filterDesde" class="form-control">
+                    <div class="col-md-4">
+                        <label>Fecha Desde</label>
+                        <input type="date" id="filterDesde" class="form-control">
+                    </div>
+
+                    <div class="col-md-4">
+                        <label>Fecha Hasta</label>
+                        <input type="date" id="filterHasta" class="form-control">
+                    </div>
+
+                    <div class="col-md-4">
+                        <button id="btnFiltrar" class="btn btn-primary w-100">Buscar Reservas</button>
+                    </div>
+
                 </div>
-
-                <div class="col-md-4">
-                    <label>Fecha Hasta</label>
-                    <input type="date" id="filterHasta" class="form-control">
-                </div>
-
-                <div class="col-md-4">
-                    <button id="btnFiltrar" class="btn btn-primary w-100">Buscar Reservas</button>
-                </div>
-
             </div>
+
+            <div id="reservasContainer" class="row g-4">
+                <p class="text-center">Cargando reservas...</p>
+            </div>
+
         </div>
+    </section>
 
-        
-        <div id="reservasContainer" class="row g-4">
-            <p class="text-center">Cargando reservas...</p>
-        </div>
-
-    </div>
-</section>
-
-
-   
+ 
     <footer class="footer set-bg" data-setbg="../img/footer-bg.jpg">
         <div class="container">
             <p class="footer-text">
@@ -175,7 +165,7 @@
         </div>
     </footer>
 
-  
+   
     <script src="../js/jquery-3.3.1.min.js"></script>
     <script src="../js/bootstrap.min.js"></script>
     <script src="../js/jquery.nice-select.min.js"></script>
@@ -184,7 +174,6 @@
     <script src="../js/owl.carousel.min.js"></script>
     <script src="../js/main.js"></script>
 
-    
     <script src="../js/authStatus.js"></script>
     <script src="../js/authGuardCliente.js"></script>
     <script src="../js/protegerReservas.js"></script>
