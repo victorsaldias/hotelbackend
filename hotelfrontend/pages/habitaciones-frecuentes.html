@@ -58,27 +58,32 @@
 
         <section class="report-section" id="exportArea">
 
+            <div class="period-buttons">
 
-<div class="period-buttons">
+                <div class="left-buttons">
+                    <button class="period-btn" onclick="cambiarPeriodo(1)">Último mes</button>
+                    <button class="period-btn" onclick="cambiarPeriodo(3)">Últimos 3 meses</button>
+                    <button class="period-btn" onclick="cambiarPeriodo(6)">Últimos 6 meses</button>
+                </div>
 
-    <div class="left-buttons">
-        <button class="period-btn" onclick="cambiarPeriodo(1)">Último mes</button>
-        <button class="period-btn" onclick="cambiarPeriodo(3)">Últimos 3 meses</button>
-        <button class="period-btn" onclick="cambiarPeriodo(6)">Últimos 6 meses</button>
+                <div class="right-buttons">
+                    <button class="btn-exportar"
+                        onclick="
+                            exportarPDF(
+                                'habitaciones_frecuentes.pdf',
+                                'tablaExportar',
+                                'Reporte: Habitaciones Más Frecuentes',
+                                'Hotel Arellano',
+                                localStorage.getItem('empleadoNombre') + ' ' + localStorage.getItem('empleadoApellido')
+                            )
+                        ">
+                        Exportar PDF
+                    </button>
 
-        <!-- Botón Exportar PDF en verde -->
-        
-    </div>
+                    <button id="btnToggleVista" class="btn-toggle-vista">Mostrar Tabla</button>
+                </div>
 
-    <div class="right-buttons">
-        <!-- Botón Mostrar Gráfico a la derecha -->
-        <button class="btn-exportar" onclick="exportarPDF('habitaciones_frecuentes.pdf', 'tablaExportar')">
-            Exportar PDF
-        </button>
-        <button id="btnToggleVista" class="btn-toggle-vista">Mostrar Tabla</button>
-    </div>
-
-</div>
+            </div>
 
             <div class="chart-container">
                 <canvas id="chartHabitacionesFrecuentes"></canvas>
@@ -112,3 +117,4 @@
 
 </body>
 </html>
+

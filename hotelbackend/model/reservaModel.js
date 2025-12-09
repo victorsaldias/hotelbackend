@@ -1,76 +1,66 @@
-import { obtenerPrecioHabitacion, asignarHabitacion } from "./habitacionModel.js";
+// model/reservaModel.js
 import { getConnection } from "../config/dbConfig.js";
+import { obtenerPrecioHabitacion } from "./habitacionModel.js";
 
+/* ============================================================
+   INSERTAR RESERVA (solo cabecera, sin habitaciones)
+============================================================ */
 export async function ingresarReservaCompleta(data) {
-    const { fechaInicio, fechaFin, idCliente, idHabitacion } = data;
+    const { fechaInicio, fechaFin, idCliente, total, cantidadHuespedes } = data;
 
     const conn = await getConnection();
 
-    // ============================================================
-    // 1) VALIDAR SOLAPAMIENTO (versión segura y universal)
-    // ============================================================
-    const conflicto = await conn.request()
+    const result = await conn.request()
+        .input("fechaInicio", fechaInicio)
+        .input("fechaFin", fechaFin)
+        .input("total", total)
+        .input("idCliente", idCliente)
+        .input("idEstadoReserva", 1) // 1 = Pendiente
+        .input("cantidadHuespedes", cantidadHuespedes || 1)
+        .query(`
+            INSERT INTO reserva (fechaInicio, fechaFin, total, idCliente, idEstadoReserva, cantidadHuespedes)
+            VALUES (@fechaInicio, @fechaFin, @total, @idCliente, @idEstadoReserva, @cantidadHuespedes);
+
+            SELECT SCOPE_IDENTITY() AS idReserva;
+        `);
+
+    const idReserva = result.recordset[0].idReserva;
+    return { idReserva, total };
+}
+
+/* ============================================================
+   VALIDAR SOLAPAMIENTO DE UNA HABITACIÓN
+============================================================ */
+export async function validarSolapamientoHabitacion(idHabitacion, fechaInicio, fechaFin) {
+    const conn = await getConnection();
+
+    const result = await conn.request()
         .input("idHabitacion", idHabitacion)
         .input("inicio", fechaInicio)
         .input("fin", fechaFin)
         .query(`
             SELECT 1
             FROM reserva r
-            WHERE r.idReserva IN (
-                SELECT idReserva
-                FROM reservaHabitacion
-                WHERE idHabitacion = @idHabitacion
-            )
-            AND r.fechaInicio < @fin
-            AND r.fechaFin > @inicio;
+            INNER JOIN reservaHabitacion rh ON r.idReserva = rh.idReserva
+            WHERE rh.idHabitacion = @idHabitacion
+              AND r.idEstadoReserva <> 3 -- 3 = Cancelada (ajusta si usas otro código)
+              AND r.fechaInicio < @fin
+              AND r.fechaFin > @inicio;
         `);
 
-    if (conflicto.recordset.length > 0) {
-        return { error: "La habitación ya está reservada en ese rango de fechas." };
-    }
-
-    // ============================================================
-    // 2) CALCULAR PRECIO TOTAL
-    // ============================================================
-    const precio = await obtenerPrecioHabitacion(idHabitacion);
-    const dias = Math.ceil((new Date(fechaFin) - new Date(fechaInicio)) 
-                            / (1000 * 60 * 60 * 24));
-    const total = dias * precio;
-
-    // ============================================================
-    // 3) INSERTAR RESERVA
-    // ============================================================
-    const result = await conn.request()
-        .input("fechaInicio", fechaInicio)
-        .input("fechaFin", fechaFin)
-        .input("total", total)
-        .input("idCliente", idCliente)
-        .input("idEstadoReserva", 1)
-        .query(`
-            INSERT INTO reserva (fechaInicio, fechaFin, total, idCliente, idEstadoReserva)
-            VALUES (@fechaInicio, @fechaFin, @total, @idCliente, @idEstadoReserva);
-
-            SELECT SCOPE_IDENTITY() AS idReserva;
-        `);
-
-    const idReserva = result.recordset[0].idReserva;
-
-    // ============================================================
-    // 4) ASIGNAR HABITACIÓN
-    // ============================================================
-    await asignarHabitacion(idReserva, idHabitacion);
-
-    return { idReserva, total };
+    return result.recordset.length > 0; // true = hay conflicto
 }
 
-
+/* ============================================================
+   GUARDAR ACOMPAÑANTE
+============================================================ */
 export async function guardarAcompaniante(idReserva, a) {
     const conn = await getConnection();
 
     const tipoNormalizado =
-        a.tipoPersona.toLowerCase() === "adulto"
+        (a.tipoPersona || "").toLowerCase() === "adulto"
             ? "adulto"
-            : "niño"; // OBLIGATORIO con tilde y minúscula
+            : "niño";
 
     return await conn.request()
         .input("nombre", a.nombre)
@@ -85,9 +75,12 @@ export async function guardarAcompaniante(idReserva, a) {
         `);
 }
 
+/* ============================================================
+   LISTAR RESERVAS (con sucursal opcional)
+============================================================ */
 export async function verReservas(idSucursal) {
     const conn = await getConnection();
-    
+
     let query = `
         SELECT 
             r.idReserva,
@@ -112,7 +105,7 @@ export async function verReservas(idSucursal) {
 
     if (idSucursal) {
         query += ` WHERE h.idSucursal = @idSucursal`;
-        request.input('idSucursal', parseInt(idSucursal));
+        request.input("idSucursal", parseInt(idSucursal));
     }
 
     query += ` ORDER BY r.idReserva DESC`;
@@ -121,6 +114,9 @@ export async function verReservas(idSucursal) {
     return result.recordset;
 }
 
+/* ============================================================
+   VER RESERVA POR ID (cabecera)
+============================================================ */
 export async function verReservaPorId(idReserva) {
     const conn = await getConnection();
     const result = await conn.request()
@@ -132,7 +128,9 @@ export async function verReservaPorId(idReserva) {
     return result.recordset[0];
 }
 
-
+/* ============================================================
+   CONFIRMAR / CANCELAR / CAMBIAR ESTADO
+============================================================ */
 export async function confirmarReserva(idReserva, idEmpleado) {
     const conn = await getConnection();
 
@@ -160,6 +158,21 @@ export async function cancelarReserva(idReserva) {
         `);
 }
 
+export async function cambiarEstadoReserva(idReserva, idEstadoReserva) {
+    const pool = await getConnection();
+    await pool.request()
+        .input("idReserva", idReserva)
+        .input("estado", idEstadoReserva)
+        .query(`
+            UPDATE reserva
+            SET idEstadoReserva = @estado
+            WHERE idReserva = @idReserva
+        `);
+}
+
+/* ============================================================
+   HISTORIAL POR CLIENTE
+============================================================ */
 export async function verHistorialReserva(idCliente) {
     const conn = await getConnection();
 
@@ -173,16 +186,13 @@ export async function verHistorialReserva(idCliente) {
                 r.total,
                 r.cantidadHuespedes,
                 er.nombre AS estadoReserva,
-                
                 h.numero AS numeroHabitacion,
                 th.nombre AS tipoHabitacion
-
             FROM reserva r
             LEFT JOIN reservaHabitacion rh ON rh.idReserva = r.idReserva
             LEFT JOIN habitacion h ON h.idHabitacion = rh.idHabitacion
             LEFT JOIN tipoHabitacion th ON th.idTipoHabitacion = h.idTipoHabitacion
             LEFT JOIN estadoReserva er ON er.idEstadoReserva = r.idEstadoReserva
-
             WHERE r.idCliente = @idCliente
             ORDER BY r.fechaInicio DESC;
         `);
@@ -190,22 +200,35 @@ export async function verHistorialReserva(idCliente) {
     return result.recordset;
 }
 
+/* ============================================================
+   MODIFICAR RESERVA (fechas + total multi-habitación)
+============================================================ */
 export async function modificarReserva(idReserva, fechaInicio, fechaFin) {
     const conn = await getConnection();
 
-    const habitacion = await conn.request()
+    // Obtener todas las habitaciones asociadas a la reserva
+    const habs = await conn.request()
         .input("idReserva", idReserva)
         .query(`
-            SELECT TOP 1 idHabitacion 
+            SELECT idHabitacion
             FROM reservaHabitacion
             WHERE idReserva = @idReserva;
         `);
 
-    const idHabitacion = habitacion.recordset[0].idHabitacion;
-    const precio = await obtenerPrecioHabitacion(idHabitacion);
+    if (habs.recordset.length === 0) {
+        throw new Error("La reserva no tiene habitaciones asociadas.");
+    }
 
-    const dias = Math.ceil((new Date(fechaFin) - new Date(fechaInicio)) / (1000 * 60 * 60 * 24));
-    const total = dias * precio;
+    const dias = Math.ceil(
+        (new Date(fechaFin) - new Date(fechaInicio)) / (1000 * 60 * 60 * 24)
+    );
+
+    let total = 0;
+
+    for (const row of habs.recordset) {
+        const precio = await obtenerPrecioHabitacion(row.idHabitacion);
+        total += precio * dias;
+    }
 
     await conn.request()
         .input("idReserva", idReserva)
@@ -215,14 +238,18 @@ export async function modificarReserva(idReserva, fechaInicio, fechaFin) {
         .query(`
             UPDATE reserva
             SET fechaInicio = @fechaInicio,
-                fechaFin = @fechaFin,
-                total = @total
+                fechaFin   = @fechaFin,
+                total      = @total
             WHERE idReserva = @idReserva;
         `);
 
     return true;
 }
 
+/* ============================================================
+   CAMBIAR HABITACIÓN(ES) DE LA RESERVA
+   (por ahora reemplaza todas por 1 nueva, como ya hacía tu código)
+============================================================ */
 export async function modificarHabitacionDeReserva(idReserva, nuevaHabitacion) {
     const conn = await getConnection();
 
@@ -232,17 +259,26 @@ export async function modificarHabitacionDeReserva(idReserva, nuevaHabitacion) {
             DELETE FROM reservaHabitacion WHERE idReserva = @idReserva;
         `);
 
-    await asignarHabitacion(idReserva, nuevaHabitacion);
+    await conn.request()
+        .input("idReserva", idReserva)
+        .input("idHabitacion", nuevaHabitacion)
+        .query(`
+            INSERT INTO reservaHabitacion (idReserva, idHabitacion)
+            VALUES (@idReserva, @idHabitacion);
+        `);
 }
 
-export async function cambiarEstadoReserva(idReserva, idEstadoReserva) {
-    const pool = await getConnection();
-    await pool.request()
+// ============================================================
+// AGREGAR HABITACIÓN A UNA RESERVA (1 fila en reservaHabitacion)
+// ============================================================
+export async function agregarHabitacionAReserva(idReserva, idHabitacion) {
+    const conn = await getConnection();
+
+    await conn.request()
         .input("idReserva", idReserva)
-        .input("estado", idEstadoReserva)
+        .input("idHabitacion", idHabitacion)
         .query(`
-            UPDATE reserva
-            SET idEstadoReserva = @estado
-            WHERE idReserva = @idReserva
+            INSERT INTO reservaHabitacion (idReserva, idHabitacion)
+            VALUES (@idReserva, @idHabitacion);
         `);
 }

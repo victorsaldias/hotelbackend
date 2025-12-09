@@ -1,8 +1,60 @@
+// model/habitacionModel.js
 import { getConnection } from "../config/dbConfig.js";
+
+/* ============================================================
+   HELPERS PRIVADOS
+============================================================ */
+
+/**
+ * Convierte una fecha JS a formato SQL DATETIME
+ */
+function toSQL(date) {
+    const d = new Date(date);
+    const pad = n => n.toString().padStart(2, "0");
+    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}:00`;
+}
+
+/**
+ * Calcula el precio de una habitación según:
+ * - precio personalizado
+ * - precio del tipo de habitación
+ */
+export async function obtenerPrecioHabitacion(idHabitacion) {
+    const pool = await getConnection();
+
+    const habitacion = await pool.request()
+        .input("idHabitacion", idHabitacion)
+        .query(`
+            SELECT precioPersonalizado, idTipoHabitacion
+            FROM habitacion
+            WHERE idHabitacion = @idHabitacion
+        `);
+
+    if (habitacion.recordset.length === 0) return null;
+
+    const h = habitacion.recordset[0];
+
+    if (h.precioPersonalizado) return h.precioPersonalizado;
+
+    const tipo = await pool.request()
+        .input("idTipoHabitacion", h.idTipoHabitacion)
+        .query(`
+            SELECT precio 
+            FROM tipoHabitacion 
+            WHERE idTipoHabitacion = @idTipoHabitacion
+        `);
+
+    return tipo.recordset[0].precio;
+}
+
+/* ============================================================
+   1) OBTENER HABITACIONES
+============================================================ */
 
 export async function obtenerHabitacionesDisponibles(idSucursal) {
     const pool = await getConnection();
-    const r = await pool.request()
+
+    const result = await pool.request()
         .input("idSucursal", idSucursal)
         .query(`
             SELECT 
@@ -19,219 +71,102 @@ export async function obtenerHabitacionesDisponibles(idSucursal) {
             INNER JOIN tipoHabitacion t ON h.idTipoHabitacion = t.idTipoHabitacion
             LEFT JOIN caracteristica c ON c.idCaracteristica = h.idCaracteristica
             WHERE h.idSucursal = @idSucursal
-            AND h.idEstadoHabitacion = 1
+              AND h.idEstadoHabitacion = 1
             ORDER BY h.numero
         `);
-    return r.recordset;
+
+    return result.recordset;
 }
+
+
+export async function obtenerHabitacionPorId(idHabitacion) {
+    const pool = await getConnection();
+
+    const result = await pool.request()
+        .input("idHabitacion", idHabitacion)
+        .query(`
+            SELECT *
+            FROM habitacion
+            WHERE idHabitacion = @idHabitacion
+        `);
+
+    return result.recordset[0] || null;
+}
+
+
 export async function obtenerHabitacionPorNumero(numero) {
     const pool = await getConnection();
-    const r = await pool.request()
+
+    const result = await pool.request()
         .input("numero", numero)
-        .query(`SELECT * FROM habitacion WHERE numero = @numero`);
-    return r.recordset[0];
-}
-export async function asignarHabitacion(idReserva, idHabitacion, fechaInicio, fechaFin) {
-    const conn = await getConnection();
-
-    // 1) Validar conflicto con otras reservas
-    const conflicto = await conn.request()
-        .input("idHabitacion", idHabitacion)
-        .input("inicio", fechaInicio)
-        .input("fin", fechaFin)
         .query(`
-            SELECT 1
-            FROM reserva r
-            INNER JOIN reservaHabitacion rh ON rh.idReserva = r.idReserva
-            WHERE rh.idHabitacion = @idHabitacion
-            AND r.fechaInicio <= @fin
-            AND r.fechaFin >= @inicio;
+            SELECT *
+            FROM habitacion
+            WHERE numero = @numero
         `);
 
-    if (conflicto.recordset.length > 0) {
-        throw new Error("La habitación ya está asignada en ese rango de fechas.");
-    }
-
-    // 2) Validar que esta reserva NO tenga otra habitación
-    const yaAsignada = await conn.request()
-        .input("idReserva", idReserva)
-        .query(`
-            SELECT idHabitacion
-            FROM reservaHabitacion
-            WHERE idReserva = @idReserva
-        `);
-
-    if (yaAsignada.recordset.length > 0) {
-        throw new Error("Esta reserva ya tiene una habitación asignada.");
-    }
-
-    // 3) Insertar asignación correcta
-    await conn.request()
-        .input("idReserva", idReserva)
-        .input("idHabitacion", idHabitacion)
-        .query(`
-            INSERT INTO reservaHabitacion (idReserva, idHabitacion)
-            VALUES (@idReserva, @idHabitacion)
-        `);
-
-    return true;
+    return result.recordset[0] || null;
 }
 
 
-export async function obtenerHabitacionPorId(id) {
-    const pool = await getConnection();
-    const r = await pool.request()
-        .input("idHabitacion", id)
-        .query(`SELECT * FROM habitacion WHERE idHabitacion = @idHabitacion`);
-    return r.recordset[0];
-}
+/* ============================================================
+   2) FILTROS Y LISTADOS
+============================================================ */
 
 export async function listarConFiltros(filtros) {
-    let query = "SELECT * FROM habitacion WHERE 1=1 ";
+    let query = "SELECT * FROM habitacion WHERE 1 = 1";
     const pool = await getConnection();
     const req = pool.request();
 
-    if (filtros.numero) { query += " AND numero = @numero"; req.input("numero", filtros.numero); }
-    if (filtros.idTipoHabitacion) { query += " AND idTipoHabitacion = @idTipoHabitacion"; req.input("idTipoHabitacion", filtros.idTipoHabitacion); }
-    if (filtros.idSucursal) { query += " AND idSucursal = @idSucursal"; req.input("idSucursal", filtros.idSucursal); }
+    if (filtros.numero) {
+        query += " AND numero = @numero";
+        req.input("numero", filtros.numero);
+    }
+    if (filtros.idTipoHabitacion) {
+        query += " AND idTipoHabitacion = @idTipoHabitacion";
+        req.input("idTipoHabitacion", filtros.idTipoHabitacion);
+    }
+    if (filtros.idSucursal) {
+        query += " AND idSucursal = @idSucursal";
+        req.input("idSucursal", filtros.idSucursal);
+    }
 
-    const r = await req.query(query);
-    return r.recordset;
+    const result = await req.query(query);
+    return result.recordset;
 }
+
+export async function obtenerTodasLasHabitaciones() {
+    const pool = await getConnection();
+    const result = await pool.request().query(`SELECT * FROM habitacion`);
+    return result.recordset;
+}
+
+
+/* ============================================================
+   3) CRUD HABITACIÓN
+============================================================ */
 
 export async function crearHabitacion(data) {
     const pool = await getConnection();
-    const r = await pool.request()
+
+    const result = await pool.request()
         .input("numero", data.numero)
         .input("precio", data.precio)
         .input("idTipoHabitacion", data.idTipoHabitacion)
         .input("idEstadoHabitacion", data.idEstadoHabitacion)
         .input("idSucursal", data.idSucursal)
         .query(`
-            INSERT INTO habitacion (numero, precio, idTipoHabitacion, idEstadoHabitacion, idSucursal)
+            INSERT INTO habitacion (numero, precioPersonalizado, idTipoHabitacion, idEstadoHabitacion, idSucursal)
             OUTPUT INSERTED.*
             VALUES (@numero, @precio, @idTipoHabitacion, @idEstadoHabitacion, @idSucursal)
         `);
 
-    return r.recordset[0];
-}
-
-
-export async function obtenerTodasLasHabitaciones() {
-    const pool = await getConnection();
-    const r = await pool.request().query(`SELECT * FROM habitacion`);
-    return r.recordset;
-}
-
-export async function obtenerTiposHabitacion() {
-    const pool = await getConnection();
-    const r = await pool.request().query(`SELECT * FROM tipoHabitacion`);
-    return r.recordset;
-}
-
-export async function obtenerCaracteristicas() {
-    const pool = await getConnection();
-    const r = await pool.request().query(`SELECT * FROM caracteristica`);
-    return r.recordset;
-}
-
-export async function obtenerCaracteristicaPorId(id) {
-    const pool = await getConnection();
-    const r = await pool.request()
-        .input("id", id)
-        .query(`SELECT * FROM caracteristica WHERE idCaracteristica = @id`);
-    return r.recordset[0];
-}
-
-export async function actualizarCaracteristica(id, data) {
-    const pool = await getConnection();
-    await pool.request()
-        .input("id", id)
-        .input("tamano", data.tamano)
-        .input("capacidad", data.capacidad)
-        .input("cama", data.cama)
-        .query(`
-            UPDATE caracteristica
-            SET tamano = @tamano, capacidad = @capacidad, cama = @cama
-            WHERE idCaracteristica = @id
-        `);
-}
-
-export async function obtenerServicios() {
-    const pool = await getConnection();
-    const r = await pool.request().query(`SELECT * FROM servicio`);
-    return r.recordset;
-}
-
-export async function obtenerServiciosHabitacion(id) {
-    const pool = await getConnection();
-    const r = await pool.request()
-        .input("idHabitacion", id) 
-        .query(`
-            SELECT T3.idServicio, T3.nombre
-            FROM habitacion T1
-            INNER JOIN TipoHabitacionServicio T2 ON T1.idTipoHabitacion = T2.idTipoHabitacion
-            INNER JOIN servicio T3 ON T2.idServicio = T3.idServicio
-            WHERE T1.idHabitacion = @idHabitacion
-        `);
-    return r.recordset;
-}
-
-export async function actualizarServiciosHabitacionModel(idHabitacion, servicios) {
-    const pool = await getConnection();
-    
-    
-    const habitacionResult = await pool.request()
-        .input("h", idHabitacion)
-        .query(`SELECT idTipoHabitacion FROM habitacion WHERE idHabitacion = @h`);
-
-    if (habitacionResult.recordset.length === 0) {
-        throw new Error("Habitación no encontrada para actualizar servicios.");
-    }
-    const idTipoHabitacion = habitacionResult.recordset[0].idTipoHabitacion;
-    
-    
-    await pool.request()
-        .input("idTipo", idTipoHabitacion)
-        .query(`DELETE FROM TipoHabitacionServicio WHERE idTipoHabitacion = @idTipo`);
-
-    for (const s of servicios) {
-        await pool.request()
-            .input("idTipo", idTipoHabitacion)
-            .input("s", s)
-            .query(`
-                INSERT INTO TipoHabitacionServicio (idTipoHabitacion, idServicio)
-                VALUES (@idTipo, @s)
-            `); 
-    }
-}
-export async function obtenerPrecioHabitacion(idHabitacion) {
-    const pool = await getConnection();
-    const result = await pool.request()
-        .input("idHabitacion", idHabitacion)
-        .query(`
-            SELECT precioPersonalizado, idTipoHabitacion
-            FROM habitacion
-            WHERE idHabitacion = @idHabitacion
-        `);
-
-    if (result.recordset.length === 0) return null;
-
-    const habitacion = result.recordset[0];
-
-    if (habitacion.precioPersonalizado) {
-        return habitacion.precioPersonalizado;
-    }
-
-    const tipo = await pool.request()
-        .input("idTipoHabitacion", habitacion.idTipoHabitacion)
-        .query(`SELECT precio FROM tipoHabitacion WHERE idTipoHabitacion = @idTipoHabitacion`);
-
-    return tipo.recordset[0].precio;
+    return result.recordset[0];
 }
 
 export async function editarHabitacionModel(idHabitacion, body) {
     const pool = await getConnection();
+
     await pool.request()
         .input("id", idHabitacion)
         .input("idTipo", body.idTipoHabitacion)
@@ -250,24 +185,164 @@ export async function editarHabitacionModel(idHabitacion, body) {
             WHERE idHabitacion = @id
         `);
 }
-function toSQL(date) {
-    const pad = n => n.toString().padStart(2,"0");
-    return `${date.getFullYear()}-${pad(date.getMonth()+1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}:00`;
+
+export async function actualizarEstadoHabitacion(idHabitacion, idEstado) {
+    const pool = await getConnection();
+
+    await pool.request()
+        .input("idHabitacion", idHabitacion)
+        .input("idEstado", idEstado)
+        .query(`
+            UPDATE habitacion
+            SET idEstadoHabitacion = @idEstado
+            WHERE idHabitacion = @idHabitacion
+        `);
+
+    return true;
 }
+
+
+/* ============================================================
+   4) TIPOS / CARACTERÍSTICAS / SERVICIOS
+============================================================ */
+
+export async function obtenerTiposHabitacion() {
+    const pool = await getConnection();
+    const result = await pool.request().query(`SELECT * FROM tipoHabitacion`);
+    return result.recordset;
+}
+
+export async function obtenerCaracteristicas() {
+    const pool = await getConnection();
+    const result = await pool.request().query(`SELECT * FROM caracteristica`);
+    return result.recordset;
+}
+
+export async function obtenerCaracteristicaPorId(id) {
+    const pool = await getConnection();
+
+    const result = await pool.request()
+        .input("id", id)
+        .query(`SELECT * FROM caracteristica WHERE idCaracteristica = @id`);
+
+    return result.recordset[0] || null;
+}
+
+export async function actualizarCaracteristica(id, data) {
+    const pool = await getConnection();
+
+    await pool.request()
+        .input("id", id)
+        .input("tamano", data.tamano)
+        .input("capacidad", data.capacidad)
+        .input("cama", data.cama)
+        .query(`
+            UPDATE caracteristica
+            SET tamano = @tamano,
+                capacidad = @capacidad,
+                cama = @cama
+            WHERE idCaracteristica = @id
+        `);
+}
+
+export async function obtenerServicios() {
+    const pool = await getConnection();
+    const result = await pool.request().query(`SELECT * FROM servicio`);
+    return result.recordset;
+}
+
+export async function obtenerServiciosHabitacion(idHabitacion) {
+    const pool = await getConnection();
+
+    const result = await pool.request()
+        .input("idHabitacion", idHabitacion)
+        .query(`
+            SELECT s.idServicio, s.nombre
+            FROM tipoHabitacionServicio ths
+            INNER JOIN servicio s ON s.idServicio = ths.idServicio
+            INNER JOIN habitacion h ON h.idTipoHabitacion = ths.idTipoHabitacion
+            WHERE h.idHabitacion = @idHabitacion
+        `);
+
+    return result.recordset;
+}
+
+/**
+ * Reemplaza todos los servicios de un tipo de habitación
+ */
+export async function actualizarServiciosHabitacionModel(idHabitacion, servicios) {
+    const pool = await getConnection();
+
+    const habitacion = await pool.request()
+        .input("h", idHabitacion)
+        .query(`SELECT idTipoHabitacion FROM habitacion WHERE idHabitacion = @h`);
+
+    if (habitacion.recordset.length === 0) {
+        throw new Error("Habitación no encontrada.");
+    }
+
+    const idTipoHabitacion = habitacion.recordset[0].idTipoHabitacion;
+
+    await pool.request()
+        .input("idTipo", idTipoHabitacion)
+        .query(`DELETE FROM tipoHabitacionServicio WHERE idTipoHabitacion = @idTipo`);
+
+    for (const s of servicios) {
+        await pool.request()
+            .input("idTipo", idTipoHabitacion)
+            .input("servicio", s)
+            .query(`
+                INSERT INTO tipoHabitacionServicio (idTipoHabitacion, idServicio)
+                VALUES (@idTipo, @servicio)
+            `);
+    }
+}
+
+export const obtenerCaracteristicasPorTipo = async (idTipo) => {
+    const pool = await getConnection();
+
+    const result = await pool.request()
+        .input("idTipo", idTipo)
+        .query(`
+            SELECT c.*
+            FROM tipoHabitacionCaracteristica thc
+            INNER JOIN caracteristica c ON c.idCaracteristica = thc.idCaracteristica
+            WHERE thc.idTipoHabitacion = @idTipo
+        `);
+
+    return result.recordset;
+};
+
+export const obtenerServiciosPorTipo = async (idTipo) => {
+    const pool = await getConnection();
+
+    const result = await pool.request()
+        .input("idTipo", idTipo)
+        .query(`
+            SELECT s.idServicio, s.nombre
+            FROM tipoHabitacionServicio ths
+            INNER JOIN servicio s ON s.idServicio = ths.idServicio
+            WHERE ths.idTipoHabitacion = @idTipo
+        `);
+
+    return result.recordset;
+};
+
+
+/* ============================================================
+   5) BÚSQUEDA POR FECHAS / CAPACIDAD
+============================================================ */
+
 export async function buscarHabitacionesPorCapacidadYFechas(
-    
     idSucursal,
-    fechaInicio,   
-    fechaFin,      
+    fechaInicio,
+    fechaFin,
     cantidadHuespedes
 ) {
     const pool = await getConnection();
 
-    
-    const inicioSQL = fechaInicio
-    const finSQL    = fechaFin
-
-    console.log("BUSQUEDA →", idSucursal, cantidadHuespedes, inicioSQL, finSQL);
+    const inicioSQL = toSQL(fechaInicio);
+    const finSQL = toSQL(fechaFin);
 
     const result = await pool.request()
         .input("idSucursal", idSucursal)
@@ -296,72 +371,12 @@ export async function buscarHabitacionesPorCapacidadYFechas(
               AND h.idHabitacion NOT IN (
                     SELECT rh.idHabitacion
                     FROM reservaHabitacion rh
-                    INNER JOIN habitacion h2 ON h2.idHabitacion = rh.idHabitacion
                     INNER JOIN reserva r ON r.idReserva = rh.idReserva
-                    WHERE h2.idSucursal = @idSucursal
-                      AND r.idEstadoReserva IN (1, 2)    -- mismos estados
-                      AND r.fechaInicio < @fechaFin     -- MISMO solape
-                      AND r.fechaFin > @fechaInicio
-               );
+                    WHERE r.idEstadoReserva IN (1, 2)
+                    AND r.fechaInicio < @fechaFin
+                    AND r.fechaFin > @fechaInicio
+              );
         `);
-console.log("=== MODEL BUSQUEDA ===");
-console.log("inicioSQL:", inicioSQL);
-console.log("finSQL:", finSQL);
-console.log("======================");
+
     return result.recordset;
 }
-
-
-
-
-export const obtenerCaracteristicasPorTipo = async (idTipo) => {
-    const pool = await getConnection();
-
-    const result = await pool.request()
-        .input("idTipo", idTipo)
-        .query(`
-            SELECT c.*
-            FROM tipoHabitacionCaracteristica thc
-            INNER JOIN Caracteristica c ON c.idCaracteristica = thc.idCaracteristica
-            WHERE thc.idTipoHabitacion = @idTipo
-        `);
-
-    return result.recordset;
-};
-
-
-export const obtenerServiciosPorTipo = async (idTipo) => {
-    const pool = await getConnection();
-
-    const result = await pool.request()
-        .input("idTipo", idTipo)
-        .query(`
-            SELECT s.idServicio, s.nombre
-            FROM tipoHabitacionServicio ths
-            INNER JOIN Servicio s ON s.idServicio = ths.idServicio
-            WHERE ths.idTipoHabitacion = @idTipo
-        `);
-
-    return result.recordset;
-};
-
-export const actualizarEstadoHabitacion = async (idHabitacion, idEstado) => {
-    const conn = await getConnection();
-
-    await conn.request()
-        .input("idHabitacion", idHabitacion)
-        .input("idEstado", idEstado)
-        .query(`
-            UPDATE habitacion
-            SET idEstadoHabitacion = @idEstado
-            WHERE idHabitacion = @idHabitacion
-        `);
-
-    return true;
-};
-
-
-
-
-
-

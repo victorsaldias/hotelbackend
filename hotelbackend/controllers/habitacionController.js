@@ -1,230 +1,215 @@
-import {
-    obtenerHabitacionesDisponibles,
-    obtenerHabitacionPorId,
-    obtenerHabitacionPorNumero,
-    crearHabitacion,
-    obtenerTodasLasHabitaciones,
-    listarConFiltros,
-    obtenerCaracteristicasPorTipo,
-    obtenerServiciosPorTipo,
-    obtenerTiposHabitacion,
-    obtenerCaracteristicas,
-    obtenerCaracteristicaPorId,
-    actualizarCaracteristica,
-    obtenerServicios,
-    obtenerServiciosHabitacion,
-    actualizarEstadoHabitacion,
-    actualizarServiciosHabitacionModel,
-    buscarHabitacionesPorCapacidadYFechas,
-    editarHabitacionModel
-} from "../model/habitacionModel.js";
+// controllers/habitacionController.js
+import habitacionService from "../services/habitacionService.js";
 
+/* ============================================================
+   1) DISPONIBILIDAD / BÚSQUEDAS
+============================================================ */
 export async function verHabitacionesDisponibles(req, res) {
     try {
         const { idSucursal } = req.query;
-
-        
         if (!idSucursal) {
-            return res.status(400).json({ 
-                error: 'Se requiere el ID de sucursal' 
-            });
+            return res.status(400).json({ error: "Se requiere idSucursal" });
         }
 
-        const habitaciones = await obtenerHabitacionesDisponibles(idSucursal);
-        res.json(habitaciones);
-        
-    } catch (err) {
-        console.error('Error en verHabitacionesDisponibles:', err);
-        res.status(500).json({ error: err.message });
+        const habitaciones = await habitacionService.obtenerDisponibles(idSucursal);
+        return res.status(200).json({ success: true, habitaciones });
+
+    } catch (error) {
+        console.error("Error verHabitacionesDisponibles:", error);
+        res.status(500).json({ error: error.message });
     }
 }
+export async function obtenerTodasLasHabitacionesController(req, res) {
+    try {
+        const habitaciones = await habitacionService.listarConFiltros({});
+        return res.status(200).json(habitaciones);
 
+    } catch (error) {
+        console.error("Error obtenerTodasLasHabitaciones:", error);
+        return res.status(500).json({ error: error.message });
+    }
+}
 
 export async function obtenerHabitacionesAdecuadas(req, res) {
     try {
-        let { idSucursal, fechaInicio, fechaFin, cantidadHuespedes } = req.body;
+        const { idSucursal, fechaInicio, fechaFin, cantidadHuespedes } = req.body;
 
-        idSucursal = Number(idSucursal);
-        cantidadHuespedes = Number(cantidadHuespedes);
-
-        
-        console.log("FINAL →", idSucursal, fechaInicio, fechaFin);
-
-        const habitaciones = await buscarHabitacionesPorCapacidadYFechas(
+        const habitaciones = await habitacionService.buscarAdecuadas({
             idSucursal,
-            fechaInicio,   
-            fechaFin,      
+            fechaInicio,
+            fechaFin,
             cantidadHuespedes
-        );
-console.log("======== DEBUG BUSQUEDA HABITACIONES ========");
-console.log("Sucursal:", idSucursal);
-console.log("Fecha Inicio (recibida):", fechaInicio);
-console.log("Fecha Fin (recibida):", fechaFin);
-console.log("Tipo:", typeof fechaInicio, typeof fechaFin);
-console.log("=============================================");
-        return res.status(200).json({
-            success: true,
-            habitaciones
         });
+
+        return res.status(200).json({ success: true, habitaciones });
 
     } catch (error) {
-        console.error("❌ Error en obtenerHabitacionesAdecuadas:", error);
-        res.status(500).json({
-            success: false,
-            message: "Error interno al buscar habitaciones"
-        });
+        console.error("Error obtenerHabitacionesAdecuadas:", error);
+        res.status(500).json({ error: error.message });
     }
 }
-
 
 export async function listarHabitaciones(req, res) {
     try {
-        res.json(await listarConFiltros(req.query));
-    } catch (err) {
-        res.status(500).json({ error: err.message });
+        const result = await habitacionService.listarConFiltros(req.query);
+        res.status(200).json(result);
+
+    } catch (error) {
+        res.status(500).json({ error: error.message });
     }
 }
 
+/* ============================================================
+   2) CRUD HABITACIONES
+============================================================ */
 export async function obtenerHabitacionIdController(req, res) {
     try {
-        const hab = await obtenerHabitacionPorId(req.params.idHabitacion);
-        if (!hab) return res.status(404).json({ message: "Habitación no encontrada" });
-        res.json(hab);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
+        const habitacion = await habitacionService.obtenerPorId(req.params.idHabitacion);
+
+        if (!habitacion) {
+            return res.status(404).json({ message: "Habitación no encontrada" });
+        }
+
+        res.status(200).json(habitacion);
+
+    } catch (error) {
+        res.status(500).json({ error: error.message });
     }
 }
 
 export async function obtenerHabitacionNumeroController(req, res) {
     try {
-        const hab = await obtenerHabitacionPorNumero(req.params.numero);
-        if (!hab) return res.status(404).json({ message: "Habitación no encontrada" });
-        res.json(hab);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
+        const habitacion = await habitacionService.obtenerPorNumero(req.params.numero);
+
+        if (!habitacion) {
+            return res.status(404).json({ message: "Habitación no encontrada" });
+        }
+
+        res.status(200).json(habitacion);
+
+    } catch (error) {
+        res.status(500).json({ error: error.message });
     }
 }
 
 export async function crearHabitacionController(req, res) {
     try {
-        res.json(await crearHabitacion(req.body));
-    } catch (err) {
-        res.status(500).json({ error: err.message });
+        const nueva = await habitacionService.crear(req.body);
+        res.status(201).json({ success: true, habitacion: nueva });
+
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+}
+
+export async function editarHabitacionController(req, res) {
+    try {
+        await habitacionService.editar(req.params.idHabitacion, req.body);
+        res.status(200).json({ success: true, message: "Habitación actualizada" });
+
+    } catch (error) {
+        res.status(500).json({ error: error.message });
     }
 }
 
 export async function actualizarEstadoHabitacionController(req, res) {
     try {
-        const ok = await actualizarEstadoHabitacion(req.params.numero, req.body.idEstadoHabitacion);
-        ok ? res.json({ message: "Estado actualizado" }) : res.status(404).json({ message: "No encontrada" });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
+        const idHabitacion = req.params.idHabitacion;
+        const { idEstadoHabitacion } = req.body;
+
+        await habitacionService.actualizarEstado(idHabitacion, idEstadoHabitacion);
+
+        res.status(200).json({ message: "Estado actualizado correctamente" });
+
+    } catch (error) {
+        res.status(500).json({ error: error.message });
     }
 }
 
-export async function obtenerTodasLasHabitacionesController(req, res) {
-    try {
-        res.json(await obtenerTodasLasHabitaciones());
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-}
-
-
+/* ============================================================
+   3) TIPOS, SERVICIOS, CARACTERÍSTICAS
+============================================================ */
 export async function obtenerTiposHabitacionController(req, res) {
     try {
-        res.json(await obtenerTiposHabitacion());
-    } catch (err) {
-        res.status(500).json({ error: err.message });
+        res.json(await habitacionService.obtenerTipos());
+
+    } catch (error) {
+        res.status(500).json({ error: error.message });
     }
 }
-
 
 export async function obtenerCaracteristicasController(req, res) {
     try {
-        res.json(await obtenerCaracteristicas());
-    } catch (err) {
-        res.status(500).json({ error: err.message });
+        res.json(await habitacionService.obtenerCaracteristicas());
+
+    } catch (error) {
+        res.status(500).json({ error: error.message });
     }
 }
 
 export async function obtenerCaracteristicaPorIdController(req, res) {
     try {
-        res.json(await obtenerCaracteristicaPorId(req.params.idCaracteristica));
-    } catch (err) {
-        res.status(500).json({ error: err.message });
+        res.json(await habitacionService.obtenerCaracteristicaPorId(req.params.idCaracteristica));
+
+    } catch (error) {
+        res.status(500).json({ error: error.message });
     }
 }
 
 export async function actualizarCaracteristicaController(req, res) {
     try {
-        await actualizarCaracteristica(req.params.idCaracteristica, req.body);
+        await habitacionService.actualizarCaracteristica(req.params.idCaracteristica, req.body);
         res.json({ message: "Característica actualizada" });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
+
+    } catch (error) {
+        res.status(500).json({ error: error.message });
     }
 }
 
-
 export async function obtenerServiciosController(req, res) {
     try {
-        res.json(await obtenerServicios());
-    } catch (err) {
-        res.status(500).json({ error: err.message });
+        res.json(await habitacionService.obtenerServicios());
+
+    } catch (error) {
+        res.status(500).json({ error: error.message });
     }
 }
 
 export async function obtenerServiciosHabitacionController(req, res) {
     try {
-        res.json(await obtenerServiciosHabitacion(req.params.idHabitacion));
-    } catch (err) {
-        res.status(500).json({ error: err.message });
+        res.json(await habitacionService.obtenerServiciosHabitacion(req.params.idHabitacion));
+
+    } catch (error) {
+        res.status(500).json({ error: error.message });
     }
 }
 
 export async function actualizarServiciosHabitacionController(req, res) {
     try {
-        await actualizarServiciosHabitacionModel(req.params.idHabitacion, req.body.servicios);
+        await habitacionService.actualizarServicios(req.params.idHabitacion, req.body.servicios);
         res.json({ message: "Servicios actualizados" });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
+
+    } catch (error) {
+        res.status(500).json({ error: error.message });
     }
 }
 
-
-export const obtenerCaracteristicasTipoController = async (req, res) => {
-    const { idTipo } = req.params;
-
+export async function obtenerCaracteristicasTipoController(req, res) {
     try {
-        const data = await obtenerCaracteristicasPorTipo(idTipo);
+        const data = await habitacionService.obtenerCaracteristicasPorTipo(req.params.idTipo);
         res.json(data);
 
     } catch (error) {
-        console.error("Error obteniendo características por tipo:", error);
-        res.status(500).json({ error: "Error interno del servidor" });
+        res.status(500).json({ error: error.message });
     }
-};
+}
 
-
-export const obtenerServiciosTipoController = async (req, res) => {
-    const { idTipo } = req.params;
-
+export async function obtenerServiciosTipoController(req, res) {
     try {
-        const data = await obtenerServiciosPorTipo(idTipo);
+        const data = await habitacionService.obtenerServiciosPorTipo(req.params.idTipo);
         res.json(data);
 
     } catch (error) {
-        console.error("Error obteniendo servicios por tipo:", error);
-        res.status(500).json({ error: "Error interno del servidor" });
-    }
-};
-
-
-export async function editarHabitacionController(req, res) {
-    try {
-        await editarHabitacionModel(req.params.idHabitacion, req.body);
-        res.json({ message: "Habitación editada" });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
+        res.status(500).json({ error: error.message });
     }
 }

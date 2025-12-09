@@ -1,29 +1,44 @@
 import express from "express";
+
 import {
     crearClienteWeb,
     crearClienteRecepcionista,
     obtenerCliente,
-    modificarCliente,
     obtenerTodosLosClientes,
     obtenerClientePorIdController,
+    modificarCliente,
     modificarClientePorId,
     cambiarPasswordController
 } from "../controllers/clienteController.js";
 
 const router = express.Router();
 
-// 👉 PRIMERO LAS RUTAS MÁS ESPECÍFICAS
+
+// =======================
+// RUTAS POR ID (seguras)
+// =======================
 router.get("/id/:idCliente", obtenerClientePorIdController);
 router.put("/id/:idCliente", modificarClientePorId);
-
-router.get("/", obtenerTodosLosClientes);
 router.put("/cambiar-password/:idCliente", cambiarPasswordController);
+
+
+// =======================
+// ACCIONES ESPECÍFICAS
+// =======================
 router.post("/web", crearClienteWeb);
 router.post("/recepcion", crearClienteRecepcionista);
 
 
-// 👉 DESPUÉS LAS GENÉRICAS POR RUT
-router.get("/:rut", obtenerCliente);
-router.put("/:rut", modificarCliente);
+// =======================
+// LISTAR
+// =======================
+router.get("/", obtenerTodosLosClientes);
+
+
+// =======================
+// RUTAS POR RUT (van al final)
+// =======================
+router.get("/rut/:rut", obtenerCliente);
+router.put("/rut/:rut", modificarCliente);
 
 export default router;

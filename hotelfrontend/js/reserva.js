@@ -236,7 +236,8 @@ btn.addEventListener("click", async () => {
                 icon: "success",
                 title: "Reserva realizada",
                 text: "Tu reserva quedó registrada."
-            }).then(() => window.location.href = "/hotelfrontend/index.html");
+           }).then(() => window.location.href = "../index.html");
+
 
         } catch (e) {
             Swal.fire("Error del servidor");

@@ -1,92 +1,72 @@
-import { 
-    ingresarReservaCompleta,
-    verReservas,
-    confirmarReserva,
-    cancelarReserva,
-    verHistorialReserva,
-    modificarReserva,
-    modificarHabitacionDeReserva,
-    guardarAcompaniante,
-    cambiarEstadoReserva           
-} from "../model/reservaModel.js";
+// controllers/reservaController.js
+import {
+    crearReservaService,
+    obtenerReservasService,
+    confirmarReservaService,
+    cancelarReservaService,
+    historialReservaService,
+    modificarReservaService,
+    modificarHabitacionService,
+    cambiarEstadoReservaService
+} from "../services/reservaService.js";
 
 /* ============================================================
-   CREAR RESERVA COMPLETA (USADO POR reserva.js)
+   CREAR RESERVA COMPLETA (carrito)
 ============================================================ */
 export const crearReservaCompleta = async (req, res) => {
     console.log("======== RESERVA RECIBIDA ========");
-console.log(req.body);
-console.log("==================================");
+    console.log(req.body);
+    console.log("==================================");
+
     try {
-        const data = req.body;
-
-        // Validar que vengan datos mínimos
-        if (!data.fechaInicio || !data.fechaFin || !data.idCliente || !data.idHabitacion) {
-            return res.status(400).json({ error: "Faltan datos obligatorios" });
-        }
-
-        // Crear reserva principal
-        const resultado = await ingresarReservaCompleta(data);
-
-        // Guardar acompañantes (si vienen)
-        if (data.acompanantes && Array.isArray(data.acompanantes)) {
-            for (const a of data.acompanantes) {
-
-                if (!a.nombre || !a.apellido) {
-                    return res.status(400).json({
-                        error: "Nombre y apellido del acompañante son obligatorios."
-                    });
-                }
-
-                await guardarAcompaniante(resultado.idReserva, a);
-            }
-        }
+        const reserva = await crearReservaService(req.body);
 
         return res.status(201).json({
             msg: "Reserva creada correctamente",
-            reserva: resultado
+            reserva
         });
 
     } catch (error) {
         console.error("Error en crearReservaCompleta:", error);
-        return res.status(500).json({ error: "Error interno del servidor" });
+        return res.status(400).json({ error: error.message });
     }
 };
 
-
-
+/* ============================================================
+   OBTENER RESERVAS (sucursal opcional)
+============================================================ */
 export async function traerReservas(req, res) {
     try {
         const { idSucursal } = req.query;
-        const reservas = await verReservas(idSucursal);
-        res.json(reservas);
+        const reservas = await obtenerReservasService(idSucursal);
+        return res.json(reservas);
     } catch (error) {
-        console.error('Error en traerReservas:', error);
-        res.status(500).json({ error: error.message });
+        console.error("Error en traerReservas:", error);
+        return res.status(500).json({ error: error.message });
     }
 }
+
 /* ============================================================
-   CONFIRMAR RESERVA
+   CONFIRMAR / CANCELAR
 ============================================================ */
 export async function confirmarReservaController(req, res) {
     try {
         const { idEmpleado } = req.body;
-        await confirmarReserva(req.params.idReserva, idEmpleado);
-        res.json({ mensaje: "Reserva confirmada" });
+        await confirmarReservaService(req.params.idReserva, idEmpleado);
+        return res.json({ mensaje: "Reserva confirmada" });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        console.error("Error confirmarReserva:", error);
+        return res.status(500).json({ error: error.message });
     }
 }
 
-/* ============================================================
-   CANCELAR RESERVA
-============================================================ */
 export async function cancelarReservaController(req, res) {
     try {
-        await cancelarReserva(req.params.idReserva);
-        res.json({ mensaje: "Reserva cancelada" });
+        await cancelarReservaService(req.params.idReserva);
+        return res.json({ mensaje: "Reserva cancelada" });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        console.error("Error cancelarReserva:", error);
+        return res.status(500).json({ error: error.message });
     }
 }
 
@@ -95,24 +75,25 @@ export async function cancelarReservaController(req, res) {
 ============================================================ */
 export async function traerHistorialReservas(req, res) {
     try {
-        const historial = await verHistorialReserva(req.params.idCliente);
-        res.json(historial);
+        const historial = await historialReservaService(req.params.idCliente);
+        return res.json(historial);
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        console.error("Error traerHistorialReservas:", error);
+        return res.status(500).json({ error: error.message });
     }
 }
 
 /* ============================================================
-   MODIFICAR RESERVA COMPLETA
+   MODIFICAR RESERVA (fechas)
 ============================================================ */
 export async function modificarReservaController(req, res) {
     try {
         const { idReserva } = req.params;
-        const datosActualizados = req.body;
-        await modificarReserva(idReserva, datosActualizados);
-        res.json({ mensaje: "Reserva modificada correctamente" });
+        await modificarReservaService(idReserva, req.body);
+        return res.json({ mensaje: "Reserva modificada correctamente" });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        console.error("Error modificarReserva:", error);
+        return res.status(500).json({ error: error.message });
     }
 }
 
@@ -123,24 +104,28 @@ export async function modificarHabitacionReservaController(req, res) {
     try {
         const { idReserva } = req.params;
         const { idHabitacion } = req.body;
-        await modificarHabitacionDeReserva(idReserva, idHabitacion);
-        res.json({ mensaje: "Habitación de la reserva modificada correctamente" });
+        await modificarHabitacionService(idReserva, idHabitacion);
+        return res.json({ mensaje: "Habitación de la reserva modificada correctamente" });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        console.error("Error modificarHabitacionReserva:", error);
+        return res.status(500).json({ error: error.message });
     }
 }
 
+/* ============================================================
+   CAMBIAR ESTADO RESERVA
+============================================================ */
 export const cambiarEstadoReservaController = async (req, res) => {
     try {
         const { idReserva } = req.params;
         const { idEstadoReserva } = req.body;
 
-        const result = await cambiarEstadoReserva(idReserva, idEstadoReserva);
+        await cambiarEstadoReservaService(idReserva, idEstadoReserva);
 
         return res.json({ msg: "Estado actualizado correctamente" });
 
     } catch (error) {
         console.error("Error cambiando estado:", error);
-        res.status(500).json({ error: "Error interno del servidor" });
+        return res.status(500).json({ error: "Error interno del servidor" });
     }
 };

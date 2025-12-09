@@ -28,7 +28,7 @@ router.get("/listar", listarHabitaciones);
 router.get("/id/:idHabitacion", obtenerHabitacionIdController);
 router.get("/numero/:numero", obtenerHabitacionNumeroController);
 router.post("/crear", crearHabitacionController);
-router.put("/estado/:numero", actualizarEstadoHabitacionController);
+router.put("/estado/:idHabitacion", actualizarEstadoHabitacionController);
 router.get("/todas", obtenerTodasLasHabitacionesController);
 router.get("/tipos-habitacion", obtenerTiposHabitacionController);
 router.get("/caracteristicas-habitacion", obtenerCaracteristicasController);

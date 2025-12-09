@@ -2,6 +2,8 @@ document.addEventListener("DOMContentLoaded", () => {
     cargarMisReservas();
 });
 
+const API_URL = "https://hotelbackend-hzc4.onrender.com";
+
 async function cargarMisReservas() {
 
     const usuario = JSON.parse(localStorage.getItem("usuarioCliente"));
@@ -11,63 +13,86 @@ async function cargarMisReservas() {
         return;
     }
 
-    const idCliente = usuario.idCliente;
+    const clienteId = usuario.idCliente;
+    const container = document.getElementById("reservasContainer");
+
+    let reservas = [];
+
+    console.log("Cargando reservas del cliente...");
 
     try {
-        const resp = await fetch(`https://hotelbackend-hzc4.onrender.com/api/reservas/cliente/${idCliente}`);
+        // --- Petición ---
+        let res = await fetch(`${API_URL}/api/reservas/cliente/${clienteId}`);
 
-        if (!resp.ok) throw new Error("No se pudieron cargar las reservas");
+        // Alias para que resp y res sean lo mismo
+        let resp = res;
 
-        const reservas = await resp.json();
-        renderizarReservas(reservas);
+        if (!res.ok) {
+            throw new Error("No se pudieron cargar las reservas");
+        }
+
+        reservas = await res.json();
+        renderReservas(reservas);
 
     } catch (error) {
-        console.error("Error:", error);
+        console.error(error);
+        container.innerHTML = "<p class='text-danger'>Error al cargar tus reservas.</p>";
     }
+
+
+    // --- Filtrado ---
+    document.getElementById("btnFiltrar").addEventListener("click", () => {
+        const desde = document.getElementById("filterDesde").value;
+        const hasta = document.getElementById("filterHasta").value;
+
+        let filtradas = reservas;
+
+        if (desde) {
+            filtradas = filtradas.filter(r => new Date(r.fechaInicio) >= new Date(desde));
+        }
+
+        if (hasta) {
+            const limite = new Date(hasta);
+            limite.setHours(23, 59, 59);
+            filtradas = filtradas.filter(r => new Date(r.fechaFin) <= limite);
+        }
+
+        renderReservas(filtradas);
+    });
 }
 
-function estadoBadge(estado) {
-    switch (estado) {
-        case "Pendiente": return `<span class="badge badge-warning">Pendiente</span>`;
-        case "Confirmada": return `<span class="badge badge-success">Confirmada</span>`;
-        case "Cancelada": return `<span class="badge badge-danger">Cancelada</span>`;
-        default: return estado;
-    }
-}
+function renderReservas(lista) {
+    const container = document.getElementById("reservasContainer");
+    container.innerHTML = "";
 
-function renderizarReservas(lista) {
-    const tbody = document.getElementById("tablaMisReservas");
-    tbody.innerHTML = "";
-
-    if (!lista.length) {
-        tbody.innerHTML = `
-            <tr><td colspan="8">No tienes reservas registradas.</td></tr>
-        `;
+    if (!lista || lista.length === 0) {
+        container.innerHTML = "<p class='text-center'>No tienes reservas.</p>";
         return;
     }
 
     lista.forEach(r => {
 
-        const entrada = new Date(r.fechaInicio).toLocaleDateString("es-CL");
-        const salida  = new Date(r.fechaFin).toLocaleDateString("es-CL");
+        const estadoClase =
+            r.estadoReserva === "Confirmada" ? "estado-confirmada" :
+            r.estadoReserva === "Cancelada" ? "estado-cancelada" :
+            "estado-pendiente";
 
-        tbody.innerHTML += `
-            <tr>
-                <td>${r.idReserva}</td>
-                <td>${entrada}</td>
-                <td>${salida}</td>
-                <td>${r.numeroHabitacion || "—"}</td>
-                <td>${r.tipoHabitacion || "—"}</td>
-                <td>${estadoBadge(r.estadoReserva)}</td>
-                <td>$${r.total}</td>
-                
-                <td>
-                    ${r.estadoReserva === "Cancelada"
-                        ? `<span class="text-muted">—</span>`
-                        : `<button class="btn btn-sm btn-danger" onclick="cancelarReserva(${r.idReserva})">Cancelar</button>`
-                    }
-                </td>
-            </tr>
+        container.innerHTML += `
+            <div class="col-12 col-md-6 col-xl-4">
+                <div class="reserva-card">
+                    <h5>Reserva #${r.idReserva}</h5>
+
+                    <p><strong>Habitación:</strong> ${r.numeroHabitacion || "N/A"}</p>
+                    <p><strong>Entrada:</strong> ${formatear(r.fechaInicio)}</p>
+                    <p><strong>Salida:</strong> ${formatear(r.fechaFin)}</p>
+                    <p><strong>Huéspedes:</strong> ${r.cantidadHuespedes}</p>
+                    <p><strong>Total:</strong> $${r.total}</p>
+
+                    <span class="estado ${estadoClase}">
+                        ${r.estadoReserva}
+                    </span>
+                </div>
+            </div>
         `;
     });
 }
@@ -76,15 +101,14 @@ async function cancelarReserva(idReserva) {
     const confirmacion = confirm("¿Seguro que deseas cancelar esta reserva?");
     if (!confirmacion) return;
 
-    await fetch(`https://hotelbackend-hzc4.onrender.com/api/reservas/cancelar/${idReserva}`, {
+    await fetch(`${API_URL}/api/reservas/cancelar/${idReserva}`, {
         method: "POST"
     });
-
-    cargarMisReservas();
 }
 
-// Logout
-function logout() {
-    localStorage.removeItem("usuarioCliente");
-    window.location.href = "../pages/login.html";
+function formatear(fecha) {
+    return new Date(fecha).toLocaleString("es-CL", {
+        dateStyle: "medium",
+        timeStyle: "short"
+    });
 }
