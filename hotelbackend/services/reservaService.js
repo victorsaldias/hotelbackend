@@ -76,7 +76,12 @@ export async function crearReservaService(data) {
     }
 
     // Calcular total
-    const total = await calcularTotalReserva(habitacionesIds, fechaInicio, fechaFin);
+    let total = data.total; // ← el total que enviaste desde el front
+
+if (!total) {
+    // fallback por seguridad en caso de que un dia lo necesites
+    total = await calcularTotalReserva(habitacionesIds, fechaInicio, fechaFin);
+}
 
     // Insertar cabecera de reserva
     const reserva = await ingresarReservaCompleta({

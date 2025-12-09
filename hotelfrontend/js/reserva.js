@@ -26,6 +26,7 @@ const fechaBonitaFin = new Date(fechaFin).toLocaleDateString("es-CL");
     document.getElementById("previewFechaInicio").textContent = fechaBonitaInicio;
     document.getElementById("previewFechaFin").textContent = fechaBonitaFin;
     document.getElementById("previewHuespedes").textContent = cantidadHuespedes;
+    document.getElementById("previewTotal").textContent = total;
 
 
     /* ============================================================
