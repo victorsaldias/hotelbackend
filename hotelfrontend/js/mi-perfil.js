@@ -1,3 +1,5 @@
+let idCliente = null;
+
 document.addEventListener("DOMContentLoaded", () => {
 
     $('select[data-nice!="false"]').niceSelect();
@@ -12,6 +14,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     const idCliente = usuario.idCliente;
+
+
 
     // ============================
     // CAMPOS DEL FORM
