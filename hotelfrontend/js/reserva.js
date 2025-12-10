@@ -66,11 +66,15 @@ carrito.forEach(h => {
 
         <div class="habitacion-info">
             <b>Precio / día:</b> $${h.precio.toLocaleString("es-CL")}
-            <p><b>Cantidad:</b> ${item.cantidad || 1}</p>
+        </div>
 
-<p><b>Total habitación:</b> 
-   $${(item.total * (item.cantidad || 1)).toLocaleString("es-CL")}
-</p>
+        <div class="habitacion-info">
+            <b>Cantidad:</b> ${h.cantidad || 1}
+        </div>
+
+        <div class="habitacion-info">
+            <b>Total habitación:</b> 
+            $${(h.total * (h.cantidad || 1)).toLocaleString("es-CL")}
         </div>
     </div>
 `;
