@@ -38,43 +38,81 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     let fechasHTML = "";
 
-carrito.forEach(h => {
+carrito.forEach((h, index) => {
     const fiDate = new Date(h.fechaInicio);
     const ffDate = new Date(h.fechaFin);
 
     const fi = fiDate.toLocaleDateString("es-CL");
     const ff = ffDate.toLocaleDateString("es-CL");
 
-    const msPorDia = 1000 * 60 * 60 * 24;
-    const noches = Math.ceil((ffDate - fiDate) / msPorDia);
-
+    const noches = Math.ceil((ffDate - fiDate) / (1000 * 60 * 60 * 24));
     const totalHabitacion = h.precio * noches;
 
+    // Cantidad de acompañantes permitidos según la capacidad
+    const acompCount = (h.capacidad || 1) - 1;
+
+    // Construir acompañantes HTML
+    let acompHTML = "";
+    if (acompCount > 0) {
+        acompHTML = `
+            <div class="acompanantes-box">
+                <b>Acompañantes (${acompCount})</b>
+                <div id="acomps_h${index}">
+                    ${Array.from({ length: acompCount }).map((_, i) => `
+                        <div class="acom-item">
+                            <label>A${i + 1}</label>
+                            <select class="form-control acomp-select" 
+                                    data-hindex="${index}" 
+                                    data-idx="${i}">
+                                <option value="adulto">Adulto</option>
+                                <option value="niño">Niño</option>
+                            </select>
+                        </div>
+                    `).join("")}
+                </div>
+            </div>
+        `;
+    }
+
     fechasHTML += `
-    <div class="habitacion-card" data-hab="${h.idHabitacion}">
-        <div class="habitacion-title">${h.nombreTipo}</div>
+        <div class="habitacion-card">
+            <div class="habitacion-title">${h.nombreTipo}</div>
 
-        <div class="habitacion-sub">
-            Sucursal: <b>${h.nombreSucursal || "No disponible"}</b>
+            <div class="habitacion-sub">
+                Sucursal: <b>${h.nombreSucursal || "No disponible"}</b>
+            </div>
+
+            <div class="habitacion-info">
+                <b>Fecha:</b> ${fi} → ${ff}
+            </div>
+
+            <div class="habitacion-info">
+                <b>Huéspedes permitidos:</b> ${h.capacidad || "N/A"}
+            </div>
+
+            <div class="habitacion-info">
+                <b>Cama:</b> ${h.cama || "N/A"}  
+                &nbsp;|&nbsp;
+                <b>Tamaño:</b> ${h.tamano || "N/A"}
+            </div>
+
+            <div class="habitacion-info">
+                <b>Precio / día:</b> $${h.precio.toLocaleString("es-CL")}
+            </div>
+
+            <div class="habitacion-info">
+                <b>Noches:</b> ${noches}
+            </div>
+
+            <div class="habitacion-info">
+                <b>Total habitación:</b> $${totalHabitacion.toLocaleString("es-CL")}
+            </div>
+
+            ${acompHTML}
         </div>
-
-        <div class="habitacion-info"><b>Fecha:</b> ${fi} → ${ff}</div>
-        <div class="habitacion-info"><b>Huéspedes permitidos:</b> ${h.capacidad}</div>
-        <div class="habitacion-info"><b>Cama:</b> ${h.cama}</div>
-        <div class="habitacion-info"><b>Tamaño:</b> ${h.tamano}</div>
-        <div class="habitacion-info"><b>Precio / día:</b> $${h.precio.toLocaleString("es-CL")}</div>
-        <div class="habitacion-info"><b>Noches:</b> ${noches}</div>
-        <div class="habitacion-info"><b>Total habitación:</b> $${totalHabitacion.toLocaleString("es-CL")}</div>
-
-        <hr>
-
-        <h6>Acompañantes (${h.capacidad - 1})</h6>
-        <div class="mini-acomp-container" id="acomp_${h.idHabitacion}">
-        </div>
-    </div>
-`;
-
+    `;
 });
+
 document.addEventListener("change", (e) => {
     if (!e.target.classList.contains("acomp-select")) return;
 
