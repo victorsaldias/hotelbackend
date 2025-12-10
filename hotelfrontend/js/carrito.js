@@ -22,8 +22,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
         contenedor.innerHTML += `
             <div class="carrito-item border p-3 mb-2">
-                <h4>${h.tipoHabitacion || "Habitación"}</h4>
-                <p>Precio: $${h.precio.toLocaleString("es-CL")}</p>
+               <h4>${r.nombreTipo}</h4>
+<p>Fecha: ${r.fechaInicio} → ${r.fechaFin}</p>
+<p>Precio por día: $${r.precio.toLocaleString("es-CL")}</p>
+<p>Total: $${r.total.toLocaleString("es-CL")}</p>
 
                 <button class="btn btn-danger btn-sm eliminar-btn"
                         data-id="${h.idHabitacion}">

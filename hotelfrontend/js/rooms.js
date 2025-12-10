@@ -93,29 +93,56 @@ document.addEventListener("DOMContentLoaded", () => {
 document.addEventListener("click", (e) => {
     if (!e.target.classList.contains("agregar-carrito-btn")) return;
 
-    const data = JSON.parse(e.target.dataset.info);
+    const habitacion = JSON.parse(e.target.dataset.info);
 
-    let carrito = JSON.parse(localStorage.getItem("carritoFinal")) || [];
+    const fechaInicio = localStorage.getItem("fechaInicioReserva");
+    const fechaFin = localStorage.getItem("fechaFinReserva");
+    const huespedes = parseInt(localStorage.getItem("cantidadHuespedesReserva"));
 
-    if (carrito.some(h => h.idHabitacion === data.idHabitacion)) {
-        Swal.fire("Atención", "Esta habitación ya está en el carrito", "info");
+    if (!fechaInicio || !fechaFin) {
+        Swal.fire("Error", "Debes elegir fechas antes de agregar al carrito.", "error");
         return;
     }
 
-    carrito.push(data);
+    // Crear objeto reserva completo
+    const reserva = {
+        idHabitacion: habitacion.idHabitacion,
+        nombreTipo: habitacion.tipoHabitacion,
+        precio: habitacion.precio,
+        fechaInicio,
+        fechaFin,
+        huespedes,
+        total: habitacion.precio *
+               Math.ceil((new Date(fechaFin) - new Date(fechaInicio)) / (1000 * 60 * 60 * 24))
+    };
+
+    let carrito = JSON.parse(localStorage.getItem("carritoFinal")) || [];
+
+    // Validar duplicados SOLO SI FECHAS Y HABITACIÓN COINCIDEN
+    const existe = carrito.some(r =>
+        r.idHabitacion === reserva.idHabitacion &&
+        r.fechaInicio === reserva.fechaInicio &&
+        r.fechaFin === reserva.fechaFin
+    );
+
+    if (existe) {
+        Swal.fire("Atención", "Ya agregaste esta reserva exacta.", "info");
+        return;
+    }
+
+    carrito.push(reserva);
     localStorage.setItem("carritoFinal", JSON.stringify(carrito));
 
     Swal.fire({
         icon: "success",
         title: "Agregada al carrito",
-        text: `${data.tipoHabitacion || "Habitación"} fue añadida`,
+        text: `Reserva del ${reserva.nombreTipo} agregada.`,
         timer: 1500,
         showConfirmButton: false
     });
 
     actualizarContadorCarrito();
 });
-
 /* ============================================================
    CONTAR ITEMS DEL CARRITO
 ============================================================ */
