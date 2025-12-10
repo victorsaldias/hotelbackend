@@ -177,25 +177,26 @@ btn.addEventListener("click", async () => {
 
     const metodo = document.querySelector("input[name='metodoPago']:checked");
     const clienteId = localStorage.getItem("clienteId");
-    const acompanantes = obtenerAcompanantes();
 
     if (!clienteId) {
         Swal.fire("Debes iniciar sesión para reservar");
         return;
     }
 
-    // YA NO recalculamos las fechas
-    total = total; 
+    if (!metodo) {
+        Swal.fire("Selecciona un método de pago");
+        return;
+    }
 
     if (metodo.value === "Presencial") {
-    await enviarReservaPresencial();
-    return;
-}
+        await enviarReservaPresencial();
+        return;
+    }
 
-if (metodo.value === "WebPay") {
-    await iniciarWebPay();
-    return;
-}
+    if (metodo.value === "WebPay") {
+        await iniciarWebPay();
+        return;
+    }
 
 
     async function enviarReservaPresencial() {
