@@ -15,14 +15,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let total = 0;
 
-    carrito.forEach(item => {
+    carrito.forEach(item => {          // 👈 AQUÍ ES item, NO h
         total += item.total;
 
         contenedor.innerHTML += `
             <div class="carrito-item">
                 <h4>${item.nombreTipo || "Habitación"}</h4>
 
-                <p><b>Sucursal:</b> ${h.nombreSucursal}</p>
+                <p><b>Sucursal:</b> ${item.nombreSucursal || "No disponible"}</p>
                 <p><b>Fecha:</b> ${item.fechaInicio} → ${item.fechaFin}</p>
                 <p><b>Precio:</b> $${item.precio.toLocaleString("es-CL")}</p>
                 <p><b>Total:</b> $${item.total.toLocaleString("es-CL")}</p>
@@ -40,26 +40,3 @@ document.addEventListener("DOMContentLoaded", () => {
 
     totalSpan.textContent = total.toLocaleString("es-CL");
 });
-
-// ===============================
-// BOTÓN → CONTINUAR CON LA RESERVA
-// ===============================
-const btnContinuar = document.getElementById("btnContinuarReserva");
-
-if (btnContinuar) {
-    btnContinuar.addEventListener("click", () => {
-        
-        let carrito = JSON.parse(localStorage.getItem("carritoFinal")) || [];
-
-        if (carrito.length === 0) {
-            Swal.fire("Carrito vacío", "Agrega habitaciones antes de continuar", "info");
-            return;
-        }
-
-        // Guardamos el carrito COMPLETO para reserva.html
-        localStorage.setItem("carritoReserva", JSON.stringify(carrito));
-
-        // Ir a confirmar la reserva
-        window.location.href = "../pages/reserva.html";
-    });
-}
