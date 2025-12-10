@@ -119,7 +119,7 @@ document.addEventListener("click", (e) => {
    CONTAR ITEMS DEL CARRITO
 ============================================================ */
 function actualizarContadorCarrito() {
-    const carrito = JSON.parse(localStorage.getItem("carritoFinal")) || [];
+    let carrito = JSON.parse(localStorage.getItem("carritoFinal")) || [];
     const span = document.getElementById("carritoCount");
     if (span) span.textContent = carrito.length;
 }
