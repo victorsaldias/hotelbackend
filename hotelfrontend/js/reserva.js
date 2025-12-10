@@ -308,4 +308,7 @@ localStorage.removeItem("cantidadHuespedesReserva");
 function obtenerAcompanantes() {
     const data = JSON.parse(localStorage.getItem("acompanantesReserva") || "{}");
     return Object.values(data).flat(); // ← ESTA LÍNEA ES LA SOLUCIÓN
+    
 }
+
+console.log("Acompañantes enviados:", acompanantes);
