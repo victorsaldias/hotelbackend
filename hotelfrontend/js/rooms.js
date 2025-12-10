@@ -3,6 +3,7 @@
 ============================================================ */
 
 document.addEventListener("DOMContentLoaded", () => {
+      actualizarContadorCarrito();
     const roomsContainer = document.getElementById("roomsContainer");
     const habitaciones = JSON.parse(localStorage.getItem("habitacionesBusqueda")) || [];
 
@@ -119,7 +120,15 @@ document.addEventListener("click", (e) => {
    CONTAR ITEMS DEL CARRITO
 ============================================================ */
 function actualizarContadorCarrito() {
-    let carrito = JSON.parse(localStorage.getItem("carritoFinal")) || [];
+    const carrito = JSON.parse(localStorage.getItem("carritoFinal")) || [];
+
     const span = document.getElementById("carritoCount");
-    if (span) span.textContent = carrito.length;
+
+    // 🔥 si el span aun no existe, reintenta luego
+    if (!span) {
+        setTimeout(actualizarContadorCarrito, 200);
+        return;
+    }
+
+    span.textContent = carrito.length;
 }
