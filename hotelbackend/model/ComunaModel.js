@@ -13,11 +13,11 @@ export async function obtenerComunasPorProvincia(idProvincia) {
        .query(`
     SELECT 
         idComuna, 
-        nombreComuna AS nombre, 
+        nombre, 
         idProvincia
     FROM Comuna
     WHERE idProvincia = @idProvincia
-    ORDER BY nombreComuna;
+    ORDER BY nombre;
 `)
 ;
 
