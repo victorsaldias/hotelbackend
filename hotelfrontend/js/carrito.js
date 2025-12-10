@@ -1,52 +1,45 @@
 document.addEventListener("DOMContentLoaded", () => {
 
-    const listaCarrito = document.getElementById("listaCarrito");
-    const totalFinal = document.getElementById("totalFinal");
-    const btnContinuar = document.getElementById("btnContinuar");
-
-    let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+    let carrito = JSON.parse(localStorage.getItem("carritoFinal")) || [];
+    const contenedor = document.getElementById("carritoContainer");
+    const totalSpan = document.getElementById("carritoTotal");
 
     if (carrito.length === 0) {
-        listaCarrito.innerHTML = "<p>No hay habitaciones en tu carrito.</p>";
-        btnContinuar.style.display = "none";
+        contenedor.innerHTML = "<p>No hay habitaciones en tu carrito.</p>";
+        totalSpan.textContent = "$0";
         return;
     }
+
+    contenedor.innerHTML = "";
 
     let total = 0;
 
     carrito.forEach(h => {
         total += h.precio;
 
-        listaCarrito.innerHTML += `
-            <div class="card mb-3 p-3">
-                <h4>${h.tipoHabitacion || "Habitación"}</h4>
-                <p><b>Precio:</b> $${h.precio}</p>
-                <p><b>Sucursal:</b> ${h.nombreSucursal}</p>
-
-                <button class="btn btn-danger btn-sm eliminar" data-id="${h.idHabitacion}">
-                    Quitar
+        contenedor.innerHTML += `
+            <div class="carrito-item">
+                <h4>${h.tipoHabitacion}</h4>
+                <p>Precio: $${h.precio.toLocaleString("es-CL")}</p>
+                <button class="btn btn-danger btn-sm eliminar-item" data-id="${h.idHabitacion}">
+                    Eliminar
                 </button>
+                <hr>
             </div>
         `;
     });
 
-    totalFinal.textContent = total.toLocaleString("es-CL");
+    totalSpan.textContent = "$" + total.toLocaleString("es-CL");
 
-    // QUITAR ELEMENTO DEL CARRITO
-    document.querySelectorAll(".eliminar").forEach(btn => {
+    // Eliminar habitación del carrito
+    document.querySelectorAll(".eliminar-item").forEach(btn => {
         btn.addEventListener("click", () => {
             const id = parseInt(btn.dataset.id);
 
             carrito = carrito.filter(h => h.idHabitacion !== id);
-            localStorage.setItem("carrito", JSON.stringify(carrito));
-            location.reload();
+            localStorage.setItem("carritoFinal", JSON.stringify(carrito));
+
+            location.reload(); // refrescar carrito
         });
     });
-
-    // CONTINUAR → RESERVA CON CARRITO
-    btnContinuar.addEventListener("click", () => {
-        localStorage.setItem("carritoFinal", JSON.stringify(carrito));
-        window.location.href = "reserva.html";
-    });
-
 });

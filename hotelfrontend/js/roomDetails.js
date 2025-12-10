@@ -1,9 +1,9 @@
-document.addEventListener("DOMContentLoaded", async function () {
+document.addEventListener("DOMContentLoaded", () => {
+    const roomsContainer = document.getElementById("roomsContainer");
+    const habitaciones = JSON.parse(localStorage.getItem("habitacionesBusqueda")) || [];
 
-    const room = JSON.parse(localStorage.getItem("habitacionSeleccionada"));
-
-    if (!room) {
-        alert("No se pudo cargar la habitación seleccionada.");
+    if (habitaciones.length === 0) {
+        roomsContainer.innerHTML = "<p>No hay habitaciones disponibles.</p>";
         return;
     }
 
