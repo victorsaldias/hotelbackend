@@ -1,3 +1,6 @@
+function fechasSolapan(f1, f2, g1, g2) {
+    return (f1 <= g2 && g1 <= f2);
+}
 document.addEventListener("DOMContentLoaded", () => {
 
     let carrito = JSON.parse(localStorage.getItem("carritoFinal")) || [];

@@ -129,7 +129,14 @@ document.addEventListener("click", (e) => {
         Swal.fire("Atención", "Ya agregaste esta reserva exacta.", "info");
         return;
     }
+for (let r of carrito) {
+    if (r.idHabitacion === reserva.idHabitacion &&
+        fechasSolapan(reserva.fechaInicio, reserva.fechaFin, r.fechaInicio, r.fechaFin)) {
 
+        Swal.fire("Error", "Esta habitación ya está reservada en un rango que se solapa.", "error");
+        return;
+    }
+}
     carrito.push(reserva);
     localStorage.setItem("carritoFinal", JSON.stringify(carrito));
 
