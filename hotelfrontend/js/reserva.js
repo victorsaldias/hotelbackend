@@ -39,8 +39,16 @@ document.addEventListener("DOMContentLoaded", async () => {
     let fechasHTML = "";
 
 carrito.forEach(h => {
-    const fi = new Date(h.fechaInicio).toLocaleDateString("es-CL");
-    const ff = new Date(h.fechaFin).toLocaleDateString("es-CL");
+    const fiDate = new Date(h.fechaInicio);
+    const ffDate = new Date(h.fechaFin);
+
+    const fi = fiDate.toLocaleDateString("es-CL");
+    const ff = ffDate.toLocaleDateString("es-CL");
+
+    const msPorDia = 1000 * 60 * 60 * 24;
+    const noches = Math.ceil((ffDate - fiDate) / msPorDia);
+
+    const totalHabitacion = h.precio * noches;
 
     fechasHTML += `
     <div class="habitacion-card">
@@ -69,15 +77,15 @@ carrito.forEach(h => {
         </div>
 
         <div class="habitacion-info">
-            <b>Cantidad:</b> ${h.cantidad || 1}
+            <b>Noches:</b> ${noches}
         </div>
 
         <div class="habitacion-info">
             <b>Total habitación:</b> 
-            $${(h.total * (h.cantidad || 1)).toLocaleString("es-CL")}
+            $${totalHabitacion.toLocaleString("es-CL")}
         </div>
     </div>
-`;
+    `;
 });
 
 document.getElementById("previewFechasMultiples").innerHTML = fechasHTML;
@@ -87,14 +95,19 @@ document.getElementById("previewFechasMultiples").innerHTML = fechasHTML;
     /* ============================================================
        3) Calcular total para TODAS las habitaciones
     ============================================================ */
-    const fechaI = new Date(fechaInicio);
-    const fechaF = new Date(fechaFin);
-    const dias = Math.ceil((fechaF - fechaI) / (1000 * 60 * 60 * 24));
+    const msPorDia = 1000 * 60 * 60 * 24;
 
-    const total = carrito.reduce((sum, h) => {
-    const subtotal = h.total * (h.cantidad || 1);
+const total = carrito.reduce((sum, h) => {
+    const fi = new Date(h.fechaInicio);
+    const ff = new Date(h.fechaFin);
+    const noches = Math.ceil((ff - fi) / msPorDia);
+
+    const subtotal = h.precio * noches;
     return sum + subtotal;
 }, 0);
+
+document.getElementById("previewTotal").textContent =
+    total.toLocaleString("es-CL");
 
     document.getElementById("previewTotal").textContent =
         total.toLocaleString("es-CL");
