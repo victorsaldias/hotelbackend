@@ -1,12 +1,7 @@
 /* ============================================================
    CARGA DE HABITACIONES EN ROOMS.HTML — VERSION ARREGLADA
 ============================================================ */
-const tipos = {
-        1: "Premium King",
-        2: "Habitación Deluxe",
-        3: "Suite Ejecutiva",
-        4: "Suite Familiar"
-    };
+
 
     const nombre = h.tipoHabitacion || h.nombreTipo || "Habitación";
 listadoHTML += `<p><b>${nombre}</b> - $${h.precio.toLocaleString("es-CL")}</p>`;
@@ -21,7 +16,13 @@ document.addEventListener("DOMContentLoaded", () => {
         roomsContainer.innerHTML = "<p>No hay habitaciones disponibles.</p>";
         return;
     }
-
+    
+const tipos = {
+        1: "Premium King",
+        2: "Habitación Deluxe",
+        3: "Suite Ejecutiva",
+        4: "Suite Familiar"
+    };
     
     const imagenesPorTipo = {
         1: "../img/rooms/room-1.jpg",
