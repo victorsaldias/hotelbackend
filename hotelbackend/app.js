@@ -39,39 +39,26 @@ const allowedOrigins = [
     "https://aquamarine-licorice-5a7138.netlify.app"
 ];
 
-app.use((req, res, next) => {
-    const origin = req.headers.origin;
-
-    res.header("Access-Control-Allow-Credentials", "true");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
-    res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-
-    // permitir cualquier dominio vercel
-    if (origin && origin.endsWith(".vercel.app")) {
-        res.header("Access-Control-Allow-Origin", origin);
-    }
-    // permitir dominios locales
-    else if (allowedOrigins.includes(origin)) {
-        res.header("Access-Control-Allow-Origin", origin);
-    }
-
-    // preflight
-    if (req.method === "OPTIONS") {
-        return res.status(200).end();
-    }
-
-    next();
-});
-
 app.use(cors({
-  origin: function(origin, callback){
-    if (!origin || allowedOrigins.includes(origin)) {
-      return callback(null, true);
-    }
-    return callback(new Error("Not allowed by CORS"));
-  },
-  credentials: true
+    origin: function(origin, callback){
+        console.log("🌐 Origin recibido:", origin);
+
+        // permitir sin origin (Postman, server-to-server)
+        if (!origin) return callback(null, true);
+
+        // permitir netlify
+        if (origin.includes("netlify.app")) return callback(null, true);
+
+        // permitir los que están en la lista
+        if (allowedOrigins.includes(origin)) return callback(null, true);
+
+        return callback(new Error("CORS bloqueó la petición: " + origin));
+    },
+    credentials: true
 }));
+
+// manejar preflight OPTIONS
+app.options("*", cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
