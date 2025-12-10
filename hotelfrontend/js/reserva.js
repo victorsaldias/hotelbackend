@@ -12,18 +12,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
     }
 
-    /* Mostrar resumen del carrito (solo título y precios) */
-    let listadoHTML = "";
-    carrito.forEach(h => {
-        listadoHTML += `
-            <p><b>${h.nombreTipo}</b> - $${h.precio.toLocaleString("es-CL")}</p>
-            <p><b>Sucursal:</b> ${h.nombreSucursal}</p>
-        `;
-    });
-
-    document.getElementById("room-title").innerHTML = "Habitaciones Seleccionadas";
-    document.getElementById("previewPrecio").innerHTML = listadoHTML;
-
 
     /* ============================================================
        2) Recuperar datos de la reserva
@@ -412,4 +400,24 @@ if (metodo.value === "WebPay") {
 
     actualizarBoton();
 
+});
+
+let acompanantesPorHabitacion = {};
+
+document.addEventListener("change", (e) => {
+    if (!e.target.classList.contains("acomp-select")) return;
+
+    const hIndex = e.target.dataset.hindex;
+    const idx = e.target.dataset.idx;
+    const tipo = e.target.value;
+
+    if (!acompanantesPorHabitacion[hIndex]) {
+        acompanantesPorHabitacion[hIndex] = [];
+    }
+
+    acompanantesPorHabitacion[hIndex][idx] = { tipoPersona: tipo };
+
+    localStorage.setItem("acompanantesReserva", 
+        JSON.stringify(acompanantesPorHabitacion)
+    );
 });
