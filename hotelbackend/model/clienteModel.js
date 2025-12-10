@@ -43,7 +43,10 @@ export async function obtenerClientePorId(idCliente) {
         SELECT 
           c.*,
           com.nombre AS nombreComuna,
+          com.idComuna,
+          p.idProvincia,
           p.nombre AS nombreProvincia,
+          r.idRegion,
           r.nombreRegion
         FROM cliente c
         LEFT JOIN comuna com ON c.idComuna = com.idComuna
@@ -59,6 +62,7 @@ export async function obtenerClientePorId(idCliente) {
     throw err;
   }
 }
+
 
 export async function obtenerClientePorRut(rut) {
   try {

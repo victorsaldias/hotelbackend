@@ -1,13 +1,17 @@
 import express from "express";
-import { listarComunasPorProvincia,
+import {
+    listarComunasPorProvincia,
     obtenerComunaPorId,
     obtenerTodasLasComunas
- } from "../controllers/comunaController.js";
+} from "../controllers/comunaController.js";
 
 const router = express.Router();
 
-router.get("/:idProvincia", listarComunasPorProvincia);
+// RUTAS ESPECÍFICAS PRIMERO
+router.get("/por-provincia/:idProvincia", listarComunasPorProvincia);
+router.get("/id/:idComuna", obtenerComunaPorId);
 
-router.get("/:idComuna", obtenerComunaPorId);
+// TODAS LAS COMUNAS
 router.get("/", obtenerTodasLasComunas);
+
 export default router;

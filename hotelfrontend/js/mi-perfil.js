@@ -1,109 +1,80 @@
+/* ============================================================
+   PERFIL CLIENTE – VERSIÓN FINAL OPTIMIZADA
+============================================================ */
+
 let usuario = JSON.parse(localStorage.getItem("usuarioCliente"));
-const idCliente = usuario?.idCliente;  // 👈 hazlo global
+const idCliente = usuario?.idCliente;
+
+// ========================================
+// Validar sesión ANTES de cargar todo
+// ========================================
 document.addEventListener("DOMContentLoaded", () => {
 
-    $('select[data-nice!="false"]').niceSelect();
-    // ============================
-    // VALIDAR SESIÓN
-    // ============================
-    let usuario = JSON.parse(localStorage.getItem("usuarioCliente"));
-
-    if (!usuario || !usuario.idCliente || isNaN(usuario.idCliente)) {
-        window.location.href = "/hotelfrontend/pages/login.html";
+    if (!usuario || !idCliente) {
+        window.location.href = "../pages/login.html";
         return;
     }
 
-   
+    // Forzar niceSelect solo en selects que no lo bloqueen
+    $('select[data-nice!="false"]').niceSelect();
 
-
-
-    // ============================
-    // CAMPOS DEL FORM
-    // ============================
+    // Campos del formulario
     const rutInput       = document.getElementById("rut");
     const correoInput    = document.getElementById("correo");
     const nombreInput    = document.getElementById("nombre");
     const apellidoInput  = document.getElementById("apellido");
     const telefonoInput  = document.getElementById("telefono");
     const direccionInput = document.getElementById("direccion");
+
+    const regionSelect     = document.getElementById("region");
+    const provinciaSelect  = document.getElementById("provincia");
+    const comunaSelect     = document.getElementById("comuna");
+
     const btnEditar  = document.getElementById("btnEditar");
     const btnGuardar = document.getElementById("btnGuardar");
-    const comunaSelect   = document.getElementById("comuna");
-    const regionSelect = document.getElementById("region");
-    const provinciaSelect = document.getElementById("provincia");
 
-console.log("regionSelect     =", regionSelect);
-console.log("provinciaSelect  =", provinciaSelect);
-console.log("comunaSelect     =", comunaSelect);
-
-regionSelect.addEventListener("change", () => {
-    console.log("🔥 Cambió región:", regionSelect.value);
-
-    console.log("Antes provinciaSelect.value =", provinciaSelect.value);
-    console.log("Antes provinciaSelect.innerHTML =", provinciaSelect.innerHTML);
-
-    // NO CAMBIAMOS NADA, SOLO MOSTRAMOS
-});
-
-provinciaSelect.addEventListener("change", () => {
-    console.log("🔥 Cambió provincia:", provinciaSelect.value);
-});
-    // ============================
-    // BLOQUEAR / HABILITAR CAMPOS
-    // ============================
-
+    /* ============================================================
+       BLOQUEAR / HABILITAR CAMPOS
+    ============================================================ */
     function bloquearCampos() {
         [
-            rutInput,
-            correoInput,
-            nombreInput,
-            apellidoInput,
-            telefonoInput,
-            direccionInput,
-            regionSelect,
-            provinciaSelect,
-            comunaSelect
-        ].forEach(i => i.setAttribute("disabled", true));
+            rutInput, correoInput, nombreInput, apellidoInput,
+            telefonoInput, direccionInput,
+            regionSelect, provinciaSelect, comunaSelect
+        ].forEach(el => el.setAttribute("disabled", true));
+
+        btnGuardar.setAttribute("disabled", true);
+        btnGuardar.style.opacity = "0.5";
     }
 
     function habilitarCampos() {
-        [   
-            rutInput,
-            correoInput,
-            nombreInput,
-            apellidoInput,
-            telefonoInput,
-            direccionInput,
-            regionSelect,
-            provinciaSelect,
-            comunaSelect
-        ].forEach(i => i.removeAttribute("disabled"));
+        [
+            rutInput, correoInput, nombreInput, apellidoInput,
+            telefonoInput, direccionInput,
+            regionSelect, provinciaSelect, comunaSelect
+        ].forEach(el => el.removeAttribute("disabled"));
+
+        btnGuardar.removeAttribute("disabled");
+        btnGuardar.style.opacity = "1";
     }
 
-    bloquearCampos(); // INICIAL
+    bloquearCampos();
 
-    // ============================
-    // CARGAR PERFIL
-    // ============================
-
+    /* ============================================================
+       CARGAR PERFIL
+    ============================================================ */
     async function cargarPerfil() {
         try {
             const resp = await fetch(`https://hotelbackend-hzc4.onrender.com/api/clientes/id/${idCliente}`);
             const cliente = await resp.json();
-            console.log("regionSelect:", regionSelect);
-console.log("provinciaSelect:", provinciaSelect);
-console.log("comunaSelect:", comunaSelect);
-            
-console.log("CLIENTE RAW:", cliente);
 
-for (const [k, v] of Object.entries(cliente)) {
-    console.log("CAMPO:", k, "=>", v);
-}
             if (!resp.ok) {
-                console.error("Cliente no encontrado:", cliente);
                 return Swal.fire("Error", "No se pudo cargar el perfil", "error");
             }
 
+            console.log("CLIENTE RECIBIDO:", cliente);
+
+            // Cargar valores
             rutInput.value       = cliente.rut || "";
             correoInput.value    = cliente.correo || "";
             nombreInput.value    = cliente.nombre || "";
@@ -111,9 +82,10 @@ for (const [k, v] of Object.entries(cliente)) {
             telefonoInput.value  = cliente.telefono || "";
             direccionInput.value = cliente.direccion || "";
 
+            // Backend ahora entrega idRegion e idProvincia
             await cargarRegiones(cliente.idRegion);
-await cargarProvincias(cliente.idRegion, cliente.idProvincia);
-await cargarComunas(cliente.idProvincia, cliente.idComuna);
+            await cargarProvincias(cliente.idRegion, cliente.idProvincia);
+            await cargarComunas(cliente.idProvincia, cliente.idComuna);
 
         } catch (err) {
             console.error("Error cargando perfil:", err);
@@ -123,30 +95,90 @@ await cargarComunas(cliente.idProvincia, cliente.idComuna);
 
     cargarPerfil();
 
-    // ============================
-    // EDITAR → HABILITAR CAMPOS
-    // ============================
+    /* ============================================================
+       CARGA DE REGIONES / PROVINCIAS / COMUNAS
+    ============================================================ */
 
-    btnEditar.addEventListener("click", () => {
-        habilitarCampos();
-        btnGuardar.removeAttribute("disabled");
-        btnGuardar.style.opacity = "1";
+    async function cargarRegiones(idRegionActual) {
+        const resp = await fetch("https://hotelbackend-hzc4.onrender.com/api/regiones");
+        const regiones = await resp.json();
+
+        regionSelect.innerHTML = "";
+        regiones.sort((a,b)=>a.nombre.localeCompare(b.nombre,'es'));
+
+        regiones.forEach(r => {
+            regionSelect.innerHTML += `
+                <option value="${r.idRegion}" ${r.idRegion == idRegionActual ? "selected" : ""}>
+                    ${r.nombre}
+                </option>`;
+        });
+    }
+
+    async function cargarProvincias(idRegion, idProvinciaActual) {
+        if (!idRegion) return;
+
+        const resp = await fetch(`https://hotelbackend-hzc4.onrender.com/api/provincias/por-region/${idRegion}`);
+        const provincias = await resp.json();
+
+        provinciaSelect.innerHTML = "";
+        provincias.sort((a,b)=>a.nombre.localeCompare(b.nombre,'es'));
+
+        provincias.forEach(p => {
+            provinciaSelect.innerHTML += `
+                <option value="${p.idProvincia}" ${p.idProvincia == idProvinciaActual ? "selected" : ""}>
+                    ${p.nombre}
+                </option>`;
+        });
+    }
+
+    async function cargarComunas(idProvincia, idComunaActual) {
+        if (!idProvincia) return;
+
+        const resp = await fetch(`https://hotelbackend-hzc4.onrender.com/api/comunas/por-provincia/${idProvincia}`);
+        const comunas = await resp.json();
+
+        comunaSelect.innerHTML = "";
+        comunas.sort((a,b)=>a.nombre.localeCompare(b.nombre,'es'));
+
+        comunas.forEach(c => {
+            comunaSelect.innerHTML += `
+                <option value="${c.idComuna}" ${c.idComuna == idComunaActual ? "selected" : ""}>
+                    ${c.nombre}
+                </option>`;
+        });
+    }
+
+    /* ============================================================
+       SELECT DEPENDIENTES
+    ============================================================ */
+    regionSelect.addEventListener("change", () => {
+        provinciaSelect.innerHTML = `<option disabled selected>Seleccione provincia</option>`;
+        comunaSelect.innerHTML    = `<option disabled selected>Seleccione comuna</option>`;
+        cargarProvincias(regionSelect.value, null);
     });
 
-    // ============================
-    // GUARDAR CAMBIOS (PUT)
-    // ============================
+    provinciaSelect.addEventListener("change", () => {
+        comunaSelect.innerHTML = `<option disabled selected>Seleccione comuna</option>`;
+        cargarComunas(provinciaSelect.value, null);
+    });
 
-    const form = document.getElementById("perfilForm");
+    /* ============================================================
+       EDITAR PERFIL
+    ============================================================ */
+    btnEditar.addEventListener("click", () => {
+        habilitarCampos();
+    });
 
-    form.addEventListener("submit", async (e) => {
+    /* ============================================================
+       GUARDAR PERFIL (PUT)
+    ============================================================ */
+    document.getElementById("perfilForm").addEventListener("submit", async (e) => {
         e.preventDefault();
-        
-const comunaValue = comunaSelect.value;
 
-if (!comunaValue || comunaValue === "null") {
-    return Swal.fire("Error", "Debes seleccionar una comuna válida", "error");
-}
+        if (!comunaSelect.value) {
+            return Swal.fire("Error", "Debes seleccionar una comuna válida", "error");
+        }
+
         const payload = {
             rut: rutInput.value.trim(),
             nombre: nombreInput.value.trim(),
@@ -166,189 +198,48 @@ if (!comunaValue || comunaValue === "null") {
 
             if (!resp.ok) {
                 const err = await resp.json();
-                throw new Error(err.message || "No se pudo actualizar el perfil");
+                throw new Error(err.message);
             }
 
             Swal.fire({
                 icon: "success",
                 title: "Cambios guardados",
-                text: "Tu perfil se actualizó correctamente",
-                timer: 1800,
+                timer: 1500,
                 showConfirmButton: false
             });
 
             bloquearCampos();
-            btnGuardar.setAttribute("disabled", true);
-            btnGuardar.style.opacity = "0.5";
-
             cargarPerfil();
 
         } catch (err) {
-            console.error("Error actualizando perfil:", err);
             Swal.fire("Error", err.message, "error");
         }
     });
 
-async function cargarRegiones(idRegionActual) {
-    const resp = await fetch("https://hotelbackend-hzc4.onrender.com/api/regiones");
-    let regiones = await resp.json();
-
-    regiones.sort((a,b)=>a.nombre.localeCompare(b.nombre,'es',{sensitivity:'base'}));
-
-    regionSelect.innerHTML = "";
-
-    regiones.forEach(r => {
-        const opt = document.createElement("option");
-        opt.value = r.idRegion;
-        opt.textContent = r.nombre;
-
-        if (r.idRegion == idRegionActual) opt.selected = true;
-
-        regionSelect.appendChild(opt);
-    });
-}
-
-async function cargarProvincias(idRegion, idProvinciaActual) {
-    const resp = await fetch(`https://hotelbackend-hzc4.onrender.com/api/provincias/${idRegion}`);
-    let provincias = await resp.json();
-
-    provincias.sort((a,b)=>a.nombre.localeCompare(b.nombre,'es',{sensitivity:'base'}));
-
-    provinciaSelect.innerHTML = "";
-
-    provincias.forEach(p => {
-        const opt = document.createElement("option");
-        opt.value = p.idProvincia;
-        opt.textContent = p.nombre;
-
-        if (p.idProvincia == idProvinciaActual) opt.selected = true;
-
-        provinciaSelect.appendChild(opt);
-    });
-}
-
-async function cargarProvincias(idRegion, idProvinciaActual) {
-    const resp = await fetch(`https://hotelbackend-hzc4.onrender.com/api/provincias/${idRegion}`);
-    let provincias = await resp.json();
-
-    provincias.sort((a,b)=>a.nombre.localeCompare(b.nombre,'es',{sensitivity:'base'}));
-
-    provinciaSelect.innerHTML = "";
-
-    provincias.forEach(p => {
-        const opt = document.createElement("option");
-        opt.value = p.idProvincia;
-        opt.textContent = p.nombre;
-
-        if (p.idProvincia == idProvinciaActual) opt.selected = true;
-
-        provinciaSelect.appendChild(opt);
-    });
-}
-
-async function cargarComunas(idProvincia, idComunaActual) {
-    const resp = await fetch(`https://hotelbackend-hzc4.onrender.com/api/comunas/${idProvincia}`);
-    //hzc4
-    let comunas = await resp.json();
-
-    comunas.sort((a,b)=>a.nombre.localeCompare(b.nombre,'es',{sensitivity:'base'}));
-
-    comunaSelect.innerHTML = "";
-
-    comunas.forEach(c => {
-        const opt = document.createElement("option");
-        opt.value = c.idComuna;
-        opt.textContent = c.nombre;
-
-        if (c.idComuna == idComunaActual) opt.selected = true;
-
-        comunaSelect.appendChild(opt);
-    });
-}
-regionSelect.addEventListener("change", () => {
-
-    // Reiniciar selects correctamente
-    provinciaSelect.value = "";
-    provinciaSelect.innerHTML = `<option value='' disabled selected>Seleccione provincia</option>`;
-
-    comunaSelect.value = "";
-    comunaSelect.innerHTML = `<option value='' disabled selected>Seleccione comuna</option>`;
-
-    // Cargar provincias reales de la región seleccionada
-    cargarProvincias(regionSelect.value, null);
 });
 
-provinciaSelect.addEventListener("change", () => {
 
-    comunaSelect.value = "";
-    comunaSelect.innerHTML = `<option value='' disabled selected>Seleccione comuna</option>`;
-
-    cargarComunas(provinciaSelect.value, null);
-});
-
-});
-
-document.addEventListener("DOMContentLoaded", () => {
-    if (typeof $ !== "undefined" && $('#comuna').length) {
-        try {
-            $('#comuna').niceSelect('destroy');  // destruir aunque no haya clase
-        } catch (e) {
-            console.warn("No había nice-select activo todavía", e);
-        }
-    }
-});
-
-document.addEventListener("DOMContentLoaded", () => {
-    if (typeof $ !== "undefined" && $('#region').length) {
-        try {
-            $('#region').niceSelect('destroy');  // destruir aunque no haya clase
-        } catch (e) {
-            console.warn("No había nice-select activo todavía", e);
-        }
-    }
-});
-
-document.addEventListener("DOMContentLoaded", () => {
-    if (typeof $ !== "undefined" && $('#provincia').length) {
-        try {
-            $('#provincia').niceSelect('destroy');  // destruir aunque no haya clase
-        } catch (e) {
-            console.warn("No había nice-select activo todavía", e);
-        }
-    }
-});
-
-// ================================
-// CAMBIO DE CONTRASEÑA
-// ================================
-const modalPw = document.getElementById("modalPassword");
-const btnCambiarPw = document.getElementById("btnCambiarPassword");
-const btnCerrarPw = document.getElementById("btnCerrarModal");
+/* ============================================================
+   CAMBIO DE CONTRASEÑA
+============================================================ */
+const modalPw        = document.getElementById("modalPassword");
+const btnCambiarPw   = document.getElementById("btnCambiarPassword");
+const btnCerrarPw    = document.getElementById("btnCerrarModal");
 const btnConfirmarPw = document.getElementById("btnConfirmarCambio");
 
-// Abrir modal
-btnCambiarPw.addEventListener("click", () => {
-    modalPw.style.display = "flex";
-});
+btnCambiarPw.addEventListener("click", () => modalPw.style.display = "flex");
+btnCerrarPw.addEventListener("click", () => modalPw.style.display = "none");
 
-// Cerrar modal
-btnCerrarPw.addEventListener("click", () => {
-    modalPw.style.display = "none";
-});
-
-// Confirmar cambio
 btnConfirmarPw.addEventListener("click", async () => {
     const actual = document.getElementById("pwActual").value.trim();
-    const nueva = document.getElementById("pwNueva").value.trim();
+    const nueva  = document.getElementById("pwNueva").value.trim();
     const nueva2 = document.getElementById("pwNueva2").value.trim();
 
-    if (!actual || !nueva || !nueva2) {
-        return Swal.fire("Campos vacíos", "Completa todos los campos", "warning");
-    }
+    if (!actual || !nueva || !nueva2)
+        return Swal.fire("Error", "Completa todos los campos", "warning");
 
-    if (nueva !== nueva2) {
-        return Swal.fire("Error", "Las nuevas contraseñas no coinciden", "error");
-    }
+    if (nueva !== nueva2)
+        return Swal.fire("Error", "Las contraseñas no coinciden", "error");
 
     try {
         const resp = await fetch(
@@ -356,21 +247,14 @@ btnConfirmarPw.addEventListener("click", async () => {
             {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    passwordActual: actual,
-                    passwordNueva: nueva
-                })
+                body: JSON.stringify({ passwordActual: actual, passwordNueva: nueva })
             }
         );
 
         const data = await resp.json();
+        if (!resp.ok) throw new Error(data.message);
 
-        if (!resp.ok) {
-            throw new Error(data.message || "No se pudo cambiar la contraseña");
-        }
-
-        Swal.fire("Listo", "Tu contraseña fue cambiada correctamente", "success");
-
+        Swal.fire("Éxito", "Contraseña actualizada", "success");
         modalPw.style.display = "none";
 
     } catch (err) {

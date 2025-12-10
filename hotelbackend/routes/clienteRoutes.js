@@ -13,31 +13,19 @@ import {
 
 const router = express.Router();
 
-
-// =======================
-// RUTAS POR ID (seguras)
-// =======================
+// RUTAS POR ID
 router.get("/id/:idCliente", obtenerClientePorIdController);
 router.put("/id/:idCliente", modificarClientePorId);
 router.put("/cambiar-password/:idCliente", cambiarPasswordController);
 
-
-// =======================
-// ACCIONES ESPECÍFICAS
-// =======================
+// CREAR CLIENTES
 router.post("/web", crearClienteWeb);
 router.post("/recepcion", crearClienteRecepcionista);
 
-
-// =======================
 // LISTAR
-// =======================
 router.get("/", obtenerTodosLosClientes);
 
-
-// =======================
-// RUTAS POR RUT (van al final)
-// =======================
+// RUTAS POR RUT
 router.get("/rut/:rut", obtenerCliente);
 router.put("/rut/:rut", modificarCliente);
 
