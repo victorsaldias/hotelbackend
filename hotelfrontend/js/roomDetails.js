@@ -68,11 +68,36 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     // --- Botón Reservar Ahora ---
     const btn = document.getElementById("btnReservar");
+btn.addEventListener("click", () => {
+    const room = JSON.parse(localStorage.getItem("habitacionSeleccionada"));
+    const fechaInicio = localStorage.getItem("fechaInicioReserva");
+    const fechaFin = localStorage.getItem("fechaFinReserva");
 
-    btn.addEventListener("click", () => {
-        localStorage.setItem("carritoFinal", JSON.stringify([room]));
-        window.location.href = "../pages/reserva.html";
-    });
+    if (!fechaInicio || !fechaFin) {
+        Swal.fire("Selecciona fechas antes de reservar");
+        return;
+    }
+
+    const noches = Math.ceil(
+        (new Date(fechaFin) - new Date(fechaInicio)) / (1000*60*60*24)
+    );
+
+    const item = {
+        idHabitacion: room.idHabitacion,
+        nombreTipo: room.nombreTipo || tipos[room.idTipoHabitacion],
+        nombreSucursal: room.nombreSucursal || room.sucursal || "No disponible",
+        fechaInicio,
+        fechaFin,
+        precio: room.precio,
+        total: room.precio * noches,
+        capacidad: room.capacidad,
+        cama: room.cama,
+        tamano: room.tamano
+    };
+
+    localStorage.setItem("carritoFinal", JSON.stringify([item]));
+    window.location.href = "../pages/reserva.html";
+});
 });
 
 // =============================
