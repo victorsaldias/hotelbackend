@@ -127,6 +127,8 @@ if (!total) {
         console.error("❌ Error enviando correo (no afecta reserva):", err);
     }
 }, 5000);
+return connData;
+
 }
 
 /* ============================================================
