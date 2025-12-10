@@ -88,10 +88,11 @@ document.addEventListener("DOMContentLoaded", () => {
             console.log("idRegion:", cliente.idRegion);
 console.log("idProvincia:", cliente.idProvincia);
 console.log("idComuna (raw):", cliente.idComuna);
-console.log("idComuna (fix):", idComunaLimpio);
+
             const idComunaLimpio = Array.isArray(cliente.idComuna)
     ? cliente.idComuna[1]   // TOMAMOS EL VALOR REAL
     : cliente.idComuna;
+console.log("idComuna (fix):", idComunaLimpio);
             await cargarComunas(cliente.idProvincia, cliente.idComuna);
 
         } catch (err) {
