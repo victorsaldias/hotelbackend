@@ -137,6 +137,7 @@ for (let r of carrito) {
         return;
     }
 }
+    data.tipoHabitacion = tipos?.[data.idTipoHabitacion] || "Habitación";
     carrito.push(reserva);
     localStorage.setItem("carritoFinal", JSON.stringify(carrito));
 
