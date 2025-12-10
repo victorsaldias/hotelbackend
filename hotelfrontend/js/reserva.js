@@ -1,6 +1,5 @@
 let totalGlobal = 0;
 let acompanantesPorHabitacion = {};
-
 document.addEventListener("DOMContentLoaded", async () => {
 
     /* ============================================================
@@ -214,14 +213,14 @@ document.addEventListener("DOMContentLoaded", async () => {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    idCliente: localStorage.getItem("clienteId"),
-                    habitaciones: carrito.map(h => h.idHabitacion),
-                    fechaInicio,
-                    fechaFin,
-                    cantidadHuespedes,
-                    total: totalGlobal,
-                    acompanantes,
-                    metodoPago: "Presencial"
+            idCliente: clienteId,
+            habitaciones: carrito.map(h => h.idHabitacion),
+            fechaInicio,
+            fechaFin,
+            cantidadHuespedes,
+            total: totalGlobal,
+            acompanantes,
+            metodoPago: "Presencial"
                 })
             });
 
@@ -265,15 +264,15 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         const acompanantes = obtenerAcompanantes();
 
-        const reserva = {
-            idCliente: localStorage.getItem("clienteId"),
-            habitaciones: carrito.map(h => h.idHabitacion),
-            fechaInicio,
-            fechaFin,
-            cantidadHuespedes,
-            total: totalGlobal,
-            acompanantes,
-            metodoPago: "WebPay"
+    const reserva = {
+        idCliente: clienteId,
+        habitaciones: carrito.map(h => h.idHabitacion),
+        fechaInicio,
+        fechaFin,
+        cantidadHuespedes,
+        total: totalGlobal,
+        acompanantes,
+        metodoPago: "WebPay"
         };
 
         localStorage.setItem("reservaCompleta", JSON.stringify(reserva));
@@ -307,8 +306,18 @@ localStorage.removeItem("cantidadHuespedesReserva");
 ============================================================ */
 function obtenerAcompanantes() {
     const data = JSON.parse(localStorage.getItem("acompanantesReserva") || "{}");
-    return Object.values(data).flat(); // ← ESTA LÍNEA ES LA SOLUCIÓN
-    
+
+    let lista = [];
+
+    for (const habIndex in data) {
+        const acompList = data[habIndex];
+        if (acompList) {
+            lista = lista.concat(acompList);
+        }
+    }
+
+    return lista;
 }
+
 
 console.log("Acompañantes enviados:", acompanantes);
