@@ -1,9 +1,6 @@
 /* ============================================================
    CARGA DE HABITACIONES EN ROOMS.HTML — VERSION ARREGLADA
 ============================================================ */
-/* ============================================================
-   CARGA DE HABITACIONES EN ROOMS.HTML — VERSION ARREGLADA
-============================================================ */
 
 const tipos = {
     1: "Premium King",
@@ -70,7 +67,7 @@ document.addEventListener("DOMContentLoaded", () => {
         `;
     });
 
-    /* Ir a detalles */
+    // Ir a detalles
     document.querySelectorAll(".ver-detalles-btn").forEach(btn => {
         btn.addEventListener("click", () => {
             const info = JSON.parse(btn.dataset.info);
@@ -79,7 +76,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    /* Reservar ahora */
+    // Reservar ahora
     document.querySelectorAll(".reservar-btn").forEach(btn => {
         btn.addEventListener("click", () => {
             const info = JSON.parse(btn.dataset.info);
@@ -89,19 +86,24 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 
+
 /* ============================================================
    EVENTO: AGREGAR AL CARRITO (OFICIAL)
 ============================================================ */
-document.addEventListener("click", (e) => {
+document.addEventListener("click", async (e) => {
     if (!e.target.classList.contains("agregar-carrito-btn")) return;
 
-    const habitacion = JSON.parse(e.target.dataset.info);
-const tipos = {
-    1: "Premium King",
-    2: "Habitación Deluxe",
-    3: "Suite Ejecutiva",
-    4: "Suite Familiar"
-};
+    const infoMin = JSON.parse(e.target.dataset.info);
+
+    // 🔥 Obtener habitación completa desde el backend
+    const resp = await fetch(`https://hotelbackend-hzc4.onrender.com/api/habitaciones/id/${infoMin.idHabitacion}`);
+    const habitacion = await resp.json();
+
+    if (!habitacion || !habitacion.idHabitacion) {
+        Swal.fire("Error", "No se pudo cargar la información de la habitación.", "error");
+        return;
+    }
+
     const fechaInicio = localStorage.getItem("fechaInicioReserva");
     const fechaFin = localStorage.getItem("fechaFinReserva");
     const huespedes = parseInt(localStorage.getItem("cantidadHuespedesReserva"));
@@ -111,16 +113,23 @@ const tipos = {
         return;
     }
 
-    // Crear objeto reserva completo
     const reserva = {
         idHabitacion: habitacion.idHabitacion,
-        idTipoHabitacion: habitacion.idTipoHabitacion,   // ✅ NECESARIO
-        nombreTipo: tipos[habitacion.idTipoHabitacion] || "Habitación", // ✅ CORRECTO
+        idTipoHabitacion: habitacion.idTipoHabitacion,
+        nombreTipo: tipos[habitacion.idTipoHabitacion] || "Habitación",
+
         precio: habitacion.precio,
         fechaInicio,
         fechaFin,
         huespedes,
-        nombreSucursal: habitacion.nombreSucursal || "No disponible",
+
+        nombreSucursal: habitacion.nombreSucursal,
+        direccionSucursal: habitacion.direccionSucursal,
+
+        capacidad: habitacion.capacidad || "N/A",
+        cama: habitacion.cama || "N/A",
+        tamano: habitacion.tamano || "N/A",
+
         total:
             habitacion.precio *
             Math.ceil((new Date(fechaFin) - new Date(fechaInicio)) / (1000 * 60 * 60 * 24))
@@ -128,7 +137,6 @@ const tipos = {
 
     let carrito = JSON.parse(localStorage.getItem("carritoFinal")) || [];
 
-    // Validar duplicados exactos
     const existe = carrito.some(r =>
         r.idHabitacion === reserva.idHabitacion &&
         r.fechaInicio === reserva.fechaInicio &&
@@ -138,17 +146,6 @@ const tipos = {
     if (existe) {
         Swal.fire("Atención", "Ya agregaste esta reserva exacta.", "info");
         return;
-    }
-
-    // Validar solapamiento
-    for (let r of carrito) {
-        if (
-            r.idHabitacion === reserva.idHabitacion &&
-            fechasSolapan(reserva.fechaInicio, reserva.fechaFin, r.fechaInicio, r.fechaFin)
-        ) {
-            Swal.fire("Error", "Esta habitación ya está reservada en un rango que se solapa.", "error");
-            return;
-        }
     }
 
     carrito.push(reserva);
@@ -165,6 +162,7 @@ const tipos = {
     actualizarContadorCarrito();
 });
 
+
 /* ============================================================
    CONTAR ITEMS DEL CARRITO
 ============================================================ */
@@ -173,7 +171,6 @@ function actualizarContadorCarrito() {
 
     const span = document.getElementById("carritoCount");
 
-    // 🔥 si el span aun no existe, reintenta luego
     if (!span) {
         setTimeout(actualizarContadorCarrito, 200);
         return;
