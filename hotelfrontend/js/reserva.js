@@ -2,26 +2,38 @@
 document.addEventListener("DOMContentLoaded", async () => {
 
     /* ============================================================
-       1) Recuperar habitación desde localStorage
+       1) Recuperar CARRITO desde localStorage
     ============================================================ */
-    const room = JSON.parse(localStorage.getItem("habitacionSeleccionada"));
+    let carrito = JSON.parse(localStorage.getItem("carritoFinal")) || [];
 
-    if (!room) {
-        Swal.fire("Error", "No se encontró la habitación seleccionada", "error");
+    if (carrito.length === 0) {
+        Swal.fire("Carrito vacío", "No has seleccionado habitaciones", "error")
+            .then(() => window.location.href = "rooms.html");
         return;
     }
 
-    document.getElementById("room-title").textContent = room.tipoHabitacion;
-    document.getElementById("previewPrecio").textContent = room.precio;
+    /* Mostrar resumen del carrito (solo título y precios) */
+    let listadoHTML = "";
+    carrito.forEach(h => {
+        listadoHTML += `
+            <p><b>${h.tipoHabitacion}</b> - $${h.precio.toLocaleString("es-CL")}</p>
+        `;
+    });
+
+    document.getElementById("room-title").innerHTML = "Habitaciones Seleccionadas";
+    document.getElementById("previewPrecio").innerHTML = listadoHTML;
+
 
     /* ============================================================
        2) Recuperar datos de la reserva
     ============================================================ */
     const fechaInicio = localStorage.getItem("fechaInicioReserva");
     const fechaFin = localStorage.getItem("fechaFinReserva");
-    const fechaBonitaInicio = new Date(fechaInicio).toLocaleDateString("es-CL");
-const fechaBonitaFin = new Date(fechaFin).toLocaleDateString("es-CL");
     const cantidadHuespedes = parseInt(localStorage.getItem("cantidadHuespedesReserva"));
+
+    // Fechas bonitas
+    const fechaBonitaInicio = new Date(fechaInicio).toLocaleDateString("es-CL");
+    const fechaBonitaFin = new Date(fechaFin).toLocaleDateString("es-CL");
 
     document.getElementById("previewFechaInicio").textContent = fechaBonitaInicio;
     document.getElementById("previewFechaFin").textContent = fechaBonitaFin;
@@ -29,22 +41,16 @@ const fechaBonitaFin = new Date(fechaFin).toLocaleDateString("es-CL");
 
 
     /* ============================================================
-       3) Calcular total
+       3) Calcular total para TODAS las habitaciones
     ============================================================ */
+    const fechaI = new Date(fechaInicio);
+    const fechaF = new Date(fechaFin);
+    const dias = Math.ceil((fechaF - fechaI) / (1000 * 60 * 60 * 24));
 
-// Convertir fechas desde el texto bonito (06 Dic 2025 → Date real)
-const fechaInicioSQL = fechaInicio;
-const fechaFinSQL   = fechaFin;
+    const total = carrito.reduce((sum, h) => sum + (h.precio * dias), 0);
 
-// Creamos Date a partir del string SQL
-const fechaI = new Date(fechaInicioSQL);
-const fechaF = new Date(fechaFinSQL);
-
-// Calcular días reales
-const dias = Math.ceil((fechaF - fechaI) / (1000 * 60 * 60 * 24));
-// Calcular total y mostrar
-const total = room.precio * dias;
-document.getElementById("previewTotal").textContent = total.toLocaleString("es-CL");
+    document.getElementById("previewTotal").textContent =
+        total.toLocaleString("es-CL");
 
     /* ============================================================
        4) PASARELA ACOMPAÑANTES
@@ -202,7 +208,7 @@ btn.addEventListener("click", async () => {
     }
 
     // YA NO recalculamos las fechas
-    const total = room.precio * dias;
+    total = total; 
 
     if (metodo.value === "Presencial") {
     await enviarReservaPresencial();
@@ -258,18 +264,18 @@ if (metodo.value === "WebPay") {
 
     async function iniciarWebPay() {
 
-        const reserva = {
-            idCliente: clienteId,
-            habitaciones: [room.idHabitacion],
-            fechaInicio: fechaInicioSQL,
-            fechaFin: fechaFinSQL,
-            cantidadHuespedes,
-            total,
-            acompanantes,
-            metodoPago: "WebPay"
-        };
+    const reserva = {
+        idCliente: clienteId,
+        habitaciones: carrito.map(h => h.idHabitacion),
+        fechaInicio,
+        fechaFin,
+        cantidadHuespedes,
+        total,
+        acompanantes,
+        metodoPago: "WebPay"
+    };
 
-        localStorage.setItem("reservaCompleta", JSON.stringify(reserva));
+    localStorage.setItem("reservaCompleta", JSON.stringify(reserva));
 
         const response = await fetch("https://hotelbackend-hzc4.onrender.com/api/webpay/init", {
             method: "POST",

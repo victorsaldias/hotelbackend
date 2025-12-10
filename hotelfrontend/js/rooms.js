@@ -58,11 +58,10 @@ document.addEventListener("DOMContentLoaded", () => {
         Ver Detalles
     </button>
 
-    <button class="btn-primary-medium reservar-btn"
-            data-info='${JSON.stringify(h)}'>
-        Reservar Ahora
-    </button>
-
+   <button class="btn-primary-medium agregar-carrito-btn"
+        data-info='${JSON.stringify(h)}'>
+    Agregar al Carrito
+</button>
 </div>
                     </div>
                 </div>
@@ -92,3 +91,15 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
 });
+
+function agregarAlCarrito(habitacion) {
+    let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+
+    // evitar duplicar la misma habitación
+    if (!carrito.find(h => h.idHabitacion === habitacion.idHabitacion)) {
+        carrito.push(habitacion);
+        localStorage.setItem("carrito", JSON.stringify(carrito));
+    }
+
+    Swal.fire("✔ Agregada", "Habitación añadida al carrito", "success");
+}
