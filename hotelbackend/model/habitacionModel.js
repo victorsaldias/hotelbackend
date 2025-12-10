@@ -85,17 +85,18 @@ export async function obtenerHabitacionPorId(idHabitacion) {
         .input("idHabitacion", idHabitacion)
         .query(`
             SELECT 
-                h.idHabitacion,
-                h.numero,
-                h.idSucursal,
-                s.nombre AS nombreSucursal,
-                s.direccion AS direccionSucursal,
-                t.nombre AS nombreTipoHabitacion,
-                ISNULL(h.precioPersonalizado, t.precio) AS precio,
-                h.idEstadoHabitacion,
-                c.capacidad,
-                c.cama,
-                c.tamano
+    h.idHabitacion,
+    h.numero,
+    h.idSucursal,
+    s.nombre AS nombreSucursal,
+    s.direccion AS direccionSucursal,
+    h.idTipoHabitacion,
+    t.nombre AS nombreTipoHabitacion,
+    ISNULL(h.precioPersonalizado, t.precio) AS precio,
+    h.idEstadoHabitacion,
+    c.capacidad,
+    c.cama,
+    c.tamano
             FROM habitacion h
             INNER JOIN tipoHabitacion t ON h.idTipoHabitacion = t.idTipoHabitacion
             LEFT JOIN caracteristica c ON c.idCaracteristica = h.idCaracteristica

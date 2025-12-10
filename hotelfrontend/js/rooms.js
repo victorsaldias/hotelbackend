@@ -78,12 +78,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Reservar ahora
     document.querySelectorAll(".reservar-btn").forEach(btn => {
-        btn.addEventListener("click", () => {
-            const info = JSON.parse(btn.dataset.info);
-            localStorage.setItem("habitacionSeleccionada", JSON.stringify(info));
-            window.location.href = "../pages/reserva.html";
-        });
+    btn.addEventListener("click", async () => {
+
+        const infoMin = JSON.parse(btn.dataset.info);
+
+        // Traer datos completos desde backend
+        const resp = await fetch(`https://hotelbackend-hzc4.onrender.com/api/habitaciones/id/${infoMin.idHabitacion}`);
+        const habitacionCompleta = await resp.json();
+
+        // Guardar habitación completa
+        localStorage.setItem("habitacionSeleccionada", JSON.stringify(habitacionCompleta));
+
+        window.location.href = "../pages/reserva.html";
     });
+});
 });
 
 
