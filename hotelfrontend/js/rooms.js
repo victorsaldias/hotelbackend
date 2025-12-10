@@ -115,11 +115,12 @@ const tipos = {
     const reserva = {
         idHabitacion: habitacion.idHabitacion,
         idTipoHabitacion: habitacion.idTipoHabitacion,   // ✅ NECESARIO
-         nombreTipo: tipos[habitacion.idTipoHabitacion] || "Habitación", // ✅ CORRECTO
+        nombreTipo: tipos[habitacion.idTipoHabitacion] || "Habitación", // ✅ CORRECTO
         precio: habitacion.precio,
         fechaInicio,
         fechaFin,
         huespedes,
+         nombreSucursal: data.nombreSucursal ,
         total:
             habitacion.precio *
             Math.ceil((new Date(fechaFin) - new Date(fechaInicio)) / (1000 * 60 * 60 * 24))

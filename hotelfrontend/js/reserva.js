@@ -17,6 +17,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     carrito.forEach(h => {
         listadoHTML += `
             <p><b>${h.nombreTipo}</b> - $${h.precio.toLocaleString("es-CL")}</p>
+            <p><b>Sucursal:</b> ${h.nombreSucursal}</p>
         `;
     });
 
@@ -42,9 +43,12 @@ carrito.forEach(h => {
     const ff = new Date(h.fechaFin).toLocaleDateString("es-CL");
 
     fechasHTML += `
-        <p><b>${h.nombreTipo}</b>: ${fi} → ${ff}</p>
-    `;
-});
+  <p>
+    <b>${h.nombreTipo}</b> 
+    (<i>${h.nombreSucursal}</i>) : 
+    ${fi} → ${ff}
+  </p>
+`;
 
 document.getElementById("previewFechasMultiples").innerHTML = fechasHTML;
     document.getElementById("previewHuespedes").textContent = cantidadHuespedes;

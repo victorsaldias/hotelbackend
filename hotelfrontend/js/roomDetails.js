@@ -29,6 +29,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     document.getElementById("room-price").textContent = room.precio || 0;
     document.getElementById("room-desc").textContent =
         `Habitación número ${room.numero}, ideal para ${room.capacidad} personas.`;
+    document.getElementById("habitacionSucursal").textContent = data.nombreSucursal;
 
     // --- Características ---
     document.getElementById("room-details-left").innerHTML = `

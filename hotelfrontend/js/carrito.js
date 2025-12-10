@@ -22,6 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
             <div class="carrito-item">
                 <h4>${item.nombreTipo || "Habitación"}</h4>
 
+                <p><b>Sucursal:</b> ${h.nombreSucursal}</p>
                 <p><b>Fecha:</b> ${item.fechaInicio} → ${item.fechaFin}</p>
                 <p><b>Precio:</b> $${item.precio.toLocaleString("es-CL")}</p>
                 <p><b>Total:</b> $${item.total.toLocaleString("es-CL")}</p>
