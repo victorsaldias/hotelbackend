@@ -1,9 +1,9 @@
-document.addEventListener("DOMContentLoaded", () => {
-    const roomsContainer = document.getElementById("roomsContainer");
-    const habitaciones = JSON.parse(localStorage.getItem("habitacionesBusqueda")) || [];
+document.addEventListener("DOMContentLoaded", async function () {
 
-    if (habitaciones.length === 0) {
-        roomsContainer.innerHTML = "<p>No hay habitaciones disponibles.</p>";
+    const room = JSON.parse(localStorage.getItem("habitacionSeleccionada"));
+
+    if (!room) {
+        alert("No se pudo cargar la habitación seleccionada.");
         return;
     }
 
@@ -67,7 +67,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // --- Botón Reservar Ahora ---
      // CLICK → Reservar Ahora → ir directo a reserva.html
-    document.querySelectorAll("#btnReservar").forEach(btn => {
+    document.querySelectorAll("btnReservar").forEach(btn => {
         btn.addEventListener("click", () => {
             const info = JSON.parse(btn.dataset.info);
 
