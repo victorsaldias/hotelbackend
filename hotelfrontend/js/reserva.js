@@ -107,10 +107,7 @@ for (let i = 1; i <= totalAcomp; i++) {
 
     function guardarPaso(num) {
         datosAcompanantes[num] = {
-            nombre: document.getElementById(`nombre_${num}`).value,
-            apellido: document.getElementById(`apellido_${num}`).value,
-            rut: document.getElementById(`rut_${num}`).value,
-            telefono: document.getElementById(`telefono_${num}`).value,
+        
             tipoPersona: document.getElementById(`tipo_${num}`).value
         };
 

@@ -8,6 +8,9 @@ const tipos = {
         4: "Suite Familiar"
     };
 
+    const nombre = h.tipoHabitacion || h.nombreTipo || "Habitación";
+listadoHTML += `<p><b>${nombre}</b> - $${h.precio.toLocaleString("es-CL")}</p>`;
+
 document.addEventListener("DOMContentLoaded", () => {
       actualizarContadorCarrito();
     const roomsContainer = document.getElementById("roomsContainer");
