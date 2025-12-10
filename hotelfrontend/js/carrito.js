@@ -39,3 +39,26 @@ document.addEventListener("DOMContentLoaded", () => {
 
     totalSpan.textContent = total.toLocaleString("es-CL");
 });
+
+// ===============================
+// BOTÓN → CONTINUAR CON LA RESERVA
+// ===============================
+const btnContinuar = document.getElementById("btnContinuarReserva");
+
+if (btnContinuar) {
+    btnContinuar.addEventListener("click", () => {
+        
+        let carrito = JSON.parse(localStorage.getItem("carritoFinal")) || [];
+
+        if (carrito.length === 0) {
+            Swal.fire("Carrito vacío", "Agrega habitaciones antes de continuar", "info");
+            return;
+        }
+
+        // Guardamos el carrito COMPLETO para reserva.html
+        localStorage.setItem("carritoReserva", JSON.stringify(carrito));
+
+        // Ir a confirmar la reserva
+        window.location.href = "../pages/reserva.html";
+    });
+}
