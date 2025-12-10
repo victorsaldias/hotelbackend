@@ -85,6 +85,13 @@ document.addEventListener("DOMContentLoaded", () => {
             // Backend ahora entrega idRegion e idProvincia
             await cargarRegiones(cliente.idRegion);
             await cargarProvincias(cliente.idRegion, cliente.idProvincia);
+            console.log("idRegion:", cliente.idRegion);
+console.log("idProvincia:", cliente.idProvincia);
+console.log("idComuna (raw):", cliente.idComuna);
+console.log("idComuna (fix):", idComunaLimpio);
+            const idComunaLimpio = Array.isArray(cliente.idComuna)
+    ? cliente.idComuna[1]   // TOMAMOS EL VALOR REAL
+    : cliente.idComuna;
             await cargarComunas(cliente.idProvincia, cliente.idComuna);
 
         } catch (err) {
