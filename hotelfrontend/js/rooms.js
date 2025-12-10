@@ -120,7 +120,7 @@ const tipos = {
         fechaInicio,
         fechaFin,
         huespedes,
-         nombreSucursal: data.nombreSucursal ,
+        nombreSucursal: habitacion.nombreSucursal || "No disponible",
         total:
             habitacion.precio *
             Math.ceil((new Date(fechaFin) - new Date(fechaInicio)) / (1000 * 60 * 60 * 24))
