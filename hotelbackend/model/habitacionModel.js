@@ -86,24 +86,24 @@ export async function obtenerHabitacionPorId(idHabitacion) {
         .input("idHabitacion", idHabitacion)
         .query(`
             SELECT 
-                h.idHabitacion,
-                h.numero,
-                h.descripcion,
-                h.idTipoHabitacion,
-                t.nombre AS nombreTipoHabitacion,
-                ISNULL(h.precioPersonalizado, t.precio) AS precio,
-                h.idSucursal,
-                s.nombre AS nombreSucursal,
-                s.direccion AS direccionSucursal,
-                h.idEstadoHabitacion,
-                c.capacidad,
-                c.cama,
-                c.tamano
-            FROM habitacion h
-            INNER JOIN tipoHabitacion t ON t.idTipoHabitacion = h.idTipoHabitacion
-            INNER JOIN sucursal s ON s.idSucursal = h.idSucursal
-            LEFT JOIN caracteristica c ON c.idCaracteristica = h.idCaracteristica
-            WHERE h.idHabitacion = @idHabitacion
+    h.idHabitacion,
+    h.numero,
+    h.idSucursal,
+    s.nombre AS nombreSucursal,
+    s.direccion AS direccionSucursal,
+    t.nombre AS tipoHabitacion,
+    ISNULL(h.precioPersonalizado, t.precio) AS precio,
+    h.idEstadoHabitacion,
+    c.capacidad,
+    c.cama,
+    c.tamano
+FROM habitacion h
+INNER JOIN tipoHabitacion t ON h.idTipoHabitacion = t.idTipoHabitacion
+LEFT JOIN caracteristica c ON c.idCaracteristica = h.idCaracteristica
+INNER JOIN sucursal s ON s.idSucursal = h.idSucursal
+WHERE h.idSucursal = @idSucursal
+  AND h.idEstadoHabitacion = 1
+ORDER BY h.numero;
         `);
 
     return result.recordset[0] || null;
@@ -366,32 +366,35 @@ export async function buscarHabitacionesPorCapacidadYFechas(
         .input("fechaInicio", inicioSQL)
         .input("fechaFin", finSQL)
         .query(`
-            SELECT 
-                h.idHabitacion,
-                h.numero,
-                ISNULL(h.precioPersonalizado, t.precio) AS precio,
-                h.idTipoHabitacion,
-                h.descripcion,
-                h.idSucursal,
-                s.nombre AS nombreSucursal,
-                s.direccion AS direccionSucursal,
-                c.capacidad,
-                c.cama,
-                c.tamano
-            FROM habitacion h
-            INNER JOIN tipoHabitacion t ON t.idTipoHabitacion = h.idTipoHabitacion
-            INNER JOIN caracteristica c ON c.idCaracteristica = h.idCaracteristica
-            INNER JOIN sucursal s ON s.idSucursal = h.idSucursal
-            WHERE h.idSucursal = @idSucursal
-              AND c.capacidad = @cantidadHuespedes
-              AND h.idHabitacion NOT IN (
-                    SELECT rh.idHabitacion
-                    FROM reservaHabitacion rh
-                    INNER JOIN reserva r ON r.idReserva = rh.idReserva
-                    WHERE r.idEstadoReserva IN (1, 2)
-                    AND r.fechaInicio < @fechaFin
-                    AND r.fechaFin > @fechaInicio
-              );
+           SELECT 
+    h.idHabitacion,
+    h.numero,
+    ISNULL(h.precioPersonalizado, t.precio) AS precio,
+    h.idTipoHabitacion,
+    h.descripcion,
+    h.idSucursal,
+
+    -- 🔥 CAMPOS NUEVOS QUE YA EXISTEN EN TU JOIN
+    s.nombre AS nombreSucursal,
+    s.direccion AS direccionSucursal,
+
+    c.capacidad,
+    c.cama,
+    c.tamano
+FROM habitacion h
+INNER JOIN tipoHabitacion t ON t.idTipoHabitacion = h.idTipoHabitacion
+INNER JOIN caracteristica c ON c.idCaracteristica = h.idCaracteristica
+INNER JOIN sucursal s ON s.idSucursal = h.idSucursal
+WHERE h.idSucursal = @idSucursal
+  AND c.capacidad = @cantidadHuespedes
+  AND h.idHabitacion NOT IN (
+        SELECT rh.idHabitacion
+        FROM reservaHabitacion rh
+        INNER JOIN reserva r ON r.idReserva = rh.idReserva
+        WHERE r.idEstadoReserva IN (1, 2)
+          AND r.fechaInicio < @fechaFin
+          AND r.fechaFin > @fechaInicio
+  );
         `);
 
     return result.recordset;

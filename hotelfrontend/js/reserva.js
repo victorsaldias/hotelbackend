@@ -43,11 +43,31 @@ carrito.forEach(h => {
     const ff = new Date(h.fechaFin).toLocaleDateString("es-CL");
 
     fechasHTML += `
-  <p>
-    <b>${h.nombreTipo}</b> 
-    (<i>${h.nombreSucursal}</i>) : 
-    ${fi} → ${ff}
-  </p>
+    <div class="habitacion-card">
+        <div class="habitacion-title">${h.nombreTipo}</div>
+
+        <div class="habitacion-sub">
+            Sucursal: <b>${h.nombreSucursal || "No disponible"}</b>
+        </div>
+
+        <div class="habitacion-info">
+            <b>Fecha:</b> ${fi} → ${ff}
+        </div>
+
+        <div class="habitacion-info">
+            <b>Huéspedes permitidos:</b> ${h.capacidad || "N/A"}
+        </div>
+
+        <div class="habitacion-info">
+            <b>Cama:</b> ${h.cama || "N/A"}  
+            &nbsp;|&nbsp;
+            <b>Tamaño:</b> ${h.tamano || "N/A"}
+        </div>
+
+        <div class="habitacion-info">
+            <b>Precio / día:</b> $${h.precio.toLocaleString("es-CL")}
+        </div>
+    </div>
 `;
 });
 
