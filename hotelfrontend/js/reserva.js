@@ -13,7 +13,26 @@ let total = 0; // se acumula más abajo
 let acompanantesPorHabitacion = {};
 
 document.addEventListener("DOMContentLoaded", async () => {
+/* ============================================================
+   0) DETECTAR ORIGEN DE LA RESERVA
+============================================================ */
 
+let carrito = JSON.parse(localStorage.getItem("carritoFinal")) || [];
+let habitacionSeleccionada = JSON.parse(localStorage.getItem("habitacionSeleccionada") || "null");
+
+let modo = "carrito"; // por defecto
+
+if (habitacionSeleccionada && carrito.length === 0) {
+    // Reservando solo 1 habitación directamente
+    carrito = [habitacionSeleccionada];
+    modo = "directo";
+}
+
+if (!carrito || carrito.length === 0) {
+    Swal.fire("No hay habitaciones seleccionadas", "Selecciona una habitación", "error")
+        .then(() => window.location.href = "rooms.html");
+    return;
+}
     /* ============================================================
        1) VALIDAR CARRITO VACÍO
     ============================================================ */
