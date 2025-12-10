@@ -35,6 +35,8 @@ $(window).on('load', function () {
     $("#preloder").delay(200).fadeOut("slow");
 });
 
+$('#huespedesSelect').niceSelect('update');
+
 
 /* --------------------------
       Background set

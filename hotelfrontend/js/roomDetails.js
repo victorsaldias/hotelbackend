@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         return;
     }
 
-    // --- Maps ---
+    // --- Maps (para títulos y fotos) ---
     const tipos = {
         1: "Premium King",
         2: "Habitación Deluxe",
@@ -19,17 +19,16 @@ document.addEventListener("DOMContentLoaded", async function () {
         1: ["../img/rooms/room-1.jpg"],
         2: ["../img/rooms/room-2.jpg"],
         3: ["../img/rooms/details/rd-1.jpg", "../img/rooms/details/rd-2.jpg"],
-        4: ["../img/rooms/details/rd-3.jpg", "../img/rooms/details/rd-4.jpg"],
+        4: ["../img/rooms/details/rd-3.jpg", "../img/rooms/details/rd-4.jpg"]
     };
 
     const imgs = imagenes[room.idTipoHabitacion] || ["../img/rooms/default.jpg"];
 
     // --- Información principal ---
-    document.getElementById("room-title").textContent = tipos[room.idTipoHabitacion];
-    document.getElementById("room-price").textContent = room.precio || 0;
+    document.getElementById("room-title").textContent = tipos[room.idTipoHabitacion] || "Habitación";
+    document.getElementById("room-price").textContent = room.precio?.toLocaleString("es-CL") || "0";
     document.getElementById("room-desc").textContent =
         `Habitación número ${room.numero}, ideal para ${room.capacidad} personas.`;
-    document.getElementById("habitacionSucursal").textContent = data.nombreSucursal;
 
     // --- Características ---
     document.getElementById("room-details-left").innerHTML = `
@@ -38,7 +37,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         <p><span class="icon_check"></span> Cama: ${room.cama || "No especificado"}</p>
     `;
 
-    // --- Cargar servicios desde backend ---
+    // --- Servicios desde backend ---
     cargarServicios(room.idHabitacion);
 
     // --- Slider ---
@@ -51,6 +50,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         `;
     });
 
+    // activar slider
     setTimeout(() => {
         $(".set-bg").each(function () {
             const bg = $(this).data("setbg");
@@ -67,20 +67,13 @@ document.addEventListener("DOMContentLoaded", async function () {
     }, 200);
 
     // --- Botón Reservar Ahora ---
-     // CLICK → Reservar Ahora → ir directo a reserva.html
-    document.querySelectorAll("btnReservar").forEach(btn => {
-        btn.addEventListener("click", () => {
-            const info = JSON.parse(btn.dataset.info);
+    const btn = document.getElementById("btnReservar");
 
-            // guardamos también la habitación seleccionada
-            localStorage.setItem("habitacionSeleccionada", JSON.stringify(info));
-
-            // redirigir a la página de reserva
-            window.location.href = "../pages/reserva.html";
-        });
+    btn.addEventListener("click", () => {
+        localStorage.setItem("carritoFinal", JSON.stringify([room]));
+        window.location.href = "../pages/reserva.html";
     });
 });
-
 
 // =============================
 // FUNCIÓN PARA CARGAR SERVICIOS
@@ -94,9 +87,7 @@ async function cargarServicios(idHabitacion) {
         contenedor.innerHTML = "";
 
         if (!Array.isArray(servicios) || servicios.length === 0) {
-            contenedor.innerHTML = `
-                <p><span class="icon_close"></span> No hay servicios disponibles.</p>
-            `;
+            contenedor.innerHTML = `<p><span class="icon_close"></span> No hay servicios disponibles.</p>`;
             return;
         }
 
