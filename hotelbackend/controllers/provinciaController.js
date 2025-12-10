@@ -1,6 +1,6 @@
 import { obtenerProvinciasPorRegion } from "../model/ProvinciaModel.js";
 
-export async function listarProvincias(req, res) {
+export async function listarProvinciasPorRegion(req, res) {
     try {
         const { idRegion } = req.params;
         const provincias = await obtenerProvinciasPorRegion(idRegion);

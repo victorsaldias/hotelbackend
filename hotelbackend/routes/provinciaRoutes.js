@@ -1,8 +1,8 @@
 import express from "express";
-import { listarProvincias } from "../controllers/provinciaController.js";
+import { listarProvinciasPorRegion } from "../controllers/provinciaController.js";
 
 const router = express.Router();
 
-router.get("/:idRegion", listarProvincias); 
+router.get("/por-region/:idRegion", listarProvinciasPorRegion);
 
 export default router;
