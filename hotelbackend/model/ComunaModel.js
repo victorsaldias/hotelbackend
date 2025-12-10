@@ -10,15 +10,16 @@ export async function obtenerComunasPorProvincia(idProvincia) {
     const pool = await getConnection();
     const result = await pool.request()
         .input("idProvincia", idProvincia)
-        .query(`
-            SELECT 
-    idComuna, 
-    nombreComuna AS nombre, 
-    idProvincia
-FROM Comuna
-WHERE idProvincia = @idProvincia
-ORDER BY nombreComuna;
-        `);
+       .query(`
+    SELECT 
+        idComuna, 
+        nombreComuna AS nombre, 
+        idProvincia
+    FROM Comuna
+    WHERE idProvincia = @idProvincia
+    ORDER BY nombreComuna;
+`)
+;
 
     return result.recordset;
 }
