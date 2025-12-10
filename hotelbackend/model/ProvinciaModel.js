@@ -8,7 +8,7 @@ export async function obtenerProvinciasPorRegion(idRegion) {
         .input("idRegion", idRegion)
         .query(`
             SELECT idProvincia, nombre, idRegion
-            FROM Provincia
+            FROM provincia
             WHERE idRegion = @idRegion
             ORDER BY nombre
         `);

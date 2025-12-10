@@ -15,7 +15,7 @@ export async function obtenerComunasPorProvincia(idProvincia) {
         idComuna, 
         nombre, 
         idProvincia
-    FROM Comuna
+    FROM comuna
     WHERE idProvincia = @idProvincia
     ORDER BY nombre;
 `)
@@ -42,8 +42,8 @@ export async function obtenerComunaPorIdDB(idComuna) {
     p.idProvincia,
     r.idRegion
             FROM comuna c
-            INNER JOIN Provincia p ON c.idProvincia = p.idProvincia
-            INNER JOIN Region r ON p.idRegion = r.idRegion
+            INNER JOIN provincia p ON c.idProvincia = p.idProvincia
+            INNER JOIN region r ON p.idRegion = r.idRegion
             WHERE c.idComuna = @idComuna
         `);
 
