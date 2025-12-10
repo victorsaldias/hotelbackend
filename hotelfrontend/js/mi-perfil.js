@@ -117,7 +117,7 @@ document.addEventListener("DOMContentLoaded", () => {
     async function cargarProvincias(idRegion, idProvinciaActual) {
         if (!idRegion) return;
 
-        const resp = await fetch(`https://hotelbackend-hzc4.onrender.com/api/provincias/por-region/${idRegion}`);
+       const resp = await fetch(`https://hotelbackend-hzc4.onrender.com/api/provincias/${idRegion}`);
         const provincias = await resp.json();
 
         provinciaSelect.innerHTML = "";
@@ -134,8 +134,7 @@ document.addEventListener("DOMContentLoaded", () => {
     async function cargarComunas(idProvincia, idComunaActual) {
         if (!idProvincia) return;
 
-        const resp = await fetch(`https://hotelbackend-hzc4.onrender.com/api/comunas/provincia/${idProvincia}`);
-
+        const resp = await fetch(`https://hotelbackend-hzc4.onrender.com/api/comunas/por-provincia/${idProvincia}`);
         const comunas = await resp.json();
 
         comunaSelect.innerHTML = "";
