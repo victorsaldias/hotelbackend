@@ -89,7 +89,8 @@ carrito.forEach(h => {
 });
 
 document.getElementById("previewFechasMultiples").innerHTML = fechasHTML;
-    document.getElementById("previewHuespedes").textContent = cantidadHuespedes;
+  const elHuespedes = document.getElementById("previewHuespedes");
+if (elHuespedes) elHuespedes.textContent = cantidadHuespedes;
 
 
     /* ============================================================
