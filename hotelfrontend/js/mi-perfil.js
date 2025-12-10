@@ -124,8 +124,8 @@ console.log("idComuna (fix):", idComunaLimpio);
     async function cargarProvincias(idRegion, idProvinciaActual) {
         if (!idRegion) return;
 
-       fetch(`https://hotelbackend-hzc4.onrender.com/api/provincias/por-region/${idRegion}`)
-        const provincias = await resp.json();
+       const resp = await fetch(`https://hotelbackend-hzc4.onrender.com/api/provincias/por-region/${idRegion}`);
+    const provincias = await resp.json();
 
         provinciaSelect.innerHTML = "";
         provincias.sort((a,b)=>a.nombre.localeCompare(b.nombre,'es'));
