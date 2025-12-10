@@ -226,9 +226,9 @@ for (let i = 1; i <= totalAcomp; i++) {
         if (totalAcomp > 0) {
             for (let i = 1; i <= totalAcomp; i++) {
                 const acomp = datosAcompanantes[i];
-                if (!acomp || !acomp.nombre || !acomp.apellido) {
-                    return false;
-                }
+                if (!acomp || !acomp.tipoPersona) {
+    return false;
+}
             }
         }
 
