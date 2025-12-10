@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let total = 0;
 
     carrito.forEach(item => {
-        total += item.total;
+       total += item.total * (item.cantidad || 1);
 
         contenedor.innerHTML += `
             <div class="carrito-item">

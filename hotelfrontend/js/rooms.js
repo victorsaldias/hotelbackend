@@ -122,26 +122,29 @@ document.addEventListener("click", async (e) => {
     }
 
     const reserva = {
-        idHabitacion: habitacion.idHabitacion,
-        idTipoHabitacion: habitacion.idTipoHabitacion,
-        nombreTipo: tipos[habitacion.idTipoHabitacion] || "Habitación",
+    idHabitacion: habitacion.idHabitacion,
+    idTipoHabitacion: habitacion.idTipoHabitacion,
+    nombreTipo: habitacion.nombreTipoHabitacion || "Habitación",
+    
+    precio: habitacion.precio,
+    fechaInicio,
+    fechaFin,
+    huespedes,
 
-        precio: habitacion.precio,
-        fechaInicio,
-        fechaFin,
-        huespedes,
+    nombreSucursal: habitacion.nombreSucursal,
+    direccionSucursal: habitacion.direccionSucursal,
 
-        nombreSucursal: habitacion.nombreSucursal,
-        direccionSucursal: habitacion.direccionSucursal,
+    capacidad: habitacion.capacidad,
+    cama: habitacion.cama,
+    tamano: habitacion.tamano,
 
-        capacidad: habitacion.capacidad || "N/A",
-        cama: habitacion.cama || "N/A",
-        tamano: habitacion.tamano || "N/A",
+    cantidad: 1,   // ⬅️ NUEVO
 
-        total:
-            habitacion.precio *
-            Math.ceil((new Date(fechaFin) - new Date(fechaInicio)) / (1000 * 60 * 60 * 24))
-    };
+    total:
+        habitacion.precio *
+        Math.ceil((new Date(fechaFin) - new Date(fechaInicio)) / (1000 * 60 * 60 * 24)) *
+        1
+};
 
     let carrito = JSON.parse(localStorage.getItem("carritoFinal")) || [];
 

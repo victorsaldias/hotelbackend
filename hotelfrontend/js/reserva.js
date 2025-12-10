@@ -66,6 +66,11 @@ carrito.forEach(h => {
 
         <div class="habitacion-info">
             <b>Precio / día:</b> $${h.precio.toLocaleString("es-CL")}
+            <p><b>Cantidad:</b> ${item.cantidad || 1}</p>
+
+<p><b>Total habitación:</b> 
+   $${(item.total * (item.cantidad || 1)).toLocaleString("es-CL")}
+</p>
         </div>
     </div>
 `;
@@ -82,7 +87,10 @@ document.getElementById("previewFechasMultiples").innerHTML = fechasHTML;
     const fechaF = new Date(fechaFin);
     const dias = Math.ceil((fechaF - fechaI) / (1000 * 60 * 60 * 24));
 
-    const total = carrito.reduce((sum, h) => sum + (h.precio * dias), 0);
+    const total = carrito.reduce((sum, h) => {
+    const subtotal = h.total * (h.cantidad || 1);
+    return sum + subtotal;
+}, 0);
 
     document.getElementById("previewTotal").textContent =
         total.toLocaleString("es-CL");
