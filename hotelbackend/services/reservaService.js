@@ -106,27 +106,27 @@ if (!total) {
     }
 
     // Enviar correo de confirmación (si el cliente tiene correo)
+   setTimeout(async () => {
     try {
         const cliente = await obtenerClientePorId(idCliente);
 
-        if (cliente && cliente.correo) {
+        if (cliente?.correo) {
             await enviarCorreo({
                 to: cliente.correo,
-                subject: "Reserva creada - Hotel Arellano",
+                subject: "Reserva Pendiente - Hotel Arellano",
                 html: `
-                    <h2>Tu reserva ha sido creada</h2>
-                    <p>Fecha de inicio: ${fechaInicio}</p>
-                    <p>Fecha de fin: ${fechaFin}</p>
-                    <p>Total: $${total}</p>
-                    <p>Cantidad de huéspedes: ${cantidadHuespedes}</p>
+                    <h2>Tu reserva está pendiente de confirmación</h2>
+                    <p><b>Inicio:</b> ${fechaInicio}</p>
+                    <p><b>Fin:</b> ${fechaFin}</p>
+                    <p><b>Total:</b> $${total}</p>
+                    <p>Un recepcionista la confirmará pronto.</p>
                 `
             });
         }
-    } catch (e) {
-        console.error("Error enviando correo de reserva (no rompe la reserva):", e);
+    } catch (err) {
+        console.error("❌ Error enviando correo (no afecta reserva):", err);
     }
-
-    return connData;
+}, 5000);
 }
 
 /* ============================================================
