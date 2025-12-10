@@ -87,19 +87,6 @@ for (let i = 1; i <= totalAcomp; i++) {
 
     pasoContenido.innerHTML = `
         <h5>Acompañante ${num}</h5>
-
-        <input id="nombre_${num}" class="form-control mb-2" placeholder="Nombre"
-            value="${guardado.nombre || ""}" />
-
-        <input id="apellido_${num}" class="form-control mb-2" placeholder="Apellido"
-            value="${guardado.apellido || ""}" />
-
-        <input id="rut_${num}" class="form-control mb-2" placeholder="RUT"
-            value="${guardado.rut || ""}" />
-
-        <input id="telefono_${num}" class="form-control mb-2" placeholder="Teléfono"
-            value="${guardado.telefono || ""}" />
-
         <select id="tipo_${num}" class="form-control mb-3">
             <option value="adulto" ${guardado.tipoPersona === "adulto" ? "selected" : ""}>Adulto</option>
             <option value="niño" ${guardado.tipoPersona === "niño" ? "selected" : ""}>Niño</option>

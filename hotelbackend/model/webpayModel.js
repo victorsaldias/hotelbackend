@@ -34,16 +34,11 @@ export const crearReservaWebPay = async (reserva) => {
     if (reserva.acompanantes && Array.isArray(reserva.acompanantes)) {
         for (const a of reserva.acompanantes) {
             await pool.request()
-                .input("idReserva", idReserva)
-                .input("nombre", a.nombre)
-                .input("apellido", a.apellido)
-                .input("rut", a.rut || null)
-                .input("telefono", a.telefono || null)
-                .input("tipoPersona", a.tipoPersona)
-                .query(`
-                    INSERT INTO acompaniante (idReserva, nombre, apellido, rut, telefono, tipoPersona)
-                    VALUES (@idReserva, @nombre, @apellido, @rut, @telefono, @tipoPersona)
-                `);
+  .input("tipoPersona", a.tipoPersona)
+  .query(`
+      INSERT INTO acompaniante (tipoPersona, idReserva)
+      VALUES (@tipoPersona, @idReserva)
+  `);
         }
     }
 
