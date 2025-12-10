@@ -78,7 +78,6 @@ export async function obtenerHabitacionesDisponibles(idSucursal) {
     return result.recordset;
 }
 
-
 export async function obtenerHabitacionPorId(idHabitacion) {
     const pool = await getConnection();
 
@@ -86,29 +85,26 @@ export async function obtenerHabitacionPorId(idHabitacion) {
         .input("idHabitacion", idHabitacion)
         .query(`
             SELECT 
-    h.idHabitacion,
-    h.numero,
-    h.idSucursal,
-    s.nombre AS nombreSucursal,
-    s.direccion AS direccionSucursal,
-    t.nombre AS tipoHabitacion,
-    ISNULL(h.precioPersonalizado, t.precio) AS precio,
-    h.idEstadoHabitacion,
-    c.capacidad,
-    c.cama,
-    c.tamano
-FROM habitacion h
-INNER JOIN tipoHabitacion t ON h.idTipoHabitacion = t.idTipoHabitacion
-LEFT JOIN caracteristica c ON c.idCaracteristica = h.idCaracteristica
-INNER JOIN sucursal s ON s.idSucursal = h.idSucursal
-WHERE h.idSucursal = @idSucursal
-  AND h.idEstadoHabitacion = 1
-ORDER BY h.numero;
+                h.idHabitacion,
+                h.numero,
+                h.idSucursal,
+                s.nombre AS nombreSucursal,
+                s.direccion AS direccionSucursal,
+                t.nombre AS nombreTipoHabitacion,
+                ISNULL(h.precioPersonalizado, t.precio) AS precio,
+                h.idEstadoHabitacion,
+                c.capacidad,
+                c.cama,
+                c.tamano
+            FROM habitacion h
+            INNER JOIN tipoHabitacion t ON h.idTipoHabitacion = t.idTipoHabitacion
+            LEFT JOIN caracteristica c ON c.idCaracteristica = h.idCaracteristica
+            INNER JOIN sucursal s ON s.idSucursal = h.idSucursal
+            WHERE h.idHabitacion = @idHabitacion
         `);
 
     return result.recordset[0] || null;
 }
-
 
 export async function obtenerHabitacionPorNumero(numero) {
     const pool = await getConnection();
