@@ -1,24 +1,25 @@
 /* ============================================================
    CARGA DE HABITACIONES EN ROOMS.HTML — VERSION ARREGLADA
 ============================================================ */
-
-document.addEventListener("DOMContentLoaded", () => {
-      actualizarContadorCarrito();
-    const roomsContainer = document.getElementById("roomsContainer");
-    const habitaciones = JSON.parse(localStorage.getItem("habitacionesBusqueda")) || [];
-
-    if (habitaciones.length === 0) {
-        roomsContainer.innerHTML = "<p>No hay habitaciones disponibles.</p>";
-        return;
-    }
-
-    const tipos = {
+const tipos = {
         1: "Premium King",
         2: "Habitación Deluxe",
         3: "Suite Ejecutiva",
         4: "Suite Familiar"
     };
 
+document.addEventListener("DOMContentLoaded", () => {
+      actualizarContadorCarrito();
+    const roomsContainer = document.getElementById("roomsContainer");
+    const habitaciones = JSON.parse(localStorage.getItem("habitacionesBusqueda")) || [];
+    
+
+    if (habitaciones.length === 0) {
+        roomsContainer.innerHTML = "<p>No hay habitaciones disponibles.</p>";
+        return;
+    }
+
+    
     const imagenesPorTipo = {
         1: "../img/rooms/room-1.jpg",
         2: "../img/rooms/room-2.jpg",
@@ -107,18 +108,20 @@ document.addEventListener("click", (e) => {
     // Crear objeto reserva completo
     const reserva = {
         idHabitacion: habitacion.idHabitacion,
-        nombreTipo: habitacion.tipoHabitacion,
+        idTipoHabitacion: habitacion.idTipoHabitacion,   // ✅ NECESARIO
+        nombreTipo: tipos[habitacion.idTipoHabitacion] || "Habitación", // ✅ CORRECTO
         precio: habitacion.precio,
         fechaInicio,
         fechaFin,
         huespedes,
-        total: habitacion.precio *
-               Math.ceil((new Date(fechaFin) - new Date(fechaInicio)) / (1000 * 60 * 60 * 24))
+        total:
+            habitacion.precio *
+            Math.ceil((new Date(fechaFin) - new Date(fechaInicio)) / (1000 * 60 * 60 * 24))
     };
 
     let carrito = JSON.parse(localStorage.getItem("carritoFinal")) || [];
 
-    // Validar duplicados SOLO SI FECHAS Y HABITACIÓN COINCIDEN
+    // Validar duplicados exactos
     const existe = carrito.some(r =>
         r.idHabitacion === reserva.idHabitacion &&
         r.fechaInicio === reserva.fechaInicio &&
@@ -129,28 +132,32 @@ document.addEventListener("click", (e) => {
         Swal.fire("Atención", "Ya agregaste esta reserva exacta.", "info");
         return;
     }
-for (let r of carrito) {
-    if (r.idHabitacion === reserva.idHabitacion &&
-        fechasSolapan(reserva.fechaInicio, reserva.fechaFin, r.fechaInicio, r.fechaFin)) {
 
-        Swal.fire("Error", "Esta habitación ya está reservada en un rango que se solapa.", "error");
-        return;
+    // Validar solapamiento
+    for (let r of carrito) {
+        if (
+            r.idHabitacion === reserva.idHabitacion &&
+            fechasSolapan(reserva.fechaInicio, reserva.fechaFin, r.fechaInicio, r.fechaFin)
+        ) {
+            Swal.fire("Error", "Esta habitación ya está reservada en un rango que se solapa.", "error");
+            return;
+        }
     }
-}
-   reserva.nombreTipo = tipos?.[reserva.idTipoHabitacion] || "Habitación";
-carrito.push(reserva);
-localStorage.setItem("carritoFinal", JSON.stringify(carrito));
 
-Swal.fire({
-    icon: "success",
-    title: "Agregada al carrito",
-    text: `Reserva de ${reserva.nombreTipo} agregada.`,
-    timer: 1500,
-    showConfirmButton: false
-});
+    carrito.push(reserva);
+    localStorage.setItem("carritoFinal", JSON.stringify(carrito));
+
+    Swal.fire({
+        icon: "success",
+        title: "Agregada al carrito",
+        text: `Reserva de ${reserva.nombreTipo} agregada.`,
+        timer: 1500,
+        showConfirmButton: false
+    });
 
     actualizarContadorCarrito();
 });
+
 /* ============================================================
    CONTAR ITEMS DEL CARRITO
 ============================================================ */
