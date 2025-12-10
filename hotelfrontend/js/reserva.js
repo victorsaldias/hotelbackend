@@ -241,8 +241,15 @@ document.addEventListener("DOMContentLoaded", async () => {
             });
 
             setTimeout(() => {
-                window.location.href = "../index.html";
-            }, 1500);
+    // LIMPIAR CARRO Y DATOS
+    localStorage.removeItem("carritoFinal");
+    localStorage.removeItem("acompanantesReserva");
+    localStorage.removeItem("fechaInicioReserva");
+    localStorage.removeItem("fechaFinReserva");
+    localStorage.removeItem("cantidadHuespedesReserva");
+
+    window.location.href = "../index.html";
+}, 1500);
 
         } catch (e) {
             console.error("ERROR RESERVA:", e);
@@ -285,7 +292,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
         localStorage.setItem("tokenTransbank", data.token);
-
+localStorage.removeItem("carritoFinal");
+localStorage.removeItem("acompanantesReserva");
+localStorage.removeItem("fechaInicioReserva");
+localStorage.removeItem("fechaFinReserva");
+localStorage.removeItem("cantidadHuespedesReserva");
         window.location.href = `webpay-pago.html?token=${data.token}`;
     }
 
