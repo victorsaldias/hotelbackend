@@ -11,7 +11,7 @@ export async function obtenerRegiones() {
             idRegion,
             nombreRegion,
             nombreRegion AS nombre
-        FROM Region
+        FROM region
         ORDER BY nombreRegion
     `);
     return result.recordset;

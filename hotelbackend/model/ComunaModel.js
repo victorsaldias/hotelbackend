@@ -37,10 +37,10 @@ export async function obtenerComunaPorIdDB(idComuna) {
         .query(`
             SELECT 
     c.idComuna, 
-    c.nombreComuna AS nombre,
+    c.nombre,
     p.idProvincia,
     r.idRegion
-            FROM Comuna c
+            FROM comuna c
             INNER JOIN Provincia p ON c.idProvincia = p.idProvincia
             INNER JOIN Region r ON p.idRegion = r.idRegion
             WHERE c.idComuna = @idComuna

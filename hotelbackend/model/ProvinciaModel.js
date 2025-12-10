@@ -13,11 +13,11 @@ export async function obtenerProvinciasPorRegion(idRegion) {
         .query(`
            SELECT 
     idProvincia, 
-    nombreProvincia AS nombre, 
+    nombre, 
     idRegion
-FROM Provincia
+FROM provincia
 WHERE idRegion = @idRegion
-ORDER BY nombreProvincia;
+ORDER BY nombre;
         `);
 
     return result.recordset;
