@@ -1,6 +1,7 @@
 import { obtenerComunasPorProvincia,
     obtenerTodasLasComunasBD,
-    obtenerComunaPorIdDB
+    obtenerComunaPorIdDB,
+    obtenerComunasPorProvincia
  } from "../model/ComunaModel.js";
 
 export async function listarComunasPorProvincia(req, res) {
@@ -39,3 +40,15 @@ export const obtenerComunaPorId = async (req, res) => {
         res.status(500).json({ message: "Error interno" });
     }
 };
+
+export async function getComunasPorProvincia(req, res) {
+    try {
+        const { idProvincia } = req.params;
+        const comunas = await obtenerComunasPorProvincia(idProvincia);
+        return res.status(200).json(comunas);
+
+    } catch (err) {
+        console.error("❌ getComunasPorProvincia:", err);
+        return res.status(500).json({ message: err.message });
+    }
+}
