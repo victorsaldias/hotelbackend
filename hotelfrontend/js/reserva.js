@@ -51,41 +51,39 @@ carrito.forEach(h => {
     const totalHabitacion = h.precio * noches;
 
     fechasHTML += `
-    <div class="habitacion-card">
+    <div class="habitacion-card" data-hab="${h.idHabitacion}">
         <div class="habitacion-title">${h.nombreTipo}</div>
 
         <div class="habitacion-sub">
             Sucursal: <b>${h.nombreSucursal || "No disponible"}</b>
         </div>
 
-        <div class="habitacion-info">
-            <b>Fecha:</b> ${fi} → ${ff}
-        </div>
+        <div class="habitacion-info"><b>Fecha:</b> ${fi} → ${ff}</div>
+        <div class="habitacion-info"><b>Huéspedes permitidos:</b> ${h.capacidad}</div>
+        <div class="habitacion-info"><b>Cama:</b> ${h.cama}</div>
+        <div class="habitacion-info"><b>Tamaño:</b> ${h.tamano}</div>
+        <div class="habitacion-info"><b>Precio / día:</b> $${h.precio.toLocaleString("es-CL")}</div>
+        <div class="habitacion-info"><b>Noches:</b> ${noches}</div>
+        <div class="habitacion-info"><b>Total habitación:</b> $${totalHabitacion.toLocaleString("es-CL")}</div>
 
-        <div class="habitacion-info">
-            <b>Huéspedes permitidos:</b> ${h.capacidad || "N/A"}
-        </div>
+        <hr>
 
-        <div class="habitacion-info">
-            <b>Cama:</b> ${h.cama || "N/A"}  
-            &nbsp;|&nbsp;
-            <b>Tamaño:</b> ${h.tamano || "N/A"}
-        </div>
-
-        <div class="habitacion-info">
-            <b>Precio / día:</b> $${h.precio.toLocaleString("es-CL")}
-        </div>
-
-        <div class="habitacion-info">
-            <b>Noches:</b> ${noches}
-        </div>
-
-        <div class="habitacion-info">
-            <b>Total habitación:</b> 
-            $${totalHabitacion.toLocaleString("es-CL")}
+        <h6>Acompañantes (${h.capacidad - 1})</h6>
+        <div class="mini-acomp-container" id="acomp_${h.idHabitacion}">
         </div>
     </div>
-    `;
+`;
+
+});
+document.addEventListener("change", (e) => {
+    if (!e.target.classList.contains("acomp-select")) return;
+
+    const idHab = e.target.dataset.hab;
+    const index = e.target.dataset.index;
+
+    acompPorHabitacion[idHab][index].tipoPersona = e.target.value;
+
+    localStorage.setItem("acompsPorHab", JSON.stringify(acompPorHabitacion));
 });
 
 document.getElementById("previewFechasMultiples").innerHTML = fechasHTML;
