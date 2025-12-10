@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     let listadoHTML = "";
     carrito.forEach(h => {
         listadoHTML += `
-            <p><b>${h.tipoHabitacion}</b> - $${h.precio.toLocaleString("es-CL")}</p>
+            <p><b>${h.nombreTipo}</b> - $${h.precio.toLocaleString("es-CL")}</p>
         `;
     });
 
