@@ -1,4 +1,4 @@
-// model/reservaModel.js
+
 import { getConnection } from "../config/dbConfig.js";
 import { obtenerPrecioHabitacion } from "./habitacionModel.js";
 
@@ -240,6 +240,25 @@ export async function agregarHabitacionAReserva(idReserva, idHabitacion) {
     await conn.request()
         .input("idReserva", idReserva)
         .input("idHabitacion", idHabitacion)
+        .query(`
+            INSERT INTO reservaHabitacion (idReserva, idHabitacion)
+            VALUES (@idReserva, @idHabitacion);
+        `);
+}
+
+// Modificar habitación de una reserva existente
+export async function modificarHabitacionDeReserva(idReserva, nuevaHabitacion) {
+    const conn = await getConnection();
+
+    await conn.request()
+        .input("idReserva", idReserva)
+        .query(`
+            DELETE FROM reservaHabitacion WHERE idReserva = @idReserva;
+        `);
+
+    await conn.request()
+        .input("idReserva", idReserva)
+        .input("idHabitacion", nuevaHabitacion)
         .query(`
             INSERT INTO reservaHabitacion (idReserva, idHabitacion)
             VALUES (@idReserva, @idHabitacion);

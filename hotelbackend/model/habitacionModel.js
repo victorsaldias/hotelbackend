@@ -396,3 +396,4 @@ WHERE h.idSucursal = @idSucursal
 
     return result.recordset;
 }
+
