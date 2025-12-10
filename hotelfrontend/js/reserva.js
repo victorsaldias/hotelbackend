@@ -1,12 +1,22 @@
-let totalGlobal = 0;
+/* ============================================================
+   VARIABLES GLOBALES NECESARIAS
+============================================================ */
+
+let carrito = JSON.parse(localStorage.getItem("carritoFinal")) || [];
+let fechaInicio = localStorage.getItem("fechaInicioReserva");
+let fechaFin = localStorage.getItem("fechaFinReserva");
+let cantidadHuespedes = parseInt(localStorage.getItem("cantidadHuespedesReserva"));
+let clienteId = localStorage.getItem("clienteId");
+let acompanantes = JSON.parse(localStorage.getItem("acompanantesReserva") || "{}");
+let total = 0; // se acumula más abajo
+
 let acompanantesPorHabitacion = {};
+
 document.addEventListener("DOMContentLoaded", async () => {
 
     /* ============================================================
-       1) Recuperar CARRITO desde localStorage
+       1) VALIDAR CARRITO VACÍO
     ============================================================ */
-    let carrito = JSON.parse(localStorage.getItem("carritoFinal")) || [];
-
     if (carrito.length === 0) {
         Swal.fire("Carrito vacío", "No has seleccionado habitaciones", "error")
             .then(() => window.location.href = "rooms.html");
@@ -14,25 +24,24 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     /* ============================================================
-       2) Recuperar datos de reserva
+       2) CONSTRUIR TARJETAS DE HABITACIÓN
     ============================================================ */
-    const fechaInicio = localStorage.getItem("fechaInicioReserva");
-    const fechaFin = localStorage.getItem("fechaFinReserva");
-    const cantidadHuespedes = parseInt(localStorage.getItem("cantidadHuespedesReserva"));
 
     let fechasHTML = "";
 
     carrito.forEach((h, index) => {
+
         const fiDate = new Date(h.fechaInicio);
         const ffDate = new Date(h.fechaFin);
 
         const fi = fiDate.toLocaleDateString("es-CL");
         const ff = ffDate.toLocaleDateString("es-CL");
 
-        const noches = Math.ceil((ffDate - fiDate) / 86400000);
-        const totalHabitacion = h.precio * noches;
+        const noches = Math.ceil((ffDate - fiDate) / (1000 * 60 * 60 * 24));
 
-        // calcular acompañantes reales por habitación
+        const totalHabitacion = h.precio * noches;
+        total += totalHabitacion; // ACUMULAR TOTAL GLOBAL
+
         const acompCount = (h.capacidad || 1) - 1;
 
         let acompHTML = "";
@@ -44,8 +53,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                         ${Array.from({ length: acompCount }).map((_, i) => `
                             <div class="acom-item">
                                 <label>A${i + 1}</label>
-                                <select class="form-control acomp-select" 
-                                        data-hindex="${index}" 
+                                <select class="form-control acomp-select"
+                                        data-hindex="${index}"
                                         data-idx="${i}">
                                     <option value="adulto">Adulto</option>
                                     <option value="niño">Niño</option>
@@ -62,7 +71,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 <div class="habitacion-title">${h.nombreTipo}</div>
 
                 <div class="habitacion-sub">
-                    Sucursal: <b>${h.nombreSucursal}</b>
+                    Sucursal: <b>${h.nombreSucursal || "No disponible"}</b>
                 </div>
 
                 <div class="habitacion-info">
@@ -70,13 +79,13 @@ document.addEventListener("DOMContentLoaded", async () => {
                 </div>
 
                 <div class="habitacion-info">
-                    <b>Huéspedes permitidos:</b> ${h.capacidad}
+                    <b>Huéspedes permitidos:</b> ${h.capacidad || "N/A"}
                 </div>
 
                 <div class="habitacion-info">
-                    <b>Cama:</b> ${h.cama}
+                    <b>Cama:</b> ${h.cama || "N/A"}  
                     &nbsp;|&nbsp;
-                    <b>Tamaño:</b> ${h.tamano}
+                    <b>Tamaño:</b> ${h.tamano || "N/A"}
                 </div>
 
                 <div class="habitacion-info">
@@ -98,47 +107,37 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     document.getElementById("previewFechasMultiples").innerHTML = fechasHTML;
 
-    /* ============================================================
-       3) Calcular total de TODAS las habitaciones
-    ============================================================ */
-    totalGlobal = carrito.reduce((sum, h) => {
-        const fi = new Date(h.fechaInicio);
-        const ff = new Date(h.fechaFin);
-        const noches = Math.ceil((ff - fi) / 86400000);
-        return sum + h.precio * noches;
-    }, 0);
+    const elHuespedes = document.getElementById("previewHuespedes");
+    if (elHuespedes) elHuespedes.textContent = cantidadHuespedes;
 
-    document.getElementById("previewTotal").textContent =
-        totalGlobal.toLocaleString("es-CL");
 
     /* ============================================================
-       4) MANEJO DE ACOMPAÑANTES POR HABITACIÓN
+       3) GUARDAR ACOMPAÑANTES POR HABITACIÓN
     ============================================================ */
+
     document.addEventListener("change", (e) => {
         if (!e.target.classList.contains("acomp-select")) return;
 
         const hIndex = e.target.dataset.hindex;
         const idx = e.target.dataset.idx;
+        const tipo = e.target.value;
 
         if (!acompanantesPorHabitacion[hIndex]) {
             acompanantesPorHabitacion[hIndex] = [];
         }
 
-        acompanantesPorHabitacion[hIndex][idx] = {
-            tipoPersona: e.target.value
-        };
+        acompanantesPorHabitacion[hIndex][idx] = { tipoPersona: tipo };
 
         localStorage.setItem("acompanantesReserva",
             JSON.stringify(acompanantesPorHabitacion)
         );
-
-        actualizarBoton();
     });
 
 
     /* ============================================================
-       5) BOTÓN DINÁMICO
+       4) VALIDACIÓN DEL BOTÓN
     ============================================================ */
+
     const btn = document.getElementById("btnReservar");
 
     function validarFormulario() {
@@ -147,8 +146,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         const data = JSON.parse(localStorage.getItem("acompanantesReserva") || "{}");
 
-        for (const hab in data) {
-            for (const acomp of data[hab]) {
+        for (const habIndex in data) {
+            const acompList = data[habIndex];
+            if (!acompList) return false;
+
+            for (const acomp of acompList) {
                 if (!acomp || !acomp.tipoPersona) return false;
             }
         }
@@ -160,33 +162,44 @@ document.addEventListener("DOMContentLoaded", async () => {
         const metodo = document.querySelector("input[name='metodoPago']:checked");
 
         if (metodo) {
-            btn.textContent =
-                metodo.value === "Presencial"
-                    ? "Reservar Ahora (Presencial)"
-                    : "Pagar con WebPay";
+            btn.textContent = metodo.value === "Presencial"
+                ? "Reservar Ahora (Presencial)"
+                : "Pagar con WebPay";
         }
 
-        btn.disabled = !validarFormulario();
-        btn.style.cursor = btn.disabled ? "not-allowed" : "pointer";
+        if (validarFormulario()) {
+            btn.disabled = false;
+            btn.style.cursor = "pointer";
+        } else {
+            btn.disabled = true;
+            btn.style.cursor = "not-allowed";
+        }
     }
 
     document.querySelectorAll("input[name='metodoPago']").forEach(r => {
         r.addEventListener("change", actualizarBoton);
     });
 
+    document.addEventListener("input", actualizarBoton);
+
     actualizarBoton();
 
 
     /* ============================================================
-       6) ACCIÓN FINAL DEL BOTÓN
+       5) ACCIÓN DEL BOTÓN (PRESENCIAL / WEBPAY)
     ============================================================ */
+
     btn.addEventListener("click", async () => {
 
         const metodo = document.querySelector("input[name='metodoPago']:checked");
-        const clienteId = localStorage.getItem("clienteId");
 
         if (!clienteId) {
             Swal.fire("Debes iniciar sesión para reservar");
+            return;
+        }
+
+        if (!metodo) {
+            Swal.fire("Selecciona un método de pago");
             return;
         }
 
@@ -203,24 +216,24 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
     /* ============================================================
-       7) RESERVA PRESENCIAL
+       6) RESERVA PRESENCIAL
     ============================================================ */
+
     async function enviarReservaPresencial() {
         try {
-            const acompanantes = obtenerAcompanantes();
 
             const response = await fetch("https://hotelbackend-hzc4.onrender.com/api/reservas/completa", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-            idCliente: clienteId,
-            habitaciones: carrito.map(h => h.idHabitacion),
-            fechaInicio,
-            fechaFin,
-            cantidadHuespedes,
-            total: totalGlobal,
-            acompanantes,
-            metodoPago: "Presencial"
+                    idCliente: clienteId,
+                    habitaciones: carrito.map(h => h.idHabitacion),
+                    fechaInicio,
+                    fechaFin,
+                    cantidadHuespedes,
+                    total,
+                    acompanantes: acompanantesPorHabitacion,
+                    metodoPago: "Presencial"
                 })
             });
 
@@ -234,45 +247,38 @@ document.addEventListener("DOMContentLoaded", async () => {
             Swal.fire({
                 icon: "success",
                 title: "Reserva realizada",
-                text: "Tu reserva quedó registrada.",
-                timer: 2000,
+                text: "Tu reserva fue registrada correctamente",
+                timer: 1500,
                 showConfirmButton: false
             });
 
-            setTimeout(() => {
-    // LIMPIAR CARRO Y DATOS
-    localStorage.removeItem("carritoFinal");
-    localStorage.removeItem("acompanantesReserva");
-    localStorage.removeItem("fechaInicioReserva");
-    localStorage.removeItem("fechaFinReserva");
-    localStorage.removeItem("cantidadHuespedesReserva");
+            localStorage.removeItem("carritoFinal");
+            localStorage.removeItem("acompanantesReserva");
 
-    window.location.href = "../index.html";
-}, 1500);
+            setTimeout(() => window.location.href = "../index.html", 1000);
 
         } catch (e) {
             console.error("ERROR RESERVA:", e);
-            Swal.fire("Error del servidor", e.message);
+            Swal.fire("Error del servidor", e.message || "", "error");
         }
     }
 
 
     /* ============================================================
-       8) RESERVA WEBPAY
+       7) WEBPAY
     ============================================================ */
+
     async function iniciarWebPay() {
 
-        const acompanantes = obtenerAcompanantes();
-
-    const reserva = {
-        idCliente: clienteId,
-        habitaciones: carrito.map(h => h.idHabitacion),
-        fechaInicio,
-        fechaFin,
-        cantidadHuespedes,
-        total: totalGlobal,
-        acompanantes,
-        metodoPago: "WebPay"
+        const reserva = {
+            idCliente: clienteId,
+            habitaciones: carrito.map(h => h.idHabitacion),
+            fechaInicio,
+            fechaFin,
+            cantidadHuespedes,
+            total,
+            acompanantes: acompanantesPorHabitacion,
+            metodoPago: "WebPay"
         };
 
         localStorage.setItem("reservaCompleta", JSON.stringify(reserva));
@@ -286,38 +292,16 @@ document.addEventListener("DOMContentLoaded", async () => {
         const data = await response.json();
 
         if (!response.ok) {
-            Swal.fire("Error", data.error || "No se pudo iniciar WebPay");
+            Swal.fire("Error", data.error || data.message || "No se inició WebPay");
             return;
         }
 
+        localStorage.removeItem("carritoFinal");
+        localStorage.removeItem("acompanantesReserva");
+
         localStorage.setItem("tokenTransbank", data.token);
-localStorage.removeItem("carritoFinal");
-localStorage.removeItem("acompanantesReserva");
-localStorage.removeItem("fechaInicioReserva");
-localStorage.removeItem("fechaFinReserva");
-localStorage.removeItem("cantidadHuespedesReserva");
+
         window.location.href = `webpay-pago.html?token=${data.token}`;
     }
 
 });
-
-/* ============================================================
-   9) UTILIDADES
-============================================================ */
-function obtenerAcompanantes() {
-    const data = JSON.parse(localStorage.getItem("acompanantesReserva") || "{}");
-
-    let lista = [];
-
-    for (const habIndex in data) {
-        const acompList = data[habIndex];
-        if (acompList) {
-            lista = lista.concat(acompList);
-        }
-    }
-
-    return lista;
-}
-
-
-console.log("Acompañantes enviados:", acompanantes);
