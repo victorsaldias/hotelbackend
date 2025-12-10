@@ -85,9 +85,25 @@ export async function obtenerHabitacionPorId(idHabitacion) {
     const result = await pool.request()
         .input("idHabitacion", idHabitacion)
         .query(`
-            SELECT *
-            FROM habitacion
-            WHERE idHabitacion = @idHabitacion
+            SELECT 
+                h.idHabitacion,
+                h.numero,
+                h.descripcion,
+                h.idTipoHabitacion,
+                t.nombre AS nombreTipoHabitacion,
+                ISNULL(h.precioPersonalizado, t.precio) AS precio,
+                h.idSucursal,
+                s.nombre AS nombreSucursal,
+                s.direccion AS direccionSucursal,
+                h.idEstadoHabitacion,
+                c.capacidad,
+                c.cama,
+                c.tamano
+            FROM habitacion h
+            INNER JOIN tipoHabitacion t ON t.idTipoHabitacion = h.idTipoHabitacion
+            INNER JOIN sucursal s ON s.idSucursal = h.idSucursal
+            LEFT JOIN caracteristica c ON c.idCaracteristica = h.idCaracteristica
+            WHERE h.idHabitacion = @idHabitacion
         `);
 
     return result.recordset[0] || null;

@@ -49,6 +49,7 @@ carrito.forEach(h => {
     ${fi} → ${ff}
   </p>
 `;
+});
 
 document.getElementById("previewFechasMultiples").innerHTML = fechasHTML;
     document.getElementById("previewHuespedes").textContent = cantidadHuespedes;
