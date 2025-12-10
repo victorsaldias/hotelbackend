@@ -137,17 +137,17 @@ for (let r of carrito) {
         return;
     }
 }
-    data.tipoHabitacion = tipos?.[data.idTipoHabitacion] || "Habitación";
-    carrito.push(reserva);
-    localStorage.setItem("carritoFinal", JSON.stringify(carrito));
+   reserva.nombreTipo = tipos?.[reserva.idTipoHabitacion] || "Habitación";
+carrito.push(reserva);
+localStorage.setItem("carritoFinal", JSON.stringify(carrito));
 
-    Swal.fire({
-        icon: "success",
-        title: "Agregada al carrito",
-        text: `Reserva del ${reserva.nombreTipo} agregada.`,
-        timer: 1500,
-        showConfirmButton: false
-    });
+Swal.fire({
+    icon: "success",
+    title: "Agregada al carrito",
+    text: `Reserva de ${reserva.nombreTipo} agregada.`,
+    timer: 1500,
+    showConfirmButton: false
+});
 
     actualizarContadorCarrito();
 });
