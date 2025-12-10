@@ -1,7 +1,6 @@
 import { obtenerComunasPorProvincia,
     obtenerTodasLasComunasBD,
     obtenerComunaPorIdDB,
-    obtenerComunasPorProvincia
  } from "../model/ComunaModel.js";
 
 export async function listarComunasPorProvincia(req, res) {
