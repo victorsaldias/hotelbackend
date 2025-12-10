@@ -11,10 +11,13 @@ export async function obtenerProvinciasPorRegion(idRegion) {
     const result = await pool.request()
         .input("idRegion", idRegion)
         .query(`
-            SELECT idProvincia, nombre, idRegion
-            FROM Provincia
-            WHERE idRegion = @idRegion
-            ORDER BY nombre
+           SELECT 
+    idProvincia, 
+    nombreProvincia AS nombre, 
+    idRegion
+FROM Provincia
+WHERE idRegion = @idRegion
+ORDER BY nombreProvincia;
         `);
 
     return result.recordset;
