@@ -35,8 +35,18 @@ document.addEventListener("DOMContentLoaded", async () => {
     const fechaBonitaInicio = new Date(fechaInicio).toLocaleDateString("es-CL");
     const fechaBonitaFin = new Date(fechaFin).toLocaleDateString("es-CL");
 
-    document.getElementById("previewFechaInicio").textContent = fechaBonitaInicio;
-    document.getElementById("previewFechaFin").textContent = fechaBonitaFin;
+    let fechasHTML = "";
+
+carrito.forEach(h => {
+    const fi = new Date(h.fechaInicio).toLocaleDateString("es-CL");
+    const ff = new Date(h.fechaFin).toLocaleDateString("es-CL");
+
+    fechasHTML += `
+        <p><b>${h.nombreTipo}</b>: ${fi} → ${ff}</p>
+    `;
+});
+
+document.getElementById("previewFechasMultiples").innerHTML = fechasHTML;
     document.getElementById("previewHuespedes").textContent = cantidadHuespedes;
 
 
