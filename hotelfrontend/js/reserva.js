@@ -218,22 +218,27 @@ for (let i = 1; i <= totalAcomp; i++) {
     ============================================================ */
     const btn = document.getElementById("btnReservar");
 
-    function validarFormulario() {
-        let metodo = document.querySelector("input[name='metodoPago']:checked");
-        if (!metodo) return false;
+   function validarFormulario() {
+    let metodo = document.querySelector("input[name='metodoPago']:checked");
+    if (!metodo) return false;
 
-        // Validar acompañantes
-        if (totalAcomp > 0) {
-            for (let i = 1; i <= totalAcomp; i++) {
-                const acomp = datosAcompanantes[i];
-                if (!acomp || !acomp.tipoPersona) {
-    return false;
-}
+    // Validar acompañantes por habitación
+    const data = JSON.parse(localStorage.getItem("acompanantesReserva") || "{}");
+
+    for (const habIndex in data) {
+        const acompList = data[habIndex];
+
+        if (!acompList) return false;
+
+        for (const acomp of acompList) {
+            if (!acomp || !acomp.tipoPersona) {
+                return false;
             }
         }
-
-        return true;
     }
+
+    return true;
+}
 
     function actualizarBoton() {
         const metodo = document.querySelector("input[name='metodoPago']:checked");
@@ -371,10 +376,8 @@ if (metodo.value === "WebPay") {
        7) UTILIDADES
     ============================================================ */
     function obtenerAcompanantes() {
-        const data = localStorage.getItem("acompanantesReserva");
-        if (!data) return [];
-        return Object.values(JSON.parse(data));
-    }
+    return JSON.parse(localStorage.getItem("acompanantesReserva") || "{}");
+}
 
     function formatearFechaSQL(date) {
     const pad = n => String(n).padStart(2, "0");
