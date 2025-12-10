@@ -98,12 +98,18 @@ if (!total) {
     await agregarHabitacionAReserva(reserva.idReserva, idHab);
 }
     // Insertar acompañantes (si vienen)
-    if (Array.isArray(acompanantes)) {
-        for (const a of acompanantes) {
-            if (!a.nombre || !a.apellido) continue;
-            await guardarAcompaniante(reserva.idReserva, a);
+    // 🔥 SOPORTE A FORMATO ACTUAL: {0: [{tipoPersona}], 1: [{tipoPersona}]}
+if (acompanantes && typeof acompanantes === "object") {
+    for (const habIndex in acompanantes) {
+        const lista = acompanantes[habIndex];
+        if (!Array.isArray(lista)) continue;
+
+        for (const acomp of lista) {
+            if (!acomp.tipoPersona) continue;
+            await guardarAcompaniante(reserva.idReserva, acomp);
         }
     }
+}
 
     // Enviar correo de confirmación (si el cliente tiene correo)
    setTimeout(async () => {
