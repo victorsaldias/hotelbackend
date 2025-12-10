@@ -122,39 +122,54 @@ console.log("idComuna (fix):", idComunaLimpio);
         });
     }
 
-    async function cargarProvincias(idRegion, idProvinciaActual) {
-        if (!idRegion) return;
+   async function cargarProvincias(idRegion, idProvinciaActual) {
+    const resp = await fetch(
+        `https://hotelbackend-hzc4.onrender.com/api/provincias/por-region/${idRegion}`
+    );
 
-       const resp = await fetch(`https://hotelbackend-hzc4.onrender.com/api/provincias/por-region/${idRegion}`);
     const provincias = await resp.json();
 
-        provinciaSelect.innerHTML = "";
-        provincias.sort((a,b)=>a.nombre.localeCompare(b.nombre,'es'));
-
-        provincias.forEach(p => {
-            provinciaSelect.innerHTML += `
-                <option value="${p.idProvincia}" ${p.idProvincia == idProvinciaActual ? "selected" : ""}>
-                    ${p.nombre}
-                </option>`;
-        });
+    if (!Array.isArray(provincias)) {
+        console.error("❌ Provincias no es un array:", provincias);
+        return;
     }
 
-    async function cargarComunas(idProvincia, idComunaActual) {
-        if (!idProvincia) return;
+    provinciaSelect.innerHTML = "";
+    provincias.sort((a, b) => a.nombre.localeCompare(b.nombre, "es"));
 
-        const resp = await fetch(`https://hotelbackend-hzc4.onrender.com/api/comunas/por-provincia/${idProvincia}`);
-        const comunas = await resp.json();
+    provincias.forEach(p => {
+        provinciaSelect.innerHTML += `
+            <option value="${p.idProvincia}" 
+                ${p.idProvincia == idProvinciaActual ? "selected" : ""}>
+                ${p.nombre}
+            </option>`;
+    });
+}
 
-        comunaSelect.innerHTML = "";
-        comunas.sort((a,b)=>a.nombre.localeCompare(b.nombre,'es'));
 
-        comunas.forEach(c => {
-            comunaSelect.innerHTML += `
-                <option value="${c.idComuna}" ${c.idComuna == idComunaActual ? "selected" : ""}>
-                    ${c.nombre}
-                </option>`;
-        });
+async function cargarComunas(idProvincia, idComunaActual) {
+    const resp = await fetch(
+        `https://hotelbackend-hzc4.onrender.com/api/comunas/por-provincia/${idProvincia}`
+    );
+
+    const comunas = await resp.json();
+
+    if (!Array.isArray(comunas)) {
+        console.error("❌ Comunas no es un array:", comunas);
+        return;
     }
+
+    comunaSelect.innerHTML = "";
+    comunas.sort((a, b) => a.nombre.localeCompare(b.nombre, "es"));
+
+    comunas.forEach(c => {
+        comunaSelect.innerHTML += `
+            <option value="${c.idComuna}" 
+                ${c.idComuna == idComunaActual ? "selected" : ""}>
+                ${c.nombre}
+            </option>`;
+    });
+}
 
     /* ============================================================
        SELECT DEPENDIENTES
