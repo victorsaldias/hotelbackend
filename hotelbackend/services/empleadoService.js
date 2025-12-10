@@ -8,8 +8,8 @@ import {
     buscarEmpleadosModel
 } from "../model/empleadoModel.js";
 
-import sucursalService from "./sucursalService.js";
-import { hashPassword } from "./passwordService.js";
+import sucursalService from "./sucursalServices.js";
+import { hashPassword } from "./passwordServices.js";
 import { enviarCorreo } from "./emailServices.js";
 import { limpiarRut } from "../utils/rutUtils.js";
 

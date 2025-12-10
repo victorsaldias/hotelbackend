@@ -1,27 +1,52 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Mi Carrito | Hotel Arellano</title>
-    <link rel="stylesheet" href="../css/bootstrap.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-</head>
+document.addEventListener("DOMContentLoaded", () => {
 
-<body>
+    const listaCarrito = document.getElementById("listaCarrito");
+    const totalFinal = document.getElementById("totalFinal");
+    const btnContinuar = document.getElementById("btnContinuar");
 
-<div class="container mt-5">
-    <h2>🧺 Mi Carrito</h2>
-    <hr>
+    let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
 
-    <div id="listaCarrito"></div>
+    if (carrito.length === 0) {
+        listaCarrito.innerHTML = "<p>No hay habitaciones en tu carrito.</p>";
+        btnContinuar.style.display = "none";
+        return;
+    }
 
-    <h3 class="mt-4">Total: $<span id="totalFinal">0</span></h3>
+    let total = 0;
 
-    <button id="btnContinuar" class="btn btn-primary btn-lg mt-3">
-        Continuar con la Reserva
-    </button>
-</div>
+    carrito.forEach(h => {
+        total += h.precio;
 
-<script src="../js/carrito.js"></script>
-</body>
-</html>
+        listaCarrito.innerHTML += `
+            <div class="card mb-3 p-3">
+                <h4>${h.tipoHabitacion || "Habitación"}</h4>
+                <p><b>Precio:</b> $${h.precio}</p>
+                <p><b>Sucursal:</b> ${h.nombreSucursal}</p>
+
+                <button class="btn btn-danger btn-sm eliminar" data-id="${h.idHabitacion}">
+                    Quitar
+                </button>
+            </div>
+        `;
+    });
+
+    totalFinal.textContent = total.toLocaleString("es-CL");
+
+    // QUITAR ELEMENTO DEL CARRITO
+    document.querySelectorAll(".eliminar").forEach(btn => {
+        btn.addEventListener("click", () => {
+            const id = parseInt(btn.dataset.id);
+
+            carrito = carrito.filter(h => h.idHabitacion !== id);
+            localStorage.setItem("carrito", JSON.stringify(carrito));
+            location.reload();
+        });
+    });
+
+    // CONTINUAR → RESERVA CON CARRITO
+    btnContinuar.addEventListener("click", () => {
+        localStorage.setItem("carritoFinal", JSON.stringify(carrito));
+        window.location.href = "reserva.html";
+    });
+
+});

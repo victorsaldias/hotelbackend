@@ -11,7 +11,6 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
-    // Nombres reales del tipo de habitación
     const tipos = {
         1: "Premium King",
         2: "Habitación Deluxe",
@@ -19,7 +18,6 @@ document.addEventListener("DOMContentLoaded", () => {
         4: "Suite Familiar"
     };
 
-    // Imágenes por tipo
     const imagenesPorTipo = {
         1: "../img/rooms/room-1.jpg",
         2: "../img/rooms/room-2.jpg",
@@ -30,7 +28,6 @@ document.addEventListener("DOMContentLoaded", () => {
     roomsContainer.innerHTML = "";
 
     habitaciones.forEach(h => {
-
         const nombreTipo = tipos[h.idTipoHabitacion] || "Habitación";
         const imagen = imagenesPorTipo[h.idTipoHabitacion] || "../img/rooms/room-1.jpg";
 
@@ -38,12 +35,9 @@ document.addEventListener("DOMContentLoaded", () => {
             <div class="col-lg-4 col-md-6 col-sm-6">
                 <div class="room__item">
                     <img src="${imagen}" alt="${nombreTipo}" style="width:100%; height:250px; object-fit:cover;">
-
                     <div class="room__text">
-
                         <h3>${nombreTipo}</h3>
                         <h2>$${h.precio}<span> / día</span></h2>
-
                         <ul>
                             <li><strong>Capacidad:</strong> ${h.capacidad} personas</li>
                             <li><strong>Camas:</strong> ${h.cama}</li>
@@ -51,25 +45,30 @@ document.addEventListener("DOMContentLoaded", () => {
                             <li><strong>Sucursal:</strong> ${h.nombreSucursal}</li>
                         </ul>
 
-     <div class="room-buttons">
+                        <div class="room-buttons">
+                            <button class="btn-secondary-small ver-detalles-btn"
+                                    data-info='${JSON.stringify(h)}'>
+                                Ver Detalles
+                            </button>
 
-    <button class="btn-secondary-small ver-detalles-btn"
-            data-info='${JSON.stringify(h)}'>
-        Ver Detalles
-    </button>
+                            <button class="btn-success agregar-carrito-btn"
+                                    data-info='${JSON.stringify(h)}'>
+                                Agregar al Carrito
+                            </button>
 
-   <button class="btn-primary-medium agregar-carrito-btn"
-        data-info='${JSON.stringify(h)}'>
-    Agregar al Carrito
-</button>
-</div>
+                            <button class="btn-primary-medium reservar-btn"
+                                    data-info='${JSON.stringify(h)}'>
+                                Reservar Ahora
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
         `;
     });
 
-   document.querySelectorAll(".ver-detalles-btn").forEach(btn => {
+    /* Ir a detalles */
+    document.querySelectorAll(".ver-detalles-btn").forEach(btn => {
         btn.addEventListener("click", () => {
             const info = JSON.parse(btn.dataset.info);
             localStorage.setItem("habitacionSeleccionada", JSON.stringify(info));
@@ -77,29 +76,50 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // CLICK → Reservar Ahora → ir directo a reserva.html
+    /* Reservar ahora */
     document.querySelectorAll(".reservar-btn").forEach(btn => {
         btn.addEventListener("click", () => {
             const info = JSON.parse(btn.dataset.info);
-
-            // guardamos también la habitación seleccionada
             localStorage.setItem("habitacionSeleccionada", JSON.stringify(info));
-
-            // redirigir a la página de reserva
             window.location.href = "../pages/reserva.html";
         });
     });
-
 });
 
-function agregarAlCarrito(habitacion) {
-    let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+/* ============================================================
+   EVENTO: AGREGAR AL CARRITO (OFICIAL)
+============================================================ */
+document.addEventListener("click", (e) => {
+    if (!e.target.classList.contains("agregar-carrito-btn")) return;
 
-    // evitar duplicar la misma habitación
-    if (!carrito.find(h => h.idHabitacion === habitacion.idHabitacion)) {
-        carrito.push(habitacion);
-        localStorage.setItem("carrito", JSON.stringify(carrito));
+    const data = JSON.parse(e.target.dataset.info);
+
+    let carrito = JSON.parse(localStorage.getItem("carritoFinal")) || [];
+
+    if (carrito.some(h => h.idHabitacion === data.idHabitacion)) {
+        Swal.fire("Atención", "Esta habitación ya está en el carrito", "info");
+        return;
     }
 
-    Swal.fire("✔ Agregada", "Habitación añadida al carrito", "success");
+    carrito.push(data);
+    localStorage.setItem("carritoFinal", JSON.stringify(carrito));
+
+    Swal.fire({
+        icon: "success",
+        title: "Agregada al carrito",
+        text: `${data.tipoHabitacion || "Habitación"} fue añadida`,
+        timer: 1500,
+        showConfirmButton: false
+    });
+
+    actualizarContadorCarrito();
+});
+
+/* ============================================================
+   CONTAR ITEMS DEL CARRITO
+============================================================ */
+function actualizarContadorCarrito() {
+    const carrito = JSON.parse(localStorage.getItem("carritoFinal")) || [];
+    const span = document.getElementById("carritoCount");
+    if (span) span.textContent = carrito.length;
 }

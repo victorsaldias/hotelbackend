@@ -1,6 +1,6 @@
 // services/authService.js
 import jwt from "jsonwebtoken";
-import { comparePassword } from "./passwordService.js";
+import { comparePassword } from "./passwordServices.js";
 import { buscarClientePorCorreo } from "../model/authModel.js";
 import { buscarEmpleadoPorCorreo } from "../model/empleadoAuthModel.js";
 

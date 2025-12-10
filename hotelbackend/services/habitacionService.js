@@ -1,5 +1,5 @@
 import * as HabitacionModel from "../model/habitacionModel.js";
-import sucursalService from "./sucursalService.js";
+import sucursalService from "./sucursalServices.js";
 
 /* ============================================================
    1) DISPONIBILIDAD / BÚSQUEDA
